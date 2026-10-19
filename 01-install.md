@@ -36,8 +36,10 @@ brew install --cask knodemd/tap/knode
 ```
 
 Or download it from [knode.md](https://knode.md). The app carries the `knode` command inside and
-offers to install it the first time you open it. If you already installed it with Homebrew, the app
-uses that one.
+offers to install it the first time you open it; you can also do it later from **Knode > Install
+Command Line Tool…**. It adds `knode` to `/usr/local/bin`, or to `/opt/homebrew/bin` when only that
+folder is writable, and asks for your password when your Mac needs it. If `knode` is already
+installed, for example with Homebrew, the app uses that one, says so and installs nothing.
 
 ## Connect your agents
 
@@ -77,5 +79,8 @@ brew uninstall --cask knode
 ```
 
 If you installed it with the install script, delete the file: `rm ~/.local/bin/knode`.
+
+If the Mac app installed the command, choose **Knode > Uninstall Command Line Tool…** before you
+delete the app. It removes only the `knode` link the app made.
 
 Your spaces are `.knode` files and stay where you saved them.
