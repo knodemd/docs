@@ -15,6 +15,46 @@ The Mac app shows your spaces and lets you read, write and organise them.
 - Try the example space to see how it works. Its notes stay in memory and are never saved.
 - See what your agents write as they write it, through Knode Service.
 
+## Several spaces (v0.2)
+
+Keep work and personal memory apart in different spaces. The sidebar lists every space you created
+or opened, like libraries in Apple Music. The first time, it shows your default space, the spaces
+you opened recently and the spaces in `~/Knode`.
+
+- **New space:** File > New Space… (Shift-Command-N), or **New Space…** at the bottom of the
+  sidebar. Give it a name and choose where it goes (`~/Knode` by default). Turn on **Use for agents
+  and capture** to make it the space your agents and captured conversations write to.
+- **Switch:** click a space, or press Command-1 to Command-9 for the first nine.
+- **Rename:** Space > Rename…, or right-click the space. This changes the name Knode shows; the
+  `.knode` file keeps its name.
+- **Icon:** Space > Choose Icon… and pick one emoji. The icon is stored in the space, so it follows
+  the space to another Mac.
+- **Default space for agents:** the space marked with a sparkle is the one the `knode` command, your
+  agents and capture use when none is named (`default_space` in `config.toml`). Change it with
+  **Use for Agents and Capture** in the Space menu or the right-click menu.
+- **Remove from list:** takes the space off the sidebar. Its files stay where they are; open it
+  again with File > Open Space… (Command-O).
+
+## History of a note (v0.2)
+
+Every change to a note is kept, with who made it. Press Command-Y, or click the clock in the
+toolbar, to see the history of the open note beside it: every version, newest first, with the
+person or agent that made it (and the agent's session), when, and how many lines it added and
+removed.
+
+Click a version to compare it with the note as it is now, line by line (**Changes**) or in two
+columns (**Side by Side**). From there:
+
+- **Restore This Version** puts the whole note back as it was. The restore is a new version, so you
+  can always go back again.
+- **Undo This Change** undoes only what that one change did. If the note changed again after it,
+  for example an agent wrote to it later, Knode says so and asks before undoing it anyway, because
+  that would also undo the later changes. To go back past them on purpose, restore a version
+  instead.
+
+Edits you have not saved yet are saved before a restore or an undo. Press Escape or **Done** to go
+back to the note.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
@@ -44,8 +84,7 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 
 ## Next
 
-- Several spaces, switched like Apple Music libraries (v0.2).
-- History of every change, and who made it (v0.2).
+- Permissions per agent and per space (v0.2).
 - A map of your nodes and links (v0.3).
 
 See the [roadmap](https://knode.md/plan) for the rest.
