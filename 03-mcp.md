@@ -11,24 +11,35 @@ Gemini and Claude Desktop all read and write the same spaces.
 knode connect claude-code
 ```
 
-See [Install](01-install.md) for every agent.
+See [Install](01-install.md) for every agent, and [the command line](02-cli.md#connect) for what
+`knode connect` changes. The server itself is `knode mcp`, which agents start on their own; it
+uses your default space, or the one in `--space <path>` or `KNODE_SPACE`.
 
 ## What agents can do
 
 | Tool | What it does |
 |---|---|
-| `search` | Finds nodes by words |
-| `read` | Reads a node as Markdown |
-| `write` | Creates or edits a node |
-| `link` | Links two nodes |
-| `recent` | Lists what changed lately |
+| `search` | Finds nodes by words, best match first, with a snippet of each |
+| `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks |
+| `write_node` | Creates a node, or edits one by id or title; can append to the end of the text |
+| `link_nodes` | Links two nodes, by id or title: `related`, `part-of`, `derived-from` |
+| `recent` | Lists the nodes that changed most recently |
 
-Agents read and write Markdown, the same text you see in the app.
+Agents read and write Markdown, the same text you see in the app. A `[[Title]]` in the text links
+to the node with that title. Every tool answers with Markdown for the agent to read and the same
+data as structured content.
+
+Every change an agent makes is kept with its name, such as `claude-code`, so you can always see
+who wrote what.
 
 ## Conversations
 
 From v0.1, every Claude Code and Codex conversation is kept as a node, with its project and date.
-You can turn this off per project. Other agents follow in v0.2.
+You can turn this off per project. Other agents follow in v0.2. To bring in one session by hand:
+
+```sh
+knode import ~/.claude/projects/<project>/<session>.jsonl
+```
 
 ## Permissions
 
