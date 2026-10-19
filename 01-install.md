@@ -57,7 +57,7 @@ claude mcp add knode -- knode mcp
 
 ## Requirements
 
-macOS 15 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2.
+macOS 26 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2.
 
 ## Uninstall
 
