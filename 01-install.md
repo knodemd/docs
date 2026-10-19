@@ -15,6 +15,14 @@ that keeps your spaces open.
 | macOS | `brew install knodemd/tap/knode` |
 | Linux (from v0.2) | `brew install knodemd/tap/knode` or `curl -fsSL https://knode.md/install.sh \| sh` |
 
+The install script puts `knode` in `~/.local/bin` after checking the download against the release's
+checksums, and never asks for root. If that directory is not in your `PATH`, it tells you the line to
+add. To pick a version or another directory:
+
+```sh
+curl -fsSL https://knode.md/install.sh | KNODE_VERSION=0.2.0 KNODE_INSTALL_DIR=~/bin sh
+```
+
 Check it works:
 
 ```sh
@@ -57,7 +65,9 @@ claude mcp add knode -- knode mcp
 
 ## Requirements
 
-macOS 26 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2.
+macOS 26 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2, with glibc 2.35 or
+later (for example Ubuntu 22.04, Debian 12, Fedora 36 or newer). Distributions built on musl, such as
+Alpine, are not supported yet.
 
 ## Uninstall
 
@@ -65,5 +75,7 @@ macOS 26 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2.
 brew uninstall knode
 brew uninstall --cask knode
 ```
+
+If you installed it with the install script, delete the file: `rm ~/.local/bin/knode`.
 
 Your spaces are `.knode` files and stay where you saved them.
