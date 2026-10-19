@@ -15,6 +15,11 @@ See [Install](01-install.md) for every agent, and [the command line](02-cli.md#c
 `knode connect` changes. The server itself is `knode mcp`, which agents start on their own; it
 uses your default space, or the one in `--space <path>` or `KNODE_SPACE`.
 
+`knode mcp` reads and writes through Knode Service, starting it in the background when it is not
+running, so what one agent writes is seen at once by the others, by the app and by the command line.
+If Knode Service cannot start, the server opens the space directly and prints a warning on its
+standard error, which agents keep in their logs.
+
 ## What agents can do
 
 | Tool | What it does |
@@ -34,8 +39,11 @@ who wrote what.
 
 ## Conversations
 
-From v0.1, every Claude Code and Codex conversation is kept as a node, with its project and date.
-You can turn this off per project. Other agents follow in v0.2. To bring in one session by hand:
+From v0.1, while Knode Service runs, every Claude Code and Codex conversation is kept as a node in
+your default space, with its project and date, and updated while the conversation goes on. You can
+turn this off, or leave projects out, in `config.toml`; see
+[the command line](02-cli.md#capture). Per-space settings and other agents follow in v0.2. To bring
+in one session by hand:
 
 ```sh
 knode import ~/.claude/projects/<project>/<session>.jsonl

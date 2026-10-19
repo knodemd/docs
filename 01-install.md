@@ -29,6 +29,21 @@ Check it works:
 knode --version
 ```
 
+### Knode Service
+
+Knode Service is the one process that opens your spaces, so you, the app and every agent can write
+at the same time and see each change at once. You do not need to start it: any `knode` command that
+uses a space, and the MCP server your agents run, start it in the background when it is not
+running. To have it running from the moment you log in, which also keeps capturing your agent
+conversations while no agent is open:
+
+```sh
+knode service install
+```
+
+On macOS this adds a launch agent; on Linux, a systemd user unit. See
+[the command line](02-cli.md#service) for the other `knode service` commands.
+
 ## The Mac app
 
 ```sh
@@ -70,6 +85,14 @@ later (for example Ubuntu 22.04, Debian 12, Fedora 36 or newer). Distributions b
 Alpine, are not supported yet.
 
 ## Uninstall
+
+If you ran `knode service install`, undo it first:
+
+```sh
+knode service uninstall
+```
+
+Then:
 
 ```sh
 brew uninstall knode

@@ -12,6 +12,7 @@ Every command works without the app.
 | `knode connect <agent>` | Adds Knode to an agent: `claude-code`, `codex`, `gemini`, `claude-desktop` |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
 | `knode spaces` | Lists the spaces Knode knows about |
+| `knode service <action>` | Runs, starts, stops or shows Knode Service, or starts it at login |
 | `knode --version` | Prints the version |
 | `knode --help` | Lists every command and option |
 
@@ -42,6 +43,10 @@ folder in `KNODE_HOME` if you set it.
 ```toml
 default_space = "/Users/you/Knode/work.knode"
 ```
+
+`knode search`, `knode import`, `knode init` and `knode mcp` read and write through Knode Service,
+and start it in the background when it is not running. If it cannot start, they open the space
+directly and print a warning.
 
 ## init
 
@@ -103,3 +108,35 @@ knode mcp [--space <path>]
 
 Runs the MCP server on standard input and output. Agents start it themselves once you run
 `knode connect`. See [Agents and MCP](03-mcp.md).
+
+## service
+
+```sh
+knode service <run|start|stop|status|install|uninstall>
+```
+
+| Action | What it does |
+|---|---|
+| `run` | Runs Knode Service in the foreground until you press Ctrl-C. If it is already running, says so |
+| `start` | Starts it in the background if it is not running |
+| `stop` | Stops it, however it was started |
+| `status` | Shows its version, process id, open spaces, connected clients, where conversations are captured, and whether it starts at login |
+| `install` | Starts it at login, and now: a launch agent on macOS, a systemd user unit on Linux |
+| `uninstall` | Stops starting it at login, and stops it |
+
+After `install`, Knode Service starts again by itself if it crashes. After `knode service stop` it
+stays stopped until your next login, or until a `knode` command or an agent needs it.
+
+### Capture
+
+While Knode Service runs, every Claude Code and Codex conversation becomes a node of kind
+`conversation` in your default space, kept current while the agent writes it. To turn it off, or to
+leave some projects out, add to `config.toml`:
+
+```toml
+capture = false
+capture_exclude = ["/Users/you/code/secret-project"]
+```
+
+Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
+within a few seconds, so there is no need to restart it.
