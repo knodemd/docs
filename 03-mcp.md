@@ -29,6 +29,8 @@ standard error, which agents keep in their logs.
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text |
 | `link_nodes` | Links two nodes, by id or title: `related`, `part-of`, `derived-from` |
 | `recent` | Lists the nodes that changed most recently |
+| `history` | Lists the latest changes to a node or to the whole space, with who made them (v0.2) |
+| `undo` | Undoes a change the same agent made (v0.2) |
 
 Agents read and write Markdown, the same text you see in the app. A `[[Title]]` in the text links
 to the node with that title. Every tool answers with Markdown for the agent to read and the same
@@ -36,6 +38,16 @@ data as structured content.
 
 Every change an agent makes is kept with its name, such as `claude-code`, so you can always see
 who wrote what.
+
+## History and undo
+
+From v0.2, every change is kept, so any of them can be undone. Agents see the changes with
+`history`, for one node or for the whole space.
+
+An agent can only `undo` its own changes, and only when nobody changed the same notes after it.
+Anything else it leaves to you: it tells you the change number, and you decide with
+`knode history` and `knode undo` (see [the command line](02-cli.md#undo)). Like every undo, it is
+one more change, so nothing is lost.
 
 ## Conversations
 
