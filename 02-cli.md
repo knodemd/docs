@@ -181,8 +181,10 @@ knode import <path> [--vault]
 - **A Claude Code or Codex session file** (`.jsonl`): one node of kind `conversation`, with its
   title, project and date, written as that agent.
 
-Importing the same files again does not make copies: a file that changed updates its note. Files
-that are not Markdown, such as images, are left out for now.
+Importing the same files again does not make copies: a file that changed updates its note. From
+v0.3, a file that is not Markdown, such as an image, is attached to the note that embeds it with
+`![[name]]` (or links to it with `[[name]]`) when it is in the same folder as the note; other such
+files are left out. A kind of link the space does not have yet is added to it, so no link is lost.
 
 ## export
 
@@ -286,8 +288,14 @@ We charge **per seat**. See [[Roadmap]].
 - Notes in subfolders of an imported vault are written back to the same subfolders.
 - Knode only ever changes or removes files it wrote: your own files in the folder are never
   touched.
+- From v0.3, attachments are written next to their note, under their names, so `![[beds.svg]]`
+  finds them in any Markdown editor. When two notes in one folder have different files with the
+  same name, the second is written as `beds 2.svg`; `.knode/files.json` in the folder remembers
+  which is which.
+- From v0.3, the kinds of link your space defines are written to `.knode/link-kinds.json`, with
+  their labels.
 - `knode import` of an exported folder, into the same space or another one, keeps every note's id,
-  dates and authors, so exporting the copy gives the same files.
+  dates, authors, attachments and kinds of link, so exporting the copy gives the same files.
 
 ## connect
 
