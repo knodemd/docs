@@ -17,7 +17,8 @@ Every command works without the app.
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it: `claude-code`, `codex`, `gemini`, `claude-desktop` |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
-| `knode spaces` | Lists the spaces Knode knows about |
+| `knode spaces [<action>]` | Lists the spaces Knode knows, with their icons; renames one, sets its icon, makes it the default or turns capture into it on or off (v0.2) |
+| `knode folders <action>` | Lists, adds and removes the folders that feed a space, such as the projects whose conversations it captures (v0.2) |
 | `knode service <action>` | Runs, starts, stops or shows Knode Service, or starts it at login |
 | `knode --version` | Prints the version |
 | `knode --help` | Lists every command and option |
@@ -39,9 +40,10 @@ A space is a `.knode` file. Every node in it is Markdown, so what you import kee
 links and its structure. See [the .knode format](05-format.md).
 
 `knode search`, `knode import`, `knode export`, `knode history`, `knode undo`, `knode restore`,
-`knode markdown` and `knode mcp` use, in this order:
+`knode markdown`, `knode folders` and `knode mcp` use, in this order:
 
-1. the space given with `--space <path>`;
+1. the space given with `--space <space>`: its `.knode` path or, from v0.2, the name of a space
+   Knode knows;
 2. the space in the `KNODE_SPACE` environment variable;
 3. your default space.
 
@@ -51,7 +53,11 @@ folder in `KNODE_HOME` if you set it.
 
 ```toml
 default_space = "/Users/you/Knode/work.knode"
+spaces = ["/Users/you/Knode/personal.knode"]
 ```
+
+`spaces` lists the other spaces Knode knows. `knode init` adds each new space to it, and the app
+does the same.
 
 Every command that uses a space reads and writes through Knode Service, and starts it in the
 background when it is not running. If it cannot start, the commands open the space directly and
@@ -66,6 +72,87 @@ knode init <name> [--dir <folder>] [--default]
 
 Creates `<name>.knode` in `~/Knode`, or in `--dir`. It becomes your default space if you have none
 yet, or if you pass `--default`.
+
+## spaces
+
+```sh
+knode spaces [--json]
+knode spaces rename <space> <name>
+knode spaces icon <space> <emoji> | --clear
+knode spaces default <space>
+knode spaces capture <space> on|off
+```
+
+From v0.2. Without an action, lists every space Knode knows: those in `config.toml` and those in
+`~/Knode`. The default space is marked with `*`; `--json` prints them as JSON.
+
+```text
+* 💼 Work      /Users/you/Knode/work.knode  (default)
+  🌱 Personal  /Users/you/Knode/personal.knode
+```
+
+`<space>` is a space's name or its `.knode` path.
+
+| Action | What it does |
+|---|---|
+| `rename` | Renames the space. Its file keeps its name, so nothing that points at it breaks |
+| `icon` | Sets the icon of the space, one emoji, or removes it with `--clear` |
+| `default` | Makes it your default space. The previous default stays in the list |
+| `capture` | Turns capture of agent conversations into the space on or off. Off, the conversations of its projects are stored nowhere |
+
+The name, the icon and the capture setting are kept inside the space, so they travel with it to
+your other devices. Only you can change them, from the command line or the app; agents cannot.
+
+## folders
+
+```sh
+knode folders list [--json]
+knode folders add <path> [--kind project|notes|agent] [--capture on|off] [--exclude <pattern>]... [--agent <agent>]
+knode folders remove <path or id>
+```
+
+From v0.2. The folders that feed a space, given with `--space` or your default space:
+
+- **project** (the default): a folder you and your agents work in, such as a code repository.
+  Agent conversations held in it, or in any folder inside it, are captured into this space. With
+  `--capture off`, nothing from them is stored at all, in this space or any other.
+- **notes:** a folder of Markdown notes for the space.
+- **agent:** a folder where an agent keeps its sessions, read besides the agent's usual one. Name
+  the agent with `--agent`, such as `--agent claude-code`.
+
+`--exclude` leaves out folders inside it, with patterns such as `node_modules/**`: `*` matches any
+characters but `/`, `**` any number of folders, and `?` one character. Repeat it for several.
+
+```sh
+knode folders add ~/code/site --space Work
+knode folders add ~/code/site/drafts --space Work --capture off
+knode folders list --space Work
+```
+
+Adding the same folder again changes it. Removing a folder keeps everything already captured from
+it. A folder inside your home folder is kept as `~/...`, so the space finds it on your other Macs
+even when your user name differs there; a folder that is not on this machine is kept and marked
+`missing here`.
+
+## Spaces and folders
+
+From v0.2. You can keep several spaces, such as one for work and one for personal life, and decide
+where each agent conversation goes by the folder it was held in. Knode Service decides, for each
+conversation:
+
+1. It looks for the project folders, in every space Knode knows, that hold the folder of the
+   conversation, and keeps the most specific one: `~/code/site/app` wins over `~/code`. The same
+   folder can be a project of two spaces, and then the conversation goes to both.
+2. The conversation is stored in those spaces, unless capture is off for the project, one of its
+   `--exclude` patterns leaves the folder out, or capture is off for the space. If none of them
+   takes it, it is **stored nowhere**: turning capture off for a project never sends its
+   conversations somewhere else.
+3. A conversation held in no project goes to the space of the agent folder it was read from, if
+   any, or else to your default space.
+
+`capture = false` and `capture_exclude` in `config.toml` still work for the whole machine, whatever
+the spaces say. A change to folders or settings applies to the next message an agent writes, without
+restarting anything.
 
 ## search
 
@@ -284,7 +371,7 @@ knode service <run|start|stop|status|install|uninstall>
 | `run` | Runs Knode Service in the foreground until you press Ctrl-C. If it is already running, says so |
 | `start` | Starts it in the background if it is not running |
 | `stop` | Stops it, however it was started |
-| `status` | Shows its version, process id, open spaces, connected clients, where conversations are captured, and whether it starts at login |
+| `status` | Shows its version, process id, open spaces, connected clients, the default space conversations are captured into, and whether it starts at login |
 | `install` | Starts it at login, and now: a launch agent on macOS, a systemd user unit on Linux |
 | `uninstall` | Stops starting it at login, and stops it |
 
@@ -293,9 +380,10 @@ stays stopped until your next login, or until a `knode` command or an agent need
 
 ### Capture
 
-While Knode Service runs, every Claude Code and Codex conversation becomes a node of kind
-`conversation` in your default space, kept current while the agent writes it. To turn it off, or to
-leave some projects out, add to `config.toml`:
+While Knode Service runs, every agent conversation becomes a node of kind `conversation`, kept
+current while the agent writes it, in the space its project belongs to, or else in your default
+space: see [Spaces and folders](#spaces-and-folders). To turn it off on this machine, or to leave
+some projects out whatever the spaces say, add to `config.toml`:
 
 ```toml
 capture = false
