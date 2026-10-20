@@ -204,6 +204,25 @@ When an agent's edit arrives, Command-Z starts over from there: to take back som
 before, use **Edit > Undo Last Change to Note**. Without Knode Service, the app saves the whole note
 as you type, as before, and the last save wins.
 
+## Attachments (v0.3)
+
+Keep images, PDFs and other files inside the space, with the note they belong to:
+
+- **Drop files in the text** of a note to attach them; each is written as `![[name]]` where you
+  dropped it. Drop them anywhere else on the note and they go where it ends.
+- **Paste an image**, such as a screenshot, into the text. It is attached as a PNG named after when
+  you pasted it, such as *Pasted image 2026-10-20 at 09.30.00.png*.
+- **Drop files on a canvas** to add a note there with each file attached.
+- Press Shift-Command-A, or click the paperclip in the toolbar, to see the files of the open note.
+  **Attach Files…** picks files to attach. Right-click a file to open it, show it in the Finder,
+  copy its `![[name]]`, or remove it.
+
+In the preview, `![[name]]` on a line of its own shows an image inline, and a PDF as its first page
+with **Open**; other files show their icon, name, size and **Open**. Clicking `[[name]]` opens the
+file. A file can be up to 100 MB; a folder is not attached, attach the files in it instead.
+Removing an attachment is a change you can undo: the file stays in the space. While Knode Service
+runs, attachments go through it, so your agents see them at once.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
