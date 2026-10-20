@@ -226,6 +226,7 @@ about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
 knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
+knode import --from readwise-api
 knode import <folder> --vault
 ```
 
@@ -253,6 +254,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Web pages (v0.3) | A saved page (`.html`), or an `http` or `https` URL | `web` |
 | Kindle (v0.3) | `My Clippings.txt` from the device, or a notebook exported from a Kindle app (`.html`) | `kindle` |
 | Readwise (v0.3) | The CSV export, or the Markdown export (a `.md` file or the unzipped folder) | `readwise` |
+| Readwise API (v0.3) | Nothing: Knode reads your highlights from Readwise with your access token | `readwise-api` |
 | Apple Notes (v0.3) | Nothing, to read the notes on this Mac, or a folder of notes exported as Markdown | `apple-notes` |
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
@@ -283,6 +285,9 @@ Everything `knode import` reads, with the kind `--from` takes:
 - **Kindle and Readwise:** one node of kind `source` per book or article, with each highlight, its
   note and its location. The same book from Kindle and from Readwise is one node, and importing
   again adds only the new highlights.
+- **Readwise API:** the same books, articles and highlights as the Readwise exports, read straight
+  from Readwise, so the API, the CSV and the Markdown export never make copies of each other. See
+  [Readwise through its API](#readwise-through-its-api).
 - **Apple Notes:** with no path, Knode reads the notes on this Mac, from the Notes database, only
   ever reading it. macOS lets only apps with Full Disk Access read it: if Knode cannot, it says
   how to turn it on in System Settings > Privacy & Security > Full Disk Access for the app that
@@ -306,6 +311,25 @@ knode import ~/Downloads/Export-notion.zip --json
 ```
 
 A path that is none of these fails and says what `knode import` takes.
+
+### Readwise through its API
+
+```sh
+knode readwise token set
+knode import --from readwise-api
+knode readwise token delete
+```
+
+Get your access token at [readwise.io/access_token](https://readwise.io/access_token).
+`knode readwise token set` reads it from standard input and keeps it in the same place as agent
+keys: the Keychain on macOS. You can also set the `READWISE_TOKEN` environment variable, which
+is used first. The token is only ever sent to Readwise: it is never written to a space, to the
+history or to the logs.
+
+`knode import --from readwise-api` reads every highlight the first time, then only what changed
+in Readwise since the last import into that space: the space remembers when it last synced, not
+the token. Highlights you discarded in Readwise are left out. When Readwise asks Knode to slow
+down, Knode waits as long as Readwise says and tries again.
 
 ## links
 
