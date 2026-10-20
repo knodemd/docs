@@ -250,6 +250,24 @@ indexed and search is by words. **Index Now** indexes every open space at once, 
 and tries a failed download again. The menu bar menu shows the same, with the same switch and
 **Index Now**.
 
+## Files deleted from the Markdown folder (v0.3)
+
+When a file is deleted from a space's live Markdown folder (see
+[markdown folder](02-cli.md#markdown-folder)), Knode never deletes its note. The note is kept,
+marked, and no longer written to the folder until you decide. The list of notes then shows a calm
+banner, such as **2 notes were deleted from the Markdown folder**. Click **Review** to see each
+note with the path its file had, and choose, for one note or for all of them:
+
+- **Delete** (or **Delete All in Knode**) deletes the note in Knode too, as you. Its history keeps
+  it: **Undo** right after brings it back, and so does restoring it later.
+- **Keep** (or **Keep All**) keeps the note, and its file is written to the folder again within a
+  few seconds.
+- **Later** (or **Decide Later**) leaves the note as it is. The banner stops asking about it until
+  you open the space again.
+
+The same choices are in the terminal as `knode markdown deleted` (see the
+[CLI](02-cli.md#markdown-deleted)).
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note

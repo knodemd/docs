@@ -20,6 +20,7 @@ Every command works without the app.
 | `knode attach <node> <file>` | Attaches a file to a node (v0.3) |
 | `knode attachments <node>` | Lists the files attached to a node (v0.3) |
 | `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space, both ways from v0.3 (v0.2) |
+| `knode markdown deleted` | Lists the notes whose file was deleted from the live Markdown folder, and keeps or deletes them (v0.3) |
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it; `knode connect --list` shows every agent |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
@@ -454,7 +455,7 @@ source, so it is in the history like any other:
 - a new file becomes a note, and gets an `id` in its frontmatter;
 - a renamed or moved file renames or moves its note;
 - a deleted file never deletes its note: the note is marked `markdown.deleted` and kept until you
-  decide;
+  decide (see [markdown deleted](#markdown-deleted));
 - `[[Title]]` links in the files become links between notes.
 
 When a note changed in Knode and in the folder since the file was last written, each field keeps
@@ -465,6 +466,23 @@ version stays in the history.
 Each space has its own folder. Knode warns you when the folder is inside iCloud Drive, Dropbox,
 OneDrive or Google Drive, because two programs syncing the same files can make conflicted copies; a
 space syncs on its own.
+
+## markdown deleted
+
+```sh
+knode markdown deleted [--keep <node> | --delete <node>]
+```
+
+From v0.3. Lists the notes whose file was deleted from the live Markdown folder, with the path the
+file had. They wait for you to decide:
+
+- `knode markdown deleted --keep <node>` keeps a note, by id or title: its file is written to the
+  folder again.
+- `knode markdown deleted --delete <node>` deletes the note in Knode too, as you. Its history keeps
+  it, so `knode restore` can bring it back.
+
+Use `all` as `<node>` to keep or delete every note listed. The Mac app asks the same with a banner
+(see [Mac app](04-mac-app.md#files-deleted-from-the-markdown-folder-v03)).
 
 ## Markdown in and out
 
