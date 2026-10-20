@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path>` | Imports a Claude, ChatGPT or Gemini data export (v0.3), a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, or notes from Apple Notes, Bear, Notion or Evernote. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -222,36 +222,89 @@ about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
 ## import
 
 ```sh
-knode import <path> [--vault]
+knode import <path or URL> [--from <kind>] [--json]
+knode import --from apple-notes
+knode import --from bear
+knode import <folder> --vault
 ```
 
-- **A folder:** every `.md` file in it and in its subfolders, leaving out hidden ones such as
-  `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or with
-  the `title` of its frontmatter; its text is kept as it is. A folder written by `knode export`
-  brings back every note with its id, kind, tags, dates, authors, links and properties. An
-  Obsidian vault keeps its frontmatter, tags and `[[links]]`. `--vault` only changes the wording
-  of the summary. See [Markdown in and out](#markdown-in-and-out).
-- **A Markdown file:** one note, titled with its first heading, or its file name when it has none.
-- **A Claude Code or Codex session file** (`.jsonl`): one node of kind `conversation`, with its
-  title, project and date, written as that agent.
-- **A data export** (from v0.3): the `.zip` you download from Claude, ChatGPT or Google Takeout
-  (Gemini Apps), or the folder it was extracted to. Knode tells which one it is by what is inside.
-  Each conversation becomes a node of kind `conversation`, with its title, model and dates; Claude
-  projects become notes, and their conversations link to them as `part-of`. It prints how many
-  conversations are new, updated and unchanged, and anything it skipped and why. Importing the
-  same export again, or a newer one of the same account, updates the conversations instead of
-  copying them.
+Brings what you already have into the space. Knode tells what a path is by its name and what is
+inside it; `--from <kind>` says it instead, when a path could be more than one thing (a folder of
+Markdown that Apple Notes exported, for example). It prints one line with how many nodes are new,
+updated and unchanged, then the nodes it wrote, anything it skipped and why, and what it read only
+in part. `--json` prints the same report as JSON.
 
-  ```sh
-  knode import ~/Downloads/data-2026-10-20.zip
-  ```
+Importing the same thing again does not make copies: Knode finds the nodes it wrote before and
+changes only what changed. A note you edited in Knode since is never overwritten by an import of
+the same, unchanged source.
+
+### Importing
+
+Everything `knode import` reads, with the kind `--from` takes:
+
+| Source | What to give it | `--from` |
+|---|---|---|
+| Claude, ChatGPT or Gemini (v0.3) | The data export `.zip`, or the folder it was extracted to | `export` |
+| A folder of Markdown, or an Obsidian vault | The folder | `markdown` |
+| A Markdown file | The `.md` file | `markdown` |
+| Claude Code or Codex | A session file (`.jsonl`) | `session` |
+| PDF (v0.3) | The `.pdf` file | `pdf` |
+| Web pages (v0.3) | A saved page (`.html`), or an `http` or `https` URL | `web` |
+| Kindle (v0.3) | `My Clippings.txt` from the device, or a notebook exported from a Kindle app (`.html`) | `kindle` |
+| Readwise (v0.3) | The CSV export, or the Markdown export (a `.md` file or the unzipped folder) | `readwise` |
+| Apple Notes (v0.3) | Nothing, to read the notes on this Mac, or a folder of notes exported as Markdown | `apple-notes` |
+| Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
+| Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
+| Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+
+- **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
+  such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
+  with the `title` of its frontmatter; its text is kept as it is. A folder written by
+  `knode export` brings back every note with its id, kind, tags, dates, authors, links and
+  properties. An Obsidian vault keeps its frontmatter, tags and `[[links]]`. `--vault` only changes
+  the wording of the summary. From v0.3, a file that is not Markdown, such as an image, is
+  attached to the note that embeds it with `![[name]]` (or links to it with `[[name]]`) when it is
+  in the same folder as the note; other such files are left out. A kind of link the space does not
+  have yet is added to it, so no link is lost. See [Markdown in and out](#markdown-in-and-out).
+- **A Markdown file:** one note, titled with its first heading, or its file name when it has none.
+- **A session file:** one node of kind `conversation`, with its title, project and date, written
+  as that agent.
+- **A data export:** Knode tells Claude, ChatGPT and Google Takeout (Gemini Apps) apart by what is
+  inside. Each conversation becomes a node of kind `conversation`, with its title, model and dates;
+  Claude projects become notes, and their conversations link to them as `part-of`. A newer export
+  of the same account updates the conversations instead of copying them.
+- **A PDF:** one node of kind `source` with its text, page by page, its title and author, and the
+  PDF attached. A PDF with no text, such as a scan, still becomes a node, and the report says so.
+- **A web page:** one node of kind `source` with the readable article as Markdown, its canonical
+  URL, author and site. Scripts on the page are never run. Knode only goes online when you give
+  it an `http` or `https` URL, and then fetches that one page. A page that changed updates its
+  node, unless you edited the node in Knode since: then the report says it was left as it is.
+- **Kindle and Readwise:** one node of kind `source` per book or article, with each highlight, its
+  note and its location. The same book from Kindle and from Readwise is one node, and importing
+  again adds only the new highlights.
+- **Apple Notes:** with no path, Knode reads the notes on this Mac, from the Notes database, only
+  ever reading it. macOS lets only apps with Full Disk Access read it: if Knode cannot, it says
+  how to turn it on in System Settings > Privacy & Security > Full Disk Access for the app that
+  runs Knode (your terminal, or Knode), or you can export the notes and import the exported
+  folder with `--from apple-notes`. Folders, checklists, links between notes, hashtags and
+  attached files are kept; tables, drawings and scans are listed as read only in part. Locked
+  notes and notes in Recently Deleted are left out.
+- **Bear:** with no path, Knode reads Bear's database on this Mac, which needs Full Disk Access in
+  the same way; a backup or TextBundles do not. Tags, nested tags, `[[links]]` and files are kept.
+- **Notion:** pages and sub-pages become notes, linked `part-of` their parent page, and each row
+  of a database becomes a note with its columns as properties.
+- **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
+  Encrypted text is left out.
+
+```sh
+knode import ~/Downloads/data-2026-10-20.zip
+knode import ~/Documents/"My Clippings.txt"
+knode import https://example.com/essays/on-rivers
+knode import --from apple-notes
+knode import ~/Downloads/Export-notion.zip --json
+```
 
 A path that is none of these fails and says what `knode import` takes.
-
-Importing the same files again does not make copies: a file that changed updates its note. From
-v0.3, a file that is not Markdown, such as an image, is attached to the note that embeds it with
-`![[name]]` (or links to it with `[[name]]`) when it is in the same folder as the note; other such
-files are left out. A kind of link the space does not have yet is added to it, so no link is lost.
 
 ## links
 
