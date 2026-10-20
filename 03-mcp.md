@@ -61,7 +61,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 
 | Tool | What it does |
 |---|---|
-| `search` | Finds nodes by words, best match first, with a snippet of each |
+| `search` | Finds nodes by words and meaning together, best match first, with a snippet of each. A `mode` picks words or meaning only (v0.3) |
 | `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks |
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text |
 | `link_nodes` | Links two nodes, by id or title: `related`, `part-of`, `derived-from` |
@@ -75,6 +75,23 @@ data as structured content.
 
 Every change an agent makes is kept with the name of the agent its key belongs to, such as
 `claude-code`, never a name it gives itself, so you can always see who wrote what.
+
+## Search
+
+Agents search the way `knode search` does: by default by words and by meaning together, so they
+find what was worked out earlier even when it was put in other words. The `search` tool takes a
+`mode`:
+
+| Mode | Finds |
+|---|---|
+| `hybrid` (default) | Notes that match the words or the meaning, ranked together |
+| `words` | Notes with every word: best for names, ids and exact terms |
+| `meaning` | Notes about the same thing, whatever words they use |
+
+Every answer says which mode ran. While search by meaning is not ready yet (the model is still
+downloading the first time, or the space is still being indexed), the search runs by words and
+the answer tells the agent why, so it can say so or try other words. Search by meaning runs on
+your machine; see [Search by words and meaning](02-cli.md#search-by-words-and-meaning). (v0.3)
 
 ## History and undo
 
