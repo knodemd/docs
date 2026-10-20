@@ -19,7 +19,7 @@ Every command works without the app.
 | `knode kinds [<action>]` | Lists the kinds of link, or adds or removes one of the space's own (v0.3) |
 | `knode attach <node> <file>` | Attaches a file to a node (v0.3) |
 | `knode attachments <node>` | Lists the files attached to a node (v0.3) |
-| `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space (v0.2) |
+| `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space, both ways from v0.3 (v0.2) |
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it; `knode connect --list` shows every agent |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
@@ -386,18 +386,34 @@ same id, so links to it work again.
 knode markdown folder [<folder> | --off]
 ```
 
-From v0.2. A **live Markdown folder** is a folder Knode keeps in step with a space, one way, from
-the space to the folder: every note is a `.md` file there, ready for Obsidian, git or any editor.
-It is off until you turn it on:
+From v0.2. A **live Markdown folder** is a folder Knode keeps in step with a space: every note is a
+`.md` file there, ready for Obsidian, git or any editor. It is off until you turn it on:
 
 - `knode markdown folder ~/Documents/work-notes` turns it on, or moves it. Knode Service writes
   the whole space there, then each change within a few seconds.
 - `knode markdown folder` shows where it is.
 - `knode markdown folder --off` turns it off; the files stay as they are.
 
-Each space has its own folder. Edits made in the folder are not read back: use `knode import` for
-that. Knode warns you when the folder is inside iCloud Drive, Dropbox, OneDrive or Google Drive,
-because two programs syncing the same files can make conflicted copies; a space syncs on its own.
+From v0.3 it works both ways. The space stays the source of truth, and Knode Service watches the
+folder and reads each edit made to its files back in as one more edit by you, with the file as its
+source, so it is in the history like any other:
+
+- a changed file updates its note, and an edit made in the folder while Knode was not running comes
+  in the next time the space opens;
+- a new file becomes a note, and gets an `id` in its frontmatter;
+- a renamed or moved file renames or moves its note;
+- a deleted file never deletes its note: the note is marked `markdown.deleted` and kept until you
+  decide;
+- `[[Title]]` links in the files become links between notes.
+
+When a note changed in Knode and in the folder since the file was last written, each field keeps
+the side that changed it. A body changed on both sides is merged when the note is being edited
+together (see [Editing together](04-mac-app.md#editing-together-v03)); otherwise the side changed last wins and the other
+version stays in the history.
+
+Each space has its own folder. Knode warns you when the folder is inside iCloud Drive, Dropbox,
+OneDrive or Google Drive, because two programs syncing the same files can make conflicted copies; a
+space syncs on its own.
 
 ## Markdown in and out
 
