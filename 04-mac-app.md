@@ -55,6 +55,51 @@ columns (**Side by Side**). From there:
 Edits you have not saved yet are saved before a restore or an undo. Press Escape or **Done** to go
 back to the note.
 
+### Undo your last change
+
+While you type, Command-Z and Shift-Command-Z undo and redo your typing, as in any text editor.
+To undo a whole saved change, even one you made yesterday, use the history from the keyboard:
+
+- **Edit > Undo Last Change to Note** (Option-Command-Z) undoes the most recent change **you** made
+  to the open note: an edit or a restore. Press it again to go further back.
+- **Edit > Redo Last Change to Note** (Shift-Option-Command-Z) puts back what you just undid. Once
+  you edit the note again, there is nothing left to redo.
+
+Changes made by your agents are never undone this way: undo them from the history. If someone else,
+such as an agent, changed the note after your change, Knode asks before undoing it, as above. Each
+undo and redo is a new version in the history, so nothing is lost.
+
+## Agents and permissions (v0.2)
+
+Each agent you connect has its own key and sees only the spaces you give it. Open
+**Knode > Settings… > Agents** (Command-Comma) to see every agent on this Mac:
+
+- its name and kind, such as `claude-code`, and when it was added;
+- its key: **Active**, with the start of its fingerprint, or **Revoked**. The key itself stays in
+  your Keychain and is never shown;
+- for each of your spaces, what it may do there:
+  - **No Access**: the space is invisible to it, not just empty.
+  - **Read**: it can read and search the space, but not change it.
+  - **Read and Write**: it can also write, and undo its own changes.
+
+A change takes effect on the agent's next call. **Revoke…** stops every key of the agent at once and
+takes away its access to every space. Its past changes keep its name. Connect it again to give it a
+new key.
+
+To change who can see one space, choose **Agent Access…** in the Space menu, or right-click the
+space.
+
+**Connect an Agent…** adds Knode to Claude Code, Codex, Gemini CLI or Claude Desktop, the same as
+`knode connect <agent>` in the terminal, and shows what the command printed. **Show What It Will
+Do** only describes the changes first. The first time, a new agent can read and write only your
+default space.
+
+Agents are managed through Knode Service. If it is not running, the screen offers to start it.
+
+> Permissions are not a sandbox. They decide what an agent can do through Knode. A program running
+> as you can still open the files of a space directly, or run the `knode` command, which acts for
+> you.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
@@ -71,6 +116,7 @@ menu shows:
 - **Start Knode Service** or **Stop Knode Service**;
 - **Run at Login**, to start the service every time you log in (the same as
   `knode service install`);
+- **Agents and Access…**, to open the permissions screen;
 - **Quit Knode**.
 
 Closing the window keeps Knode in the menu bar; quit it from the menu.
@@ -84,7 +130,6 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 
 ## Next
 
-- Permissions per agent and per space (v0.2).
 - A map of your nodes and links (v0.3).
 
 See the [roadmap](https://knode.md/plan) for the rest.
