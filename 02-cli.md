@@ -216,8 +216,6 @@ about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
 
   `knode index run` turns it on again. `KNODE_EMBEDDINGS=off` in the environment of Knode Service
   turns it off too.
-- **Raspberry Pi and other ARM Linux machines:** search by meaning is not available there yet, so
-  search is by words.
 
 `knode service status` shows the same as `knode index status`.
 
