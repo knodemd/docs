@@ -223,6 +223,33 @@ file. A file can be up to 100 MB; a folder is not attached, attach the files in 
 Removing an attachment is a change you can undo: the file stays in the space. While Knode Service
 runs, attachments go through it, so your agents see them at once.
 
+## Search by meaning (v0.3)
+
+The search in the toolbar finds notes by the words they contain and by what they mean, so it also
+finds a note about "what we charge" when you search for *pricing*. The menu next to the search
+picks how:
+
+- **Words and Meaning**, the default: both, ranked together.
+- **Words**: only notes with the words you type.
+- **Meaning**: notes about what you type, even in other words or another language.
+
+Each result shows the text around the words found, in bold, or the passage nearest in meaning, and
+how it was found: **Words 1** is the first note by words, **Meaning 2** the second by meaning. The
+app remembers the mode you chose.
+
+Search by meaning runs on your Mac, in Knode Service, with a small model; nothing is sent anywhere.
+The first time, Knode downloads the model once (about 490 MB), then indexes each open space in the
+background, and waits while your Mac runs on battery. Until a space is ready, the search runs by
+words and says why above the results, such as how many notes are left to index. Without Knode
+Service, the app searches by words and says so.
+
+**Settings > Search** shows whether search by meaning is on, the model and its download, and how
+many notes of each open space are indexed and how many wait. **Search by Meaning** turns it on or
+off (`embeddings` in `config.toml`, the same as `knode index off`); off, nothing is downloaded or
+indexed and search is by words. **Index Now** indexes every open space at once, even on battery,
+and tries a failed download again. The menu bar menu shows the same, with the same switch and
+**Index Now**.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
@@ -241,6 +268,8 @@ menu shows:
 - **Start Knode Service** or **Stop Knode Service**;
 - **Run at Login**, to start the service every time you log in (the same as
   `knode service install`);
+- search by meaning: the model, how far each open space is indexed, a switch to turn it on or off
+  and **Index Now** (from v0.3);
 - **Agents and Access…**, to open the permissions screen;
 - **Quit Knode**.
 
