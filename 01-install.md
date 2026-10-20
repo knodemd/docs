@@ -23,6 +23,14 @@ add. To pick a version or another directory:
 curl -fsSL https://knode.md/install.sh | KNODE_VERSION=0.2.0 KNODE_INSTALL_DIR=~/bin sh
 ```
 
+On Linux there are two builds. From v0.3 the script picks the static musl build on systems that use
+musl, such as Alpine, and on glibc older than 2.35, and the glibc build everywhere else. To choose
+one yourself, set `KNODE_LIBC` to `gnu` or `musl`:
+
+```sh
+curl -fsSL https://knode.md/install.sh | KNODE_LIBC=musl sh
+```
+
 Check it works:
 
 ```sh
@@ -107,8 +115,10 @@ claude mcp add knode -- knode mcp --agent claude-code
 ## Requirements
 
 macOS 26 or later on Apple silicon or Intel. Linux on x86_64 or arm64 from v0.2, with glibc 2.35 or
-later (for example Ubuntu 22.04, Debian 12, Fedora 36 or newer). Distributions built on musl, such as
-Alpine, are not supported yet.
+later (for example Ubuntu 22.04, Debian 12, Fedora 36 or newer). From v0.3, any other Linux on
+x86_64 or arm64 too, including musl distributions such as Alpine and older glibc, through the static
+musl build that the install script picks for them. Homebrew on Linux always installs the glibc
+build.
 
 ## Uninstall
 
