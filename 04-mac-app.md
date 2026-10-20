@@ -188,11 +188,27 @@ when you remove the `[[link]]` from the text.
 it reads from this note (*depends on*), how it reads from the other one (*needed by*), or that it
 reads the same both ways, and what it means, for you and your agents.
 
+## Editing together (v0.3)
+
+While Knode Service runs, you and your agents can write in the same note at the same time:
+
+- What an agent writes appears in the open note as it writes it, while you keep typing. Your cursor
+  and your selection stay with the words around them.
+- What you type is merged with what the agents write, so nobody overwrites anybody. Knode sends
+  your typing a moment after you pause, and at least once a second while you keep going.
+- Under the title, **Claude Code is editing** (or the name of whichever agent or person it is) shows
+  for a few seconds after someone else changes the note.
+- Each merged edit is a change in the history of the note, with who made it.
+
+When an agent's edit arrives, Command-Z starts over from there: to take back something you wrote
+before, use **Edit > Undo Last Change to Note**. Without Knode Service, the app saves the whole note
+as you type, as before, and the last save wins.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
 an agent writes appears in the list as it is written, and the note you are reading updates when an
-agent changes it (unless you are editing it). When the service is not running, the app opens the
+agent changes it, even while you edit it (from v0.3). When the service is not running, the app opens the
 space itself and keeps working; it moves back to the service when the service starts. Renaming a
 space, its icon, capture and folders go through the service too while it runs, so your agents and
 capture see each change at once.

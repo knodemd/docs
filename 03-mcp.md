@@ -62,8 +62,8 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | Tool | What it does |
 |---|---|
 | `search` | Finds nodes by words, best match first, with a snippet of each |
-| `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks (each as it reads from the node, from v0.3) and attached files (v0.3) |
-| `write_node` | Creates a node, or edits one by id or title; can append to the end of the text |
+| `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks (each as it reads from the node, from v0.3), attached files (v0.3) and the version of the text it read (v0.3) |
+| `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
 | `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
 | `recent` | Lists the nodes that changed most recently |
 | `history` | Lists the latest changes to a node or to the whole space, with who made them (v0.2) |
@@ -79,6 +79,26 @@ data as structured content.
 
 Every change an agent makes is kept with the name of the agent its key belongs to, such as
 `claude-code`, never a name it gives itself, so you can always see who wrote what.
+
+## Editing at the same time
+
+From v0.3, you and your agents can edit the same note at once, and nothing anyone writes is lost.
+Knode merges the edits with [Loro](https://loro.dev) instead of letting the last one overwrite the
+others:
+
+- `read_node` gives the version of the text it read. When the agent rewrites the note with
+  `write_node`, it passes that version back (or Knode uses the one the agent read last), and only
+  what the agent changed in that text is applied. Words you typed meanwhile, or another agent's
+  lines, stay where they are.
+- When someone did change the note meanwhile, `write_node` says so: the agent's edit was merged with
+  theirs, and it should read the note again before changing it further.
+- With `append`, the text is added to the end of the note as it is when the agent writes, after a
+  blank line.
+- Every merged edit is its own change in the history, with who made it, so it can be undone like
+  any other.
+
+Titles, kinds and tags are short values: the last one written is kept, and the history has the
+others.
 
 ## Files
 
