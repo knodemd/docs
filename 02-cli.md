@@ -264,7 +264,8 @@ Everything `knode import` reads, with the kind `--from` takes:
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
   with the `title` of its frontmatter; its text is kept as it is. A folder written by
   `knode export` brings back every note with its id, kind, tags, dates, authors, links and
-  properties. An Obsidian vault keeps its frontmatter, tags and `[[links]]`. `--vault` only changes
+  properties. An Obsidian vault keeps its frontmatter, tags and `[[links]]`, including links written
+  as paths, such as `[[Projects/README]]`, which find the note imported from that file. `--vault` only changes
   the wording of the summary. From v0.3, a file that is not Markdown, such as an image, is
   attached to the note that embeds it with `![[name]]` (or links to it with `[[name]]`) when it is
   in the same folder as the note; other such files are left out. A kind of link the space does not
