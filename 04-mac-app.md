@@ -100,6 +100,67 @@ Agents are managed through Knode Service. If it is not running, the screen offer
 > as you can still open the files of a space directly, or run the `knode` command, which acts for
 > you.
 
+## The map: graph and canvases (v0.3)
+
+### Graph
+
+Press Shift-Command-M, or click the graph button in the toolbar, to see the whole space as a graph:
+every note is a point and every link a line between two. Press it again to go back to your notes.
+
+- Each kind of note has its own mark: notes, conversations, decisions, ideas, sources and canvases.
+  The legend in the corner says which is which.
+- Faint lines are links written in the text with `[[double brackets]]`; dashed lines are typed
+  links, such as *part of* or *answers*. Point at a note to see how each of its links reads, or at a
+  line to see its kind.
+- Drag the background, or scroll, to move around. Pinch, scroll while holding Command, or use the
+  zoom buttons to zoom. **Fit** shows everything.
+- Drag a note to move it; the others make room. Click a note to open it.
+- **Find a note:** type part of a title and press Return to centre it and mark it.
+- **Filter:** show only some kinds of note, kinds of link, tags, people or agents, or notes changed
+  today, in the past 7 or 30 days, or in the past year.
+
+**Saved views.** The **Whole Space** menu saves what you see as a named view: its filters, the
+part of the graph on screen and where every note is. Open it again from the same menu and the graph
+looks exactly as you left it, on any Mac that opens the space. Moving notes in a saved view keeps
+their new places. From the same menu you can save new filters to the view, rename it or delete it.
+
+### Canvases
+
+A canvas is a board where you arrange notes by hand. Choose **File > New Canvas** (Option-Command-N);
+it appears in the list like a note, and opens as a board.
+
+- **Add notes:** drag them from the list onto the board, or click **Add Notes** and pick them.
+- **Move and resize:** drag a note; drag its corner to resize it. Shift-click to select several and
+  move them together. Double-click a note to open it.
+- **Show only the title:** right-click a note and choose **Show Title Only**.
+- **Groups:** click **New Group** to draw a labelled box, around the selected notes if any. Notes
+  dropped inside a group join it and move with it. Click the arrow on a group to fold it, and
+  double-click its label to rename it.
+- **Link notes:** right-click a note, choose **Link To**, the other note and how they relate.
+- **Remove from canvas:** right-click a note. The note stays in your space.
+- Zoom and move around as in the graph.
+
+Everything is saved as you go. Moving things around is not a change to your notes, so it never
+fills their history; while the canvas is open, Command-Z and Shift-Command-Z undo and redo your
+moves, additions and removals.
+
+## Links and backlinks (v0.3)
+
+Press Shift-Command-L, or click the link button in the toolbar, to see the links of the open note
+beside it:
+
+- **Links:** the notes this one links to, grouped by how they read from here, such as *mentions* or
+  *part of*.
+- **Backlinks:** the notes that link here, read the other way, such as *mentioned in* or *has part*.
+
+Click a note to open it. Right-click a typed link to remove it; links written in the text go away
+when you remove the `[[link]]` from the text.
+
+**Add Link…** links the open note to another and says how they relate: *related to*, *part of*,
+*derived from*, *answers* or *contradicts*. Choose **New Kind** to name a relation of your own: how
+it reads from this note (*depends on*), how it reads from the other one (*needed by*), or that it
+reads the same both ways, and what it means, for you and your agents.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
@@ -129,7 +190,5 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 [Install](01-install.md#the-mac-app).
 
 ## Next
-
-- A map of your nodes and links (v0.3).
 
 See the [roadmap](https://knode.md/plan) for the rest.
