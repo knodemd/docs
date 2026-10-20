@@ -14,7 +14,7 @@ Every command works without the app.
 | `knode undo <change>` | Undoes a change (v0.2) |
 | `knode restore <node> <version>` | Puts a node back to an earlier version, or brings back a deleted one (v0.2) |
 | `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space (v0.2) |
-| `knode connect <agent>` | Gives an agent its own key and adds Knode to it: `claude-code`, `codex`, `gemini`, `claude-desktop` |
+| `knode connect <agent>` | Gives an agent its own key and adds Knode to it; `knode connect --list` shows every agent |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
 | `knode spaces [<action>]` | Lists the spaces Knode knows, with their icons; renames one, sets its icon, makes it the default or turns capture into it on or off (v0.2) |
@@ -301,7 +301,11 @@ We charge **per seat**. See [[Roadmap]].
 
 ```sh
 knode connect <agent> [--space <path>] [--print]
+knode connect --list
 ```
+
+`--list` shows every agent Knode can be added to, whether it is on this machine, and the file it
+would change.
 
 Connecting an agent does two things:
 
@@ -318,10 +322,23 @@ Connecting an agent does two things:
 | `codex` | `codex` | Runs `codex mcp add knode -- <path to knode> mcp --agent codex`, or adds `[mcp_servers.knode]` to `~/.codex/config.toml` when `codex` is not installed |
 | `gemini` | `gemini-cli` | Adds `knode` to `mcpServers` in `~/.gemini/settings.json` |
 | `claude-desktop` | `claude-desktop` | Adds `knode` to `mcpServers` in `claude_desktop_config.json` |
+| `cursor` | `cursor` | Adds `knode` to `mcpServers` in `~/.cursor/mcp.json` |
+| `windsurf` | `windsurf` | Adds `knode` to `mcpServers` in Windsurf's `mcp_config.json` |
+| `cline` | `cline` | Adds `knode` to `mcpServers` in `cline_mcp_settings.json`, in every editor Cline is installed in and in Cline CLI |
+| `roo-code` | `roo-code` | Adds `knode` to `mcpServers` in `mcp_settings.json`, in every editor Roo Code is installed in |
+| `copilot-cli` | `copilot-cli` | Adds `knode` to `mcpServers` in `~/.copilot/mcp-config.json` |
+| `vscode` | `vscode` | Adds `knode` to `servers` in the VS Code user `mcp.json`, for GitHub Copilot agent mode |
+| `opencode` | `opencode` | Adds `knode` to `mcp` in `~/.config/opencode/opencode.json` |
+| `amp` | `amp` | Adds `knode` to `amp.mcpServers` in `~/.config/amp/settings.json` |
+| `zed` | `zed` | Adds `knode` to `context_servers` in `~/.config/zed/settings.json` |
+| `aider` | - | Changes nothing and gives no key: Aider has no MCP client, so it prints what to do instead |
 
 When it edits a settings file, it changes only the `knode` entry, keeps a copy of the file as
-`<file>.knode-backup` first, and does nothing if Knode is already there. `--print` shows what it
-would do without doing it. If `claude` is not installed, it prints the command to run later.
+`<file>.knode-backup` first, keeps its permissions and, where the agent allows them, its comments,
+and does nothing if Knode is already there. A file the agent could not read is left untouched.
+`--print` shows what it would do without doing it. If `claude` is not installed, it prints the
+command to run later. [Agents and MCP](03-mcp.md#where-each-agent-is-configured) lists every file
+on macOS and Linux.
 
 Running it again keeps the agent's key and access. If the key is missing or was revoked, the agent
 gets a new one and its old keys stop working.

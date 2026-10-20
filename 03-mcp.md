@@ -1,7 +1,8 @@
 # 3 - Agents and MCP
 
 Knode gives every agent the same memory through MCP, the Model Context Protocol. Claude Code, Codex,
-Gemini and Claude Desktop all read and write the same spaces.
+Gemini, Claude Desktop, Cursor, Windsurf, Cline, Roo Code, GitHub Copilot, OpenCode, Amp and Zed
+all read and write the same spaces.
 
 > Not released yet: arrives with v0.1.
 
@@ -16,6 +17,41 @@ See [Install](01-install.md) for every agent, and [the command line](02-cli.md#c
 and lets it read and write your default space only. The server itself is `knode mcp --agent
 <name>`, which agents start on their own; it uses your default space, or the one in
 `--space <path>` or `KNODE_SPACE`.
+
+### Where each agent is configured
+
+`knode connect --list` shows every agent, whether it is on this machine, and the file it would
+change. On macOS and Linux:
+
+| Agent | What `knode connect` changes |
+|---|---|
+| `claude-code` | Runs `claude mcp add --scope user knode -- <path to knode> mcp --agent claude-code` |
+| `codex` | Runs `codex mcp add`, or adds `[mcp_servers.knode]` to `~/.codex/config.toml` |
+| `gemini` | `mcpServers` in `~/.gemini/settings.json` |
+| `claude-desktop` | `mcpServers` in `claude_desktop_config.json` |
+| `cursor` | `mcpServers` in `~/.cursor/mcp.json` |
+| `windsurf` | `mcpServers` in `~/.config/devin/mcp_config.json`, and in `~/.codeium/windsurf/mcp_config.json` when an earlier Windsurf is installed |
+| `cline` | `mcpServers` in `cline_mcp_settings.json` of every editor Cline is installed in, and of Cline CLI (`~/.cline`) |
+| `roo-code` | `mcpServers` in `mcp_settings.json` of every editor Roo Code is installed in |
+| `copilot-cli` | `mcpServers` in `~/.copilot/mcp-config.json` (or `$COPILOT_HOME`) |
+| `vscode` | `servers` in your VS Code user `mcp.json` (and VS Code Insiders') |
+| `opencode` | `mcp` in `~/.config/opencode/opencode.json`, or `opencode.jsonc` |
+| `amp` | `amp.mcpServers` in `~/.config/amp/settings.json`, or `settings.jsonc` |
+| `zed` | `context_servers` in `~/.config/zed/settings.json` |
+| `aider` | Nothing: Aider has no MCP client yet |
+
+Every time, only the `knode` entry is added or replaced. The file is copied to
+`<file>.knode-backup` first and keeps its permissions, and nothing changes if Knode is already
+there. Where the agent accepts comments in its settings (VS Code, Zed, OpenCode and Amp), your
+comments are kept. A file the agent itself could not read, such as one with a typo, is left
+untouched and `knode connect` says what is wrong. Cline and Roo Code are only set up in editors
+where they are installed; if there are none, nothing is changed.
+
+**Aider** cannot run MCP servers yet. To give it what is in Knode, keep a live Markdown copy of a
+space with `knode markdown folder <dir>` and add notes with `aider --read <dir>/<note>.md`, or run
+`/run knode search <words>` inside Aider.
+
+## How it works
 
 `knode mcp` reads and writes through Knode Service, starting it in the background when it is not
 running, so what one agent writes is seen at once by the others, by the app and by the command line.

@@ -60,15 +60,39 @@ installed, for example with Homebrew, the app uses that one, says so and install
 
 ```sh
 knode connect claude-code
-knode connect codex
-knode connect gemini
-knode connect claude-desktop
 ```
 
-Or add the MCP server by hand, for example in Claude Code:
+To see every agent Knode can be added to, and which of them are on this machine:
 
 ```sh
-claude mcp add knode -- knode mcp
+knode connect --list
+```
+
+| Agent | Command |
+|---|---|
+| Claude Code | `knode connect claude-code` |
+| Codex | `knode connect codex` |
+| Gemini CLI | `knode connect gemini` |
+| Claude Desktop | `knode connect claude-desktop` |
+| Cursor | `knode connect cursor` |
+| Windsurf | `knode connect windsurf` |
+| Cline (in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf, and Cline CLI) | `knode connect cline` |
+| Roo Code (in the same editors) | `knode connect roo-code` |
+| GitHub Copilot CLI | `knode connect copilot-cli` |
+| GitHub Copilot in VS Code | `knode connect vscode` |
+| OpenCode | `knode connect opencode` |
+| Amp | `knode connect amp` |
+| Zed | `knode connect zed` |
+| Aider | No MCP support yet; `knode connect aider` prints what you can do instead |
+
+Add `--print` to see what would change first. [Agents and MCP](03-mcp.md#where-each-agent-is-configured)
+lists the file each one changes.
+
+Or add the MCP server by hand, once the agent has a key from `knode connect <agent>`. For example,
+in Claude Code:
+
+```sh
+claude mcp add knode -- knode mcp --agent claude-code
 ```
 
 ## Later
