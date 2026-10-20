@@ -7,7 +7,8 @@ Every command works without the app.
 | Command | What it does |
 |---|---|
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
-| `knode search <words>` | Searches the space and prints the matching nodes |
+| `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
+| `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
 | `knode import <path>` | Imports a Claude, ChatGPT or Gemini data export (v0.3), a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
@@ -34,6 +35,7 @@ Every command works without the app.
 knode init work
 knode import ~/notes
 knode search pricing decision
+knode search --meaning how did we decide what to charge
 knode connect claude-code
 knode history
 knode export ~/Documents/work-notes
@@ -162,13 +164,62 @@ restarting anything.
 ## search
 
 ```sh
-knode search <words> [--limit <n>] [--json]
+knode search <words> [--meaning | --words] [--limit <n>] [--json]
 ```
 
 Prints the best matches first, each with its kind, date, who changed it last, a snippet and its
-id. Every word must appear; the last one also matches the start of a word. Case and accents are
-ignored. `--limit` (or `-n`) sets how many nodes to print, 10 by default; `--json` prints them as
-JSON.
+id. By default it ranks matches by words and by meaning together, so it also finds notes that
+say the same thing in other words, or in another language (v0.3, see [Search](#search-by-words-and-meaning)).
+
+- `--words` searches by the words only: every word must appear, and the last one also matches
+  the start of a word. Case and accents are ignored. Best for names, ids and exact terms.
+- `--meaning` searches by meaning only: notes about what you asked, whatever words they use.
+- `--limit` (or `-n`) sets how many nodes to print, 10 by default.
+- `--json` prints `{ "mode", "hits", "note" }`: the mode that ran, the matches, and why the
+  search ran by words when meaning was asked for but is not ready yet.
+
+When search by meaning is not ready yet (the model is still downloading, or the space is still
+being indexed), the search runs by words and prints a note saying why.
+
+## index
+
+```sh
+knode index <status|run|off>
+```
+
+| Action | What it does |
+|---|---|
+| `status` | Shows whether search by meaning is on, the search model (downloading, ready) and how many notes of the space wait to be indexed. `--json` prints it as JSON |
+| `run` | Turns search by meaning on and indexes the space now, even on battery, showing its progress until it is done. The first time, it waits for the model to download |
+| `off` | Turns search by meaning off: nothing is downloaded or indexed, and search is by words. What is already indexed stays |
+
+You rarely need these: Knode Service indexes in the background by itself.
+
+## Search by words and meaning
+
+Search by meaning finds notes by what they are about, not only by the words they share with
+your query: "how did we decide what to charge" finds the note titled "Pricing". It runs on your
+machine, with a small open model ([multilingual-e5-small](https://huggingface.co/intfloat/multilingual-e5-small),
+about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
+
+- **The first time** there is something to index, Knode Service downloads the model once, about
+  490 MB, in the background, and checks every file. It is kept in the Knode home folder, in
+  `models`. Until it is ready, search is by words.
+- **Indexing** runs in the background: when a space opens, and a couple of seconds after each
+  change. It never slows down writing, and it pauses while your laptop runs on battery (`knode
+  index run` indexes anyway). A note that is not indexed yet is still found by its words.
+- **Turning it off:** `knode index off`, or in `config.toml`:
+
+  ```toml
+  embeddings = "off"
+  ```
+
+  `knode index run` turns it on again. `KNODE_EMBEDDINGS=off` in the environment of Knode Service
+  turns it off too.
+- **Raspberry Pi and other ARM Linux machines:** search by meaning is not available there yet, so
+  search is by words.
+
+`knode service status` shows the same as `knode index status`.
 
 ## import
 
@@ -486,7 +537,7 @@ knode service <run|start|stop|status|install|uninstall>
 | `run` | Runs Knode Service in the foreground until you press Ctrl-C. If it is already running, says so |
 | `start` | Starts it in the background if it is not running |
 | `stop` | Stops it, however it was started |
-| `status` | Shows its version, process id, open spaces, connected clients, the default space conversations are captured into, and whether it starts at login |
+| `status` | Shows its version, process id, open spaces, connected clients, the default space conversations are captured into, how far search by meaning has indexed the spaces, and whether it starts at login |
 | `install` | Starts it at login, and now: a launch agent on macOS, a systemd user unit on Linux |
 | `uninstall` | Stops starting it at login, and stops it |
 
