@@ -8,7 +8,12 @@ Every command works without the app.
 |---|---|
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space and prints the matching nodes |
-| `knode import <path>` | Imports a folder of Markdown files, a Markdown file or an agent session file |
+| `knode import <path>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file |
+| `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
+| `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
+| `knode undo <change>` | Undoes a change (v0.2) |
+| `knode restore <node> <version>` | Puts a node back to an earlier version, or brings back a deleted one (v0.2) |
+| `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space (v0.2) |
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it: `claude-code`, `codex`, `gemini`, `claude-desktop` |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
@@ -24,6 +29,8 @@ knode init work
 knode import ~/notes
 knode search pricing decision
 knode connect claude-code
+knode history
+knode export ~/Documents/work-notes
 ```
 
 ## Which space
@@ -31,7 +38,8 @@ knode connect claude-code
 A space is a `.knode` file. Every node in it is Markdown, so what you import keeps its text, its
 links and its structure. See [the .knode format](05-format.md).
 
-`knode search`, `knode import` and `knode mcp` use, in this order:
+`knode search`, `knode import`, `knode export`, `knode history`, `knode undo`, `knode restore`,
+`knode markdown` and `knode mcp` use, in this order:
 
 1. the space given with `--space <path>`;
 2. the space in the `KNODE_SPACE` environment variable;
@@ -45,10 +53,10 @@ folder in `KNODE_HOME` if you set it.
 default_space = "/Users/you/Knode/work.knode"
 ```
 
-`knode search`, `knode import`, `knode init` and `knode mcp` read and write through Knode Service,
-and start it in the background when it is not running. If it cannot start, `knode search`,
-`knode import` and `knode init` open the space directly and print a warning; `knode mcp` does not,
-because agents only reach spaces through Knode Service, which checks what each may do.
+Every command that uses a space reads and writes through Knode Service, and starts it in the
+background when it is not running. If it cannot start, the commands open the space directly and
+print a warning; `knode mcp` does not, because agents only reach spaces through Knode Service,
+which checks what each may do.
 
 ## init
 
@@ -73,17 +81,126 @@ JSON.
 ## import
 
 ```sh
-knode import <path>
+knode import <path> [--vault]
 ```
 
 - **A folder:** every `.md` file in it and in its subfolders, leaving out hidden ones such as
-  `.git` and `.obsidian`. Each file becomes a note: its first heading is the title, or the file
-  name when it has none, and its text is kept as it is.
-- **A Markdown file:** one note, the same way.
+  `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or with
+  the `title` of its frontmatter; its text is kept as it is. A folder written by `knode export`
+  brings back every note with its id, kind, tags, dates, authors, links and properties. An
+  Obsidian vault keeps its frontmatter, tags and `[[links]]`. `--vault` only changes the wording
+  of the summary. See [Markdown in and out](#markdown-in-and-out).
+- **A Markdown file:** one note, titled with its first heading, or its file name when it has none.
 - **A Claude Code or Codex session file** (`.jsonl`): one node of kind `conversation`, with its
   title, project and date, written as that agent.
 
-Importing the same files again does not make copies.
+Importing the same files again does not make copies: a file that changed updates its note. Files
+that are not Markdown, such as images, are left out for now.
+
+## export
+
+```sh
+knode export <folder>
+```
+
+From v0.2. Writes every node of the space to `<folder>` as a `.md` file, creating the folder if
+needed, and prints how many files it wrote, left as they were, and removed. Exporting again to the
+same folder rewrites only what changed. See [Markdown in and out](#markdown-in-and-out).
+
+## history
+
+```sh
+knode history [<node>] [--limit <n>] [--json]
+```
+
+From v0.2. Without a node, lists the latest changes to the space, newest first: the change number,
+when, what was done, to which note, and who did it, a person or an agent. With a node (its id or
+exact title, even a deleted one by id), lists the changes to that node with the **version** each one
+wrote. `--limit` (or `-n`) sets how many changes to show, 20 by default; `--json` prints them as
+JSON.
+
+```text
+"Pricing decision"  01K83N6V4W5D2XQJ0Y7RZ9T1AB
+  change 43     2026-10-20 09:31  undo  by you (person)  version 59  (undoes change 42)
+  change 42     2026-10-20 09:30  node.update  by claude-code (agent)  version 58
+  change 41     2026-10-20 09:12  node.create  by you (person)  version 57
+```
+
+## undo
+
+```sh
+knode undo <change> [--force]
+```
+
+From v0.2. Undoes a change, by its number from `knode history`: a note it created is deleted, a
+note it changed or deleted goes back to how it was just before, and a link it made or removed is
+put back. The undo is one more change, so nothing is lost: undoing it redoes the change.
+
+If someone changed the same notes later, `knode undo` stops and names those changes, because
+undoing would overwrite them. Check them with `knode history`, then pass `--force` to undo anyway.
+Changes to settings are not undone: set them again instead.
+
+## restore
+
+```sh
+knode restore <node> <version>
+```
+
+From v0.2. Puts a note back to one of its versions from `knode history <node>`, as a new change.
+To bring back a deleted note, restore it to the version its delete kept: it comes back with the
+same id, so links to it work again.
+
+## markdown folder
+
+```sh
+knode markdown folder [<folder> | --off]
+```
+
+From v0.2. A **live Markdown folder** is a folder Knode keeps in step with a space, one way, from
+the space to the folder: every note is a `.md` file there, ready for Obsidian, git or any editor.
+It is off until you turn it on:
+
+- `knode markdown folder ~/Documents/work-notes` turns it on, or moves it. Knode Service writes
+  the whole space there, then each change within a few seconds.
+- `knode markdown folder` shows where it is.
+- `knode markdown folder --off` turns it off; the files stay as they are.
+
+Each space has its own folder. Edits made in the folder are not read back: use `knode import` for
+that. Knode warns you when the folder is inside iCloud Drive, Dropbox, OneDrive or Google Drive,
+because two programs syncing the same files can make conflicted copies; a space syncs on its own.
+
+## Markdown in and out
+
+From v0.2. Every note is Markdown, so a space can always go to a folder of `.md` files and come back
+without losing anything. `knode export` and the live Markdown folder write one file per note, named
+after its title, with YAML frontmatter:
+
+```markdown
+---
+id: 01K83N6V4W5D2XQJ0Y7RZ9T1AB
+kind: decision
+tags: [pricing]
+created: 2026-10-20T09:12:00.000Z
+created_by:
+  kind: person
+  actor: you
+updated: 2026-10-20T09:30:41.511Z
+updated_by:
+  kind: agent
+  actor: claude-code
+links:
+  part-of: [01K83N8Q2M4C7ZP1Y5X3RW0B9D]
+---
+We charge **per seat**. See [[Roadmap]].
+```
+
+- `[[links]]` show the current title of the note they point at, and are rewritten when it is
+  renamed.
+- Notes in subfolders of an imported vault are written back to the same subfolders.
+- Knode only ever changes or removes files it wrote: your own files in the folder are never
+  touched.
+- `knode import` of an exported folder, into the same space or another one, keeps every note's id,
+  dates and authors, so exporting the copy gives the same files.
 
 ## connect
 
