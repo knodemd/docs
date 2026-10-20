@@ -18,22 +18,49 @@ The Mac app shows your spaces and lets you read, write and organise them.
 ## Several spaces (v0.2)
 
 Keep work and personal memory apart in different spaces. The sidebar lists every space you created
-or opened, like libraries in Apple Music. The first time, it shows your default space, the spaces
-you opened recently and the spaces in `~/Knode`.
+or opened, like libraries in Apple Music. The first time, it shows your default space, the other
+spaces Knode knows, the spaces you opened recently and the spaces in `~/Knode`.
+
+Every space you create or open in the app is added to the spaces Knode knows (`spaces` in
+`config.toml`), so Knode Service captures conversations into it by its folders (see below).
 
 - **New space:** File > New Space… (Shift-Command-N), or **New Space…** at the bottom of the
   sidebar. Give it a name and choose where it goes (`~/Knode` by default). Turn on **Use for agents
   and capture** to make it the space your agents and captured conversations write to.
 - **Switch:** click a space, or press Command-1 to Command-9 for the first nine.
 - **Rename:** Space > Rename…, or right-click the space. This changes the name Knode shows; the
-  `.knode` file keeps its name.
+  `.knode` file keeps its name. A rename or a new icon made elsewhere, such as with
+  `knode spaces rename`, shows in the sidebar at once while Knode Service runs.
 - **Icon:** Space > Choose Icon… and pick one emoji. The icon is stored in the space, so it follows
   the space to another Mac.
 - **Default space for agents:** the space marked with a sparkle is the one the `knode` command, your
   agents and capture use when none is named (`default_space` in `config.toml`). Change it with
   **Use for Agents and Capture** in the Space menu or the right-click menu.
 - **Remove from list:** takes the space off the sidebar. Its files stay where they are; open it
-  again with File > Open Space… (Command-O).
+  again with File > Open Space… (Command-O). Knode asks whether to also **stop capturing into it**:
+  only then is it taken out of the spaces Knode knows (and out of the default, if it was), so
+  capture no longer writes to it.
+
+### Folders and capture
+
+Each space keeps the folders that feed it. Choose **Folders and Capture…** in the Space menu or the
+right-click menu of a space, or open Settings > Spaces. There you can:
+
+- turn **capture into this space** on or off: off, nothing captured is written to it;
+- **add a folder** with the **Add Folder** menu: a **project** (a folder you and your agents work
+  in, such as a code repository), a **notes** folder of Markdown files, or an **agent** folder
+  where an agent keeps its sessions (choose the agent from the list);
+- turn **capture off for one folder**, or remove it. Removing a folder never removes what was
+  already captured from it.
+
+Each folder shows its kind and its path, and **Not on this Mac** when it does not exist here: it
+is kept, and used again on a Mac where it exists.
+
+How a captured conversation finds its space: a conversation an agent holds in a project folder
+goes to every space that lists the folder with capture on; one held anywhere else goes to your
+default space. Turn capture off for a project and nothing of it is kept, in any space. The same
+settings are in the terminal as `knode folders` and `knode spaces capture` (see the
+[CLI](02-cli.md#folders)).
 
 ## History of a note (v0.2)
 
@@ -161,12 +188,30 @@ when you remove the `[[link]]` from the text.
 it reads from this note (*depends on*), how it reads from the other one (*needed by*), or that it
 reads the same both ways, and what it means, for you and your agents.
 
+## Editing together (v0.3)
+
+While Knode Service runs, you and your agents can write in the same note at the same time:
+
+- What an agent writes appears in the open note as it writes it, while you keep typing. Your cursor
+  and your selection stay with the words around them.
+- What you type is merged with what the agents write, so nobody overwrites anybody. Knode sends
+  your typing a moment after you pause, and at least once a second while you keep going.
+- Under the title, **Claude Code is editing** (or the name of whichever agent or person it is) shows
+  for a few seconds after someone else changes the note.
+- Each merged edit is a change in the history of the note, with who made it.
+
+When an agent's edit arrives, Command-Z starts over from there: to take back something you wrote
+before, use **Edit > Undo Last Change to Note**. Without Knode Service, the app saves the whole note
+as you type, as before, and the last save wins.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
 an agent writes appears in the list as it is written, and the note you are reading updates when an
-agent changes it (unless you are editing it). When the service is not running, the app opens the
-space itself and keeps working; it moves back to the service when the service starts.
+agent changes it, even while you edit it (from v0.3). When the service is not running, the app opens the
+space itself and keeps working; it moves back to the service when the service starts. Renaming a
+space, its icon, capture and folders go through the service too while it runs, so your agents and
+capture see each change at once.
 
 The Knode icon in the menu bar shows the service. It is dimmed while the service is stopped. Its
 menu shows:

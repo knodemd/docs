@@ -62,12 +62,16 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | Tool | What it does |
 |---|---|
 | `search` | Finds nodes by words and meaning together, best match first, with a snippet of each. A `mode` picks words or meaning only (v0.3) |
-| `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks |
-| `write_node` | Creates a node, or edits one by id or title; can append to the end of the text |
-| `link_nodes` | Links two nodes, by id or title: `related`, `part-of`, `derived-from` |
+| `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks (each as it reads from the node, from v0.3), attached files (v0.3) and the version of the text it read (v0.3) |
+| `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
+| `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
 | `recent` | Lists the nodes that changed most recently |
 | `history` | Lists the latest changes to a node or to the whole space, with who made them (v0.2) |
 | `undo` | Undoes a change the same agent made (v0.2) |
+| `link_kinds` | Lists the kinds of link, with how each reads and what it means (v0.3) |
+| `read_canvas` | Lists the canvases, or reads one: its cards with their positions and groups, and the links between them (v0.3) |
+| `attach_file` | Attaches a file to a node: its bytes, or a file in a notes folder of the space (v0.3) |
+| `read_attachment` | Reads a file attached to a node; text files come back as text (v0.3) |
 
 Agents read and write Markdown, the same text you see in the app. A `[[Title]]` in the text links
 to the node with that title. Every tool answers with Markdown for the agent to read and the same
@@ -92,6 +96,39 @@ Every answer says which mode ran. While search by meaning is not ready yet (the 
 downloading the first time, or the space is still being indexed), the search runs by words and
 the answer tells the agent why, so it can say so or try other words. Search by meaning runs on
 your machine; see [Search by words and meaning](02-cli.md#search-by-words-and-meaning). (v0.3)
+
+## Editing at the same time
+
+From v0.3, you and your agents can edit the same note at once, and nothing anyone writes is lost.
+Knode merges the edits with [Loro](https://loro.dev) instead of letting the last one overwrite the
+others:
+
+- `read_node` gives the version of the text it read. When the agent rewrites the note with
+  `write_node`, it passes that version back (or Knode uses the one the agent read last), and only
+  what the agent changed in that text is applied. Words you typed meanwhile, or another agent's
+  lines, stay where they are.
+- When someone did change the note meanwhile, `write_node` says so: the agent's edit was merged with
+  theirs, and it should read the note again before changing it further.
+- With `append`, the text is added to the end of the note as it is when the agent writes, after a
+  blank line.
+- Every merged edit is its own change in the history, with who made it, so it can be undone like
+  any other.
+
+Titles, kinds and tags are short values: the last one written is kept, and the history has the
+others.
+
+## Files
+
+From v0.3, agents can attach files to nodes, such as a diagram they drew or a screenshot, and read
+the ones you attached:
+
+- An agent with `write` sends the bytes of the file, up to 10 MB.
+- An agent can also attach a file by its path, but only a file inside a folder of kind `notes`
+  that you added to the space (`knode folders add <dir> --kind notes`), and never a hidden file or
+  one in a hidden folder. Any other path is refused. Larger files you attach yourself with
+  [`knode attach`](02-cli.md#attach).
+- `read_attachment` returns text files (Markdown, plain text, CSV, JSON, SVG and the like) as
+  text, up to 256 KB; for other files it says what they are.
 
 ## History and undo
 

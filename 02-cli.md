@@ -9,11 +9,16 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file |
+| `knode import <path>` | Imports a Claude, ChatGPT or Gemini data export (v0.3), a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
 | `knode restore <node> <version>` | Puts a node back to an earlier version, or brings back a deleted one (v0.2) |
+| `knode links <node>` | Shows the links of a node, each as it reads from the node, such as *part of* or *needed by* (v0.3) |
+| `knode link <from> <to>` | Links two nodes, with a kind of link such as `part-of` (v0.3) |
+| `knode kinds [<action>]` | Lists the kinds of link, or adds or removes one of the space's own (v0.3) |
+| `knode attach <node> <file>` | Attaches a file to a node (v0.3) |
+| `knode attachments <node>` | Lists the files attached to a node (v0.3) |
 | `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space (v0.2) |
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it; `knode connect --list` shows every agent |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
@@ -231,11 +236,96 @@ knode import <path> [--vault]
 - **A Markdown file:** one note, titled with its first heading, or its file name when it has none.
 - **A Claude Code or Codex session file** (`.jsonl`): one node of kind `conversation`, with its
   title, project and date, written as that agent.
+- **A data export** (from v0.3): the `.zip` you download from Claude, ChatGPT or Google Takeout
+  (Gemini Apps), or the folder it was extracted to. Knode tells which one it is by what is inside.
+  Each conversation becomes a node of kind `conversation`, with its title, model and dates; Claude
+  projects become notes, and their conversations link to them as `part-of`. It prints how many
+  conversations are new, updated and unchanged, and anything it skipped and why. Importing the
+  same export again, or a newer one of the same account, updates the conversations instead of
+  copying them.
+
+  ```sh
+  knode import ~/Downloads/data-2026-10-20.zip
+  ```
+
+A path that is none of these fails and says what `knode import` takes.
 
 Importing the same files again does not make copies: a file that changed updates its note. From
 v0.3, a file that is not Markdown, such as an image, is attached to the note that embeds it with
 `![[name]]` (or links to it with `[[name]]`) when it is in the same folder as the note; other such
 files are left out. A kind of link the space does not have yet is added to it, so no link is lost.
+
+## links
+
+```sh
+knode links <node> [--json]
+```
+
+From v0.3. Shows the links of a node, by id or exact title: first the links going out (`->`), then
+the ones coming in (`<-`), each with how it reads from this node, the kind and the id of the node
+at the other end. A link `App` *depends on* `Database` shows as `-> depends on "Database"` on
+`App` and as `<- needed by "App"` on `Database`. A `[[link]]` in the text shows as *mentions* and
+*mentioned in*.
+
+## link
+
+```sh
+knode link <from> <to> [--kind <kind>]
+```
+
+From v0.3. Links two nodes, by id or exact title, with a kind of link: `related` by default, or
+any kind `knode kinds` lists. Linking twice does nothing more. `mentions` links come only from
+`[[links]]` in a note's text.
+
+## kinds
+
+```sh
+knode kinds [list] [--json]
+knode kinds add <kind> --label <label> [--inverse <label>] [--symmetric] [--description <text>]
+knode kinds remove <kind>
+```
+
+From v0.3. A kind of link says how two nodes relate, and reads one way from each end. Every space
+has the built-in kinds:
+
+| Kind | From the source | From the target |
+|---|---|---|
+| `mentions` | mentions | mentioned in |
+| `related` | related to | related to |
+| `part-of` | part of | has part |
+| `derived-from` | derived from | source of |
+| `answers` | answers | answered by |
+| `contradicts` | contradicts | contradicted by |
+
+`knode kinds add` defines a kind of the space's own, or changes its labels: a name of lower case
+letters, digits and `-`, how it reads from its source (`--label`) and from its target
+(`--inverse`), or `--symmetric` for a kind that reads the same from both ends. `--description`
+says what it means, for you and for agents choosing a kind. `knode kinds remove` removes a kind
+the space defined, once no link has it. Built-in kinds cannot be changed or removed.
+
+```sh
+knode kinds add depends-on --label "depends on" --inverse "needed by"
+knode link App Database --kind depends-on
+```
+
+## attach
+
+```sh
+knode attach <node> <file>
+```
+
+From v0.3. Attaches a file, such as an image or a PDF, to a node, by id or exact title, under the
+file's name, up to 100 MB. The file is copied into the space, stored once however many nodes use
+it. `![[name]]` in the node's text shows it. Attaching a different file with a name the node
+already uses adds ` 2`, ` 3`... to the name.
+
+## attachments
+
+```sh
+knode attachments <node> [--json]
+```
+
+From v0.3. Lists the files attached to a node, with their type, size, date and who attached them.
 
 ## export
 
