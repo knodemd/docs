@@ -82,6 +82,9 @@ Every change an agent makes is kept with the name of the agent its key belongs t
 
 ## Search
 
+Words also match imported Markdown paths, so an agent can search for `DEPLOY.md` without
+knowing the note's title. Other property values are not included in word search.
+
 Agents search the way `knode search` does: by default by words and by meaning together, so they
 find what was worked out earlier even when it was put in other words. The `search` tool takes a
 `mode`:

@@ -173,7 +173,10 @@ id. By default it ranks matches by words and by meaning together, so it also fin
 say the same thing in other words, or in another language (v0.3, see [Search](#search-by-words-and-meaning)).
 
 - `--words` searches by the words only: every word must appear, and the last one also matches
-  the start of a word. Case and accents are ignored. Best for names, ids and exact terms.
+  the start of a word. Case and accents are ignored. Titles, note text and imported Markdown
+  paths are searched: `knode search --words DEPLOY.md` finds a note imported from
+  `Projects/DEPLOY.md`, even if its title is “Release instructions”. Best for names, ids and
+  exact terms. Existing spaces add paths to their search index when opened by this version.
 - `--meaning` searches by meaning only: notes about what you asked, whatever words they use.
 - `--limit` (or `-n`) sets how many nodes to print, 10 by default.
 - `--json` prints `{ "mode", "hits", "note" }`: the mode that ran, the matches, and why the
