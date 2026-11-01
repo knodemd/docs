@@ -64,6 +64,11 @@ Command Line Tool…**. It adds `knode` to `/usr/local/bin`, or to `/opt/homebre
 folder is writable, and asks for your password when your Mac needs it. If `knode` is already
 installed, for example with Homebrew, the app uses that one, says so and installs nothing.
 
+The release download is `Knode-<version>.dmg`: open it and drag Knode to Applications. The app
+and its embedded command are universal (Apple silicon and Intel) and share the release version.
+Release apps and disk images are signed with Developer ID and notarised; the release includes
+checksums for the downloads. These downloads become available with the first published release.
+
 ## Connect your agents
 
 ```sh
