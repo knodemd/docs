@@ -262,7 +262,8 @@ Everything `knode import` reads, with the kind `--from` takes:
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
-  with the `title` of its frontmatter; its text is kept as it is. A folder written by
+  with the `title` of its frontmatter; its text is kept as it is, and it keeps the dates the file
+  was created and last changed. A folder written by
   `knode export` brings back every note with its id, kind, tags, dates, authors, links and
   properties. An Obsidian vault keeps its frontmatter, tags and `[[links]]`, including links written
   as paths, such as `[[Projects/README]]`, which find the note imported from that file. `--vault` only changes
