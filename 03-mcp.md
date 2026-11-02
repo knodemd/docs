@@ -63,6 +63,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 |---|---|
 | `search` | Finds nodes by words and meaning together, best match first, with a snippet of each. A `mode` picks words or meaning only (v0.3) |
 | `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks (each as it reads from the node, from v0.3), attached files (v0.3) and the version of the text it read (v0.3) |
+| `read_excerpt` | Reads a bounded body range by node id, with a snapshot for safe continuation; omits full-note links and metadata |
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
 | `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
 | `recent` | Lists the nodes that changed most recently |
