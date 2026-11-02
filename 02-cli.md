@@ -647,9 +647,14 @@ knode service <run|start|stop|status|install|uninstall>
 | `run` | Runs Knode Service in the foreground until you press Ctrl-C. If it is already running, says so |
 | `start` | Starts it in the background if it is not running |
 | `stop` | Stops it, however it was started |
-| `status` | Shows its version, process id, open spaces, connected clients, the default space conversations are captured into, how far search by meaning has indexed the spaces, and whether it starts at login |
+| `status` | Shows its version, process id, open spaces, connected clients and their last-used spaces, the default space conversations are captured into, how far search by meaning has indexed the spaces, and whether it starts at login |
 | `install` | Starts it at login, and now: a launch agent on macOS, a systemd user unit on Linux |
 | `uninstall` | Stops starting it at login, and stops it |
+
+For each authenticated connection that has used a space, `status` lists its connection id,
+person (app/CLI) or agent identity, and the last space it successfully used. Switching spaces
+updates that entry; disconnecting removes it. Refused calls do not change it. This inventory is
+only available to you, not to agents, and connection ids reset when the service restarts.
 
 After `install`, Knode Service starts again by itself if it crashes. After `knode service stop` it
 stays stopped until your next login, or until a `knode` command or an agent needs it.
