@@ -112,7 +112,10 @@ are never called tokens. Include memory-writing and all task sessions, record se
 separately, and grade answer correctness before comparing matched trials. Report failures,
 latency, tool calls, cache treatment and no-benefit cases. Optional cost calculations require
 dated supplied prices and cache counts; they do not predict subscription billing. The validator
-makes no model calls and the fixture is not evidence of measured savings.
+makes no model calls and the fixture is not evidence of measured savings. A separate
+`smoke.py --knode <built-cli>` checks the combined CLI/MCP setup in a disposable home, including
+fresh-process checkpoint retrieval; it needs the companion CLI features and never launches
+a model session.
 
 Local storage does not mean retrieved content stays local: the agent sends text it uses to its
 model provider. Use synthetic fixtures for evaluations, not a personal vault.
