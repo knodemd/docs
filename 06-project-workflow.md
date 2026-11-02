@@ -162,18 +162,28 @@ point remains available later.
 1. Choose an Obsidian/Markdown memory, a project with agents, or an empty start. Select a source
    folder for the first two options. Analysis is local and makes no model calls.
 2. Review the proposed groups and individual Markdown documents. A project import suggests one
-   project; a vault uses folder names, including the next level under Projects/Proyectos. Rename
+   project; a vault uses folder names, including the next level under Projects/Proyectos. A
+   top-level folder holding git repositories in two or more of its subfolders, such as a folder per
+   organization, becomes a group of projects: each subfolder with a repository is a project inside
+   it, and its other subfolders stay with it. Two suggestions with the same name are told apart by
+   their parent folder, `handbook (work)`, so they do not merge unless you rename them. Rename
    groups, give them identical names to merge them, add groups, reassign notes and uncheck notes
    to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
    into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
    These are deterministic folder suggestions, not AI interpretations of decisions.
 3. Choose a new space name/location outside the source and acknowledge the compatibility notes.
    Existing spaces are never overwritten. Knode revalidates source fingerprints, stages a copy,
-   imports it and adds editable project context indexes and typed part-of links. The source is
+   imports it and adds an editable index note per project and typed links. The source is
    not a live folder and changes are not synchronized back. Capture starts off in the new space.
 
-The context indexes contain links to source notes, placeholders for actual goals/status and no
-invented decisions. Imported notes remain editable. IDs, metadata and attachments supported by
+Each index note is named after its project (`taskbot`, or `taskbot (index)` when a note already has
+that title) and lists the project's key notes first (readme, status, agent instructions), the
+projects inside it and related projects: those whose notes link to each other, with how many links.
+A group whose notes link to a large share of all the others, such as a folder of maps or a
+dashboard, is treated as an index of everything rather than a related project. Every imported note
+is linked to its index as `part-of`, a project inside a group to the group's index as `part-of`,
+and related projects as `related`. Index notes contain no invented goals or decisions. Imported
+notes remain editable. IDs, metadata and attachments supported by
 the existing Markdown importer are preserved; duplicate source IDs that would merge documents
 abort publication. Common adjacent, relative and vault-root attachment paths, plus globally unique wikilink
 filenames, are resolved inside the copied source. Wiki attachment destinations may be normalized
@@ -182,8 +192,14 @@ Adaptations are recorded in the receipt and note history; code spans and origina
 are unchanged. Ambiguous filenames are not guessed. Exporting does not reconstruct the original
 shared attachment-folder layout. Plugin execution, canvas layout and every possible Obsidian attachment layout
 are not reproduced. Review warnings, unresolved links and unused files before adopting the copy.
-Hidden paths, symlinks, common generated/dependency directories, possible key files and oversized
-files are excluded and reported; this is not a complete secret scanner. The temporary rehearsal
+Only Markdown files and the attachments they reference (images, PDFs, audio, video, office
+documents and similar) are read and copied; links to source code or other files stay as written,
+and a change to an unrelated file in the source does not invalidate the proposal. Git worktrees and
+submodules (folders whose `.git` is a file) are other checkouts of a repository and are excluded.
+Hidden paths, symlinks, common generated/dependency directories, nested spaces, possible key files
+and oversized files are excluded too. Exclusions are reported as one line per reason with examples,
+and attachment references that are not found, or match several files, are listed once; this is not
+a complete secret scanner. The temporary rehearsal
 uses ordinary local disk and the source should remain stable during import.
 
 ### Adopt the workflow explicitly
