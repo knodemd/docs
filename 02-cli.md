@@ -240,6 +240,38 @@ Importing the same thing again does not make copies: Knode finds the nodes it wr
 changes only what changed. A note you edited in Knode since is never overwritten by an import of
 the same, unchanged source.
 
+### Preview a vault migration
+
+```sh
+knode import /path/to/vault --preview
+knode import /path/to/vault --preview --json
+```
+
+No destination space is required. This runs the actual Markdown-folder importer in a private
+temporary local space, reports its result and deletes that space. The source vault and any
+configured destination remain unchanged. It does not start Knode Service, download an embedding
+model, connect an agent or call an external API. Only Markdown folders are supported in preview.
+
+The report lists imported titles/source paths, unresolved wikilinks, repeated lowercased titles,
+skipped files with reasons, attached and unused files, and failed typed links. It also warns
+about ignored hidden paths/symlinks, canvases not converted by Markdown import, uppercase `.MD`
+files and possible plugin-dependent queries/templates. Plugin detection is heuristic, not an
+exhaustive compatibility audit. Preview does not expose temporary node IDs as final IDs.
+
+Review all unused files, especially shared attachment folders: current attachment import covers
+files referenced by name next to a note and attachment mappings in Knode exports, not every
+Obsidian layout. Do not treat source-text preservation as plugin execution support.
+
+Keep the source stable during preview and import: this is not a filesystem snapshot. The
+rehearsal uses ordinary temporary disk proportional to the imported data; deletion is not secure
+erasure. It tests a new space, not merge/conflict behavior against an existing destination.
+`simulation_only: true` in JSON makes this distinction explicit.
+
+After reviewing the report, import a pilot into an explicitly selected new space, inspect notes,
+links and attachments, and export for comparison before cutover. Exports can add Knode metadata;
+this report is not proof of byte-identical Obsidian round-trip fidelity or ongoing synchronization.
+Keep your original vault and a backup until those checks pass.
+
 ### Importing
 
 Everything `knode import` reads, with the kind `--from` takes:
