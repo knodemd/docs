@@ -8,7 +8,8 @@ The Mac app shows your spaces and lets you read, write and organise them.
 
 - Open a `.knode` space, or create a new one, from the File menu or the welcome screen.
 - Reopen a space you used recently: File > Open Recent, or the list on the welcome screen.
-- List its notes, the most recently changed first.
+- List its notes, the most recently changed first. A note imported from a Markdown file shows
+  the folder it came from next to its title, so many notes named `README` stay apart.
 - Read and edit a note in Markdown, with a live preview. Changes are saved as you type, and each
   one is recorded as made by you, with the name of your Mac user account.
 - Search titles and text.

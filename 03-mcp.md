@@ -74,7 +74,8 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | `read_attachment` | Reads a file attached to a node; text files come back as text (v0.3) |
 
 Agents read and write Markdown, the same text you see in the app. A `[[Title]]` in the text links
-to the node with that title. Every tool answers with Markdown for the agent to read and the same
+to the node with that title. A note imported from a file says which in `search` and `recent`, such
+as ``**README** (note, id `…`, from `taskbot/README.md`)``, so notes of the same name stay apart. Every tool answers with Markdown for the agent to read and the same
 data as structured content.
 
 Every change an agent makes is kept with the name of the agent its key belongs to, such as
