@@ -152,3 +152,85 @@ can increase token usage. No percentage of token or billing savings has been est
 Memory is stored locally, but text an agent retrieves is sent to its model provider when used.
 Never place credentials in notes. Raw capture, durable summaries and the agent's current context
 are separate things, with separate costs and privacy choices.
+
+## Guided import in the Mac app
+
+Choose **Get started** on the welcome screen or **Import projects** above the spaces list. The
+first offer also appears automatically once. Cancelling leaves the source unchanged; the entry
+point remains available later.
+
+1. Choose an Obsidian/Markdown memory, a project with agents, or an empty start. Select a source
+   folder for the first two options. Analysis is local and makes no model calls.
+2. Review the proposed groups and individual Markdown documents. A project import suggests one
+   project; a vault uses folder names, including the next level under Projects/Proyectos. Rename
+   groups, give them identical names to merge them, add groups, reassign notes and uncheck notes
+   to exclude. These are deterministic folder suggestions, not AI interpretations of decisions.
+3. Choose a new space name/location outside the source and acknowledge the compatibility notes.
+   Existing spaces are never overwritten. Knode revalidates source fingerprints, stages a copy,
+   imports it and adds editable project context indexes and typed part-of links. The source is
+   not a live folder and changes are not synchronized back. Capture starts off in the new space.
+
+The context indexes contain links to source notes, placeholders for actual goals/status and no
+invented decisions. Imported notes remain editable. IDs, metadata and attachments supported by
+the existing Markdown importer are preserved; duplicate source IDs that would merge documents
+abort publication. Plugin execution, canvas layout and every possible Obsidian attachment layout
+are not reproduced. Review warnings, unresolved links and unused files before adopting the copy.
+Hidden paths, symlinks, common generated/dependency directories, possible key files and oversized
+files are excluded and reported; this is not a complete secret scanner. The temporary rehearsal
+uses ordinary local disk and the source should remain stable during import.
+
+### Adopt the workflow explicitly
+
+The completion screen offers **Connect Codex**. This grants read/write access to the new copy
+and replaces Codex's Knode MCP entry; other MCP entries and pre-existing grants remain. It saves
+a private configuration recovery snapshot under Knode home in `onboarding-recovery` (owner-only
+folder/files), outside the memory package. No model session is launched. Repeated connection attempts preserve the initial recovery point
+and refuse to overwrite unrelated later configuration changes. Opening the imported space makes
+it the default only if no default exists. Start a fresh Codex
+session and verify the intended project before saving real work. Claude remains a later choice.
+
+Instruction installation is a separate optional action: choose a working repository, read the
+preview, then install the managed block. It edits only that chosen instruction file and keeps
+numbered backups. A source vault cannot be selected for this action; a project source can be
+selected as an explicit instruction-file edit. Those file edits are independent of archiving the
+memory: their backups remain in the working repository. Keep execution/build rules in place.
+
+### Change your mind without losing the source
+
+Before finishing, use **Archive copy and start again**. Afterwards, use **Review import / archive**
+in the imported space's sidebar menu. The report is the original import report, not a claim that
+later user edits have not changed the notes. Archiving retains the current notes/edits in a new
+`*-archive-<timestamp>.knode` package; it does not erase them. Reopen that package with **Open
+space** to recover it. To try a different grouping, analyze the unchanged source again and create
+a new independent space. Later edits from the old copy stay in its archive, not in the new import.
+
+Archiving removes agent access only to that copy, forgets its old path and briefly stops the
+memory service so open files are flushed. Other space grants are retained. If the tutorial
+changed Codex configuration and that file still matches its post-setup snapshot, the prior
+configuration is restored atomically. If the file was edited afterwards, it is left untouched and
+the app reports that reconnecting/review is needed. A previously absent configuration can remain
+as an empty file. Restart Codex after restoration. Optional instruction-file edits are recovered
+separately from their numbered backups; they are not silently removed by archiving.
+
+An `onboarding.json` receipt inside the imported package records the reviewed proposal, original
+paths, source fingerprints, generated context IDs and actual import report. It is auxiliary local
+recovery metadata, not an agent credential and not a promise that it is synchronized across devices.
+
+### CLI boundary
+
+The native tutorial uses these core-backed commands:
+
+```sh
+knode onboard analyze --mode vault --source /path/to/vault > /path/to/reviewed-plan.json
+# Edit group names, document project assignments and include flags in the proposal.
+knode onboard apply --plan /path/to/reviewed-plan.json --destination /path/outside/source/Work.knode --name Work
+knode onboard inspect --target /path/outside/source/Work.knode
+# Explicit connection; modifies Codex configuration and saves its private recovery point.
+knode onboard connect-codex --target /path/outside/source/Work.knode
+# Close editors first; archive retains notes, revokes this copy's grants and restores config if safe.
+knode onboard archive --target /path/outside/source/Work.knode
+```
+
+`--mode project` imports one project; `--mode empty` needs no source. Plans are not exports: their
+fingerprints intentionally expire when the source changes. Re-analyze instead of editing digests.
+Do not place plan output inside the source folder, which would itself change the analyzed inputs.

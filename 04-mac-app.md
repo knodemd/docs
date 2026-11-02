@@ -303,3 +303,12 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 ## Next
 
 See the [roadmap](https://knode.md/plan) for the rest.
+
+## Guided project and vault import
+
+Use **Get started** or **Import projects** to analyze an existing vault/project or start empty,
+review and edit groupings, and create a separate Knode copy. The source is not moved or replaced.
+The completion screen offers explicit Codex setup and optional instruction-file installation.
+Use **Review import / archive** in the imported space's sidebar menu to recoverably archive a
+trial and start again. See [the guided import tutorial](06-project-workflow.md#guided-import-in-the-mac-app)
+for supported content, recovery behavior and the limits of folder-based organization.
