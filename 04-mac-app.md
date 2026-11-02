@@ -151,6 +151,13 @@ part of the graph on screen and where every note is. Open it again from the same
 looks exactly as you left it, on any Mac that opens the space. Moving notes in a saved view keeps
 their new places. From the same menu you can save new filters to the view, rename it or delete it.
 
+### Watch what an agent reads
+
+While an agent reads through Knode Service, the notes it opens or finds light up in the graph and
+fade after a few seconds, and a line at the bottom says which agent is reading what. Turn on
+**Follow** (top right) to move the view to each note it reads. Only you see this, never other
+agents, and nothing of it is kept; what agents call is in the access log.
+
 ### Canvases
 
 A canvas is a board where you arrange notes by hand. Choose **File > New Canvas** (Option-Command-N);
