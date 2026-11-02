@@ -173,7 +173,12 @@ point remains available later.
 The context indexes contain links to source notes, placeholders for actual goals/status and no
 invented decisions. Imported notes remain editable. IDs, metadata and attachments supported by
 the existing Markdown importer are preserved; duplicate source IDs that would merge documents
-abort publication. Plugin execution, canvas layout and every possible Obsidian attachment layout
+abort publication. Common adjacent, relative and vault-root attachment paths, plus globally unique wikilink
+filenames, are resolved inside the copied source. Wiki attachment destinations may be normalized
+to node-local names (with collision-safe numbering), and inline Markdown file URLs to blob URLs.
+Adaptations are recorded in the receipt and note history; code spans and original source files
+are unchanged. Ambiguous filenames are not guessed. Exporting does not reconstruct the original
+shared attachment-folder layout. Plugin execution, canvas layout and every possible Obsidian attachment layout
 are not reproduced. Review warnings, unresolved links and unused files before adopting the copy.
 Hidden paths, symlinks, common generated/dependency directories, possible key files and oversized
 files are excluded and reported; this is not a complete secret scanner. The temporary rehearsal
