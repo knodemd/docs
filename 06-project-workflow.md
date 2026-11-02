@@ -171,7 +171,12 @@ point remains available later.
    to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
    into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
    These are deterministic folder suggestions, not AI interpretations of decisions.
-3. Choose a new space name/location outside the source and acknowledge the compatibility notes.
+3. Choose whether to also bring the conversations your agents held in these project folders. When
+   on (the default, except for an empty start), Knode reads the sessions of Claude Code, Codex and
+   the other agents it knows, and brings those whose working folder is inside one of the projects,
+   each part of the nearest project; conversations held elsewhere are left out. In the terminal,
+   add `--sessions` to `knode onboard apply`. This does not turn on capture.
+4. Choose a new space name/location outside the source and acknowledge the compatibility notes.
    Existing spaces are never overwritten. Knode revalidates source fingerprints, stages a copy,
    imports it and adds an editable index note per project and typed links. The source is
    not a live folder and changes are not synchronized back. Capture starts off in the new space.
