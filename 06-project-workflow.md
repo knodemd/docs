@@ -164,7 +164,9 @@ point remains available later.
 2. Review the proposed groups and individual Markdown documents. A project import suggests one
    project; a vault uses folder names, including the next level under Projects/Proyectos. Rename
    groups, give them identical names to merge them, add groups, reassign notes and uncheck notes
-   to exclude. These are deterministic folder suggestions, not AI interpretations of decisions.
+   to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
+   into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
+   These are deterministic folder suggestions, not AI interpretations of decisions.
 3. Choose a new space name/location outside the source and acknowledge the compatibility notes.
    Existing spaces are never overwritten. Knode revalidates source fingerprints, stages a copy,
    imports it and adds editable project context indexes and typed part-of links. The source is
