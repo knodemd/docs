@@ -668,3 +668,11 @@ capture_exclude = ["/Users/you/code/secret-project"]
 
 Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
 within a few seconds, so there is no need to restart it.
+
+## instructions
+
+`knode instructions codex|claude-code --project <folder> [--apply] [--remove]` previews, installs
+or removes a versioned project-local memory workflow. It preserves other rules and saves numbered
+backups on changes. Without `--apply` it writes nothing. It does not connect an agent or change
+spaces, permissions or capture. `knode connect <agent> --instructions <folder>` combines connection
+with installation; `--print` previews both. See [the workflow guide](06-project-workflow.md).

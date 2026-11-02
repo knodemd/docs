@@ -177,3 +177,8 @@ knode agents revoke codex
 
 See [the command line](02-cli.md#agents) for every option. Grants keep each agent to the spaces you
 gave it through Knode; they are not a sandbox for programs that can read your files directly.
+
+## Daily project workflow
+
+For project context, typed decision/source links, concise session checkpoints and fresh-session
+verification, see [Projects and durable memory](06-project-workflow.md).
