@@ -97,6 +97,26 @@ downloading the first time, or the space is still being indexed), the search run
 the answer tells the agent why, so it can say so or try other words. Search by meaning runs on
 your machine; see [Search by words and meaning](02-cli.md#search-by-words-and-meaning). (v0.3)
 
+## Measure memory workflow efficiency
+
+Knode memory does not replace the model's context window. Tool responses occupy context, and
+searches, instruction loading and memory writing can outweigh reduced document loading.
+
+The product repository includes [an offline evaluation fixture and validator](https://github.com/knodemd/knode/tree/main/evaluation/memory).
+It defines synthetic project-resumption, changed-decision and cross-session checkpoint tasks.
+Compare full-file loading, a capable selective-file workflow, ordinary MCP retrieval and bounded
+retrieval when available, using the same exact model/version and task inputs.
+
+Supply actual authorized provider usage; missing usage remains unknown, and returned characters
+are never called tokens. Include memory-writing and all task sessions, record setup/indexing
+separately, and grade answer correctness before comparing matched trials. Report failures,
+latency, tool calls, cache treatment and no-benefit cases. Optional cost calculations require
+dated supplied prices and cache counts; they do not predict subscription billing. The validator
+makes no model calls and the fixture is not evidence of measured savings.
+
+Local storage does not mean retrieved content stays local: the agent sends text it uses to its
+model provider. Use synthetic fixtures for evaluations, not a personal vault.
+
 ## Editing at the same time
 
 From v0.3, you and your agents can edit the same note at once, and nothing anyone writes is lost.
