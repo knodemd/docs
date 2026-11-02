@@ -239,3 +239,8 @@ knode onboard archive --target /path/outside/source/Work.knode
 `--mode project` imports one project; `--mode empty` needs no source. Plans are not exports: their
 fingerprints intentionally expire when the source changes. Re-analyze instead of editing digests.
 Do not place plan output inside the source folder, which would itself change the analyzed inputs.
+
+Source links in generated contexts use stable node IDs, so equal-titled README notes remain
+distinct. Native note navigation also resolves imported file paths and heading references
+through the core; a heading reference opens its destination note, without promising section
+scroll positioning.
