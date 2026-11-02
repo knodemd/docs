@@ -303,3 +303,26 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 ## Next
 
 See the [roadmap](https://knode.md/plan) for the rest.
+
+## Add projects when creating a space
+
+The New Space sheet offers **Add projects next**. Leave it enabled to open **Folders and
+capture** after creation, or skip and return through Settings > Spaces / the space's folder
+settings later. A space can contain multiple projects. Projects organize context; spaces define
+agent access boundaries. An agent with access to a space may read its other projects too.
+
+Choose **Add folder > Project folder**, select the existing folder, then confirm its destination
+space and whether to capture conversations. Capture starts off in this confirmation: enabling it
+is an explicit choice. Off for a project prevents its conversations being captured anywhere;
+it does not prevent intentional MCP writes by an authorized agent. Space/service capture must
+also be enabled for automatic capture to run. Cancellation registers nothing. Repeat for more
+projects and review existing mappings before adding overlapping folders.
+
+Registering a project does not move/import its notes, connect an agent, change its MCP space or
+grant access. Check permissions separately in Settings > Agents; an agent pinned to a space
+keeps that space even when the default changes. Import existing notes separately. As a first
+task, save a project decision through the connected agent, then retrieve it in a fresh session.
+
+This is the initial native setup step. Automatic cross-space overlap diagnostics, managed
+instruction previews inside the app and independent first-time-user validation remain separate
+follow-up work; they are not implied by adding a folder.
