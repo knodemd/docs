@@ -22,7 +22,9 @@ between **Projects** and **Recent**. Projects lists the top-level projects with 
 has; open one to see the projects and notes inside it, and **‹** to go back up. The main area shows
 the project's page: what it is part of, its description, the projects inside it and its most recent
 notes. **Edit description** opens the project itself as a note. Recent lists the most recently
-changed notes, up to 1,000 (`1000+` when there are more).
+changed notes: up to 1,000 while Knode Service runs (the count reads `1000+` when there are more),
+and up to 10,000 when the app opens the space itself. In the graph, **Projects** shows only the
+projects and how they relate; click it again to show every note.
 
 The preview shows GitHub tables, and an HTML image line, such as a README banner, as a link to the
 image: Knode does not download it.
@@ -157,6 +159,8 @@ every note is a point and every link a line between two. Press it again to go ba
 - **Find a note:** type part of a title and press Return to centre it and mark it.
 - **Filter:** show only some kinds of note, kinds of link, tags, people or agents, or notes changed
   today, in the past 7 or 30 days, or in the past year.
+- **Projects:** show only the projects, the projects they are part of and the projects related to
+  them. Click it again to show every note.
 
 **Saved views.** The **Whole Space** menu saves what you see as a named view: its filters, the
 part of the graph on screen and where every note is. Open it again from the same menu and the graph
