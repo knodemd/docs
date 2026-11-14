@@ -63,6 +63,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 |---|---|
 | `search` | Finds nodes by words and meaning together, best match first, with a snippet of each. A `mode` picks words or meaning only (v0.3) |
 | `read_node` | Reads a node in full, by id or title: its Markdown, kind, tags, links and backlinks (each as it reads from the node, from v0.3), attached files (v0.3) and the version of the text it read (v0.3) |
+| `read_excerpt` | Reads a bounded body range by node id, with a snapshot for safe continuation; omits full-note links and metadata |
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
 | `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
 | `recent` | Lists the nodes that changed most recently |
@@ -79,6 +80,31 @@ data as structured content.
 
 Every change an agent makes is kept with the name of the agent its key belongs to, such as
 `claude-code`, never a name it gives itself, so you can always see who wrote what.
+
+## Read only part of a long note
+
+`read_excerpt` retrieves a bounded range of a note's Markdown body, by the node id from search.
+It adds a tool; `read_node` still returns the complete note with its links and metadata.
+
+```json
+{"id":"<id from search>","start":0,"max_chars":2000}
+```
+
+The response has `text`, `start`, `end`, `total_chars`, `partial`, `next_start` and `snapshot`.
+Continue with the returned `next_start` and the same `snapshot`; continuation without a snapshot
+is refused. If the body changes, start again at zero instead of joining ranges from different
+versions. Offsets count Unicode scalar values, not bytes, grapheme clusters or model tokens.
+The default is 2,000 characters; the allowed range is 1–8,000. Title output is capped at 160
+characters. Links, attachments and other potentially large metadata lists are omitted.
+
+An excerpt may omit qualifications or contradictory evidence elsewhere in the note. Read
+surrounding ranges or use `read_node` as needed. Read the complete note before a full rewrite;
+the excerpt's `snapshot` is for pagination, not a `write_node` version. Excerpts use the same
+space permissions as other reads, including revocation checks on subsequent calls.
+
+The backend still opens the whole body locally; this limits the returned context, not database
+read memory. Markdown and structured content both carry the excerpt. These character bounds
+are not a token count or a promise of lower provider billing.
 
 ## Search
 
