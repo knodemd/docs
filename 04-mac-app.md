@@ -62,6 +62,23 @@ default space. Turn capture off for a project and nothing of it is kept, in any 
 settings are in the terminal as `knode folders` and `knode spaces capture` (see the
 [CLI](02-cli.md#folders)).
 
+### Add project folders when creating a space
+
+A project folder is where a project's files live, such as a code repository. The New Space sheet
+offers **Add project folders next**: leave it on and **Folders and Capture** opens once the space
+is created, or turn it off and add them later from the Space menu or Settings > Spaces.
+
+Choose **Add Folder > Project folder**, pick the folder, then confirm it. **Capture conversations
+held in this folder** is on, as for every folder; turn it off and nothing agents say in that
+folder is captured, in any space. Capture also needs to be on for the space and for Knode Service.
+Agents can still save notes through MCP when they can write to the space. Cancel and nothing is
+added. Repeat for each project.
+
+One space can hold several projects, and every agent that can read the space can read all of
+them: use separate spaces when agents need different access. Adding a project folder does not
+move or import its notes, connect an agent or change the space an agent uses. Import notes with
+`knode import`, and connect agents in Settings > Agents.
+
 ## History of a note (v0.2)
 
 Every change to a note is kept, with who made it. Press Command-Y, or click the clock in the
@@ -303,26 +320,3 @@ Knode menu. If `knode` is already installed with Homebrew, the app uses that one
 ## Next
 
 See the [roadmap](https://knode.md/plan) for the rest.
-
-## Add projects when creating a space
-
-The New Space sheet offers **Add projects next**. Leave it enabled to open **Folders and
-capture** after creation, or skip and return through Settings > Spaces / the space's folder
-settings later. A space can contain multiple projects. Projects organize context; spaces define
-agent access boundaries. An agent with access to a space may read its other projects too.
-
-Choose **Add folder > Project folder**, select the existing folder, then confirm its destination
-space and whether to capture conversations. Capture starts off in this confirmation: enabling it
-is an explicit choice. Off for a project prevents its conversations being captured anywhere;
-it does not prevent intentional MCP writes by an authorized agent. Space/service capture must
-also be enabled for automatic capture to run. Cancellation registers nothing. Repeat for more
-projects and review existing mappings before adding overlapping folders.
-
-Registering a project does not move/import its notes, connect an agent, change its MCP space or
-grant access. Check permissions separately in Settings > Agents; an agent pinned to a space
-keeps that space even when the default changes. Import existing notes separately. As a first
-task, save a project decision through the connected agent, then retrieve it in a fresh session.
-
-This is the initial native setup step. Automatic cross-space overlap diagnostics, managed
-instruction previews inside the app and independent first-time-user validation remain separate
-follow-up work; they are not implied by adding a folder.
