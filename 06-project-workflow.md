@@ -176,7 +176,7 @@ point remains available later.
    imports it and adds an editable index note per project and typed links. The source is
    not a live folder and changes are not synchronized back. Capture starts off in the new space.
 
-Each index note is named after its project (`taskbot`, or `taskbot (index)` when a note already has
+Each index note is named after its project (`harbor`, or `harbor (index)` when a note already has
 that title) and lists the project's key notes first (readme, status, agent instructions), the
 projects inside it and related projects: those whose notes link to each other, with how many links.
 A group whose notes link to a large share of all the others, such as a folder of maps or a
