@@ -649,7 +649,7 @@ knode agents revoke <agent>
 
 | Action | What it does |
 |---|---|
-| `list` | Lists the agents of this machine, whether their key is valid, and what each may do in each space |
+| `list` | Lists the agents of this machine, whether their key is valid, and what each may do in each space, then the agents whose conversations are captured, with the folder each is read from, or that capture is off |
 | `grant` | Sets what an agent may do in a space: `none`, `read` or `write`. `<space>` is a `.knode` path or the name of a space in `~/Knode` |
 | `revoke` | Revokes every key of the agent and takes away its access to every space. `knode connect` connects it again |
 
@@ -711,6 +711,27 @@ capture_exclude = ["/Users/you/code/secret-project"]
 
 Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
 within a few seconds, so there is no need to restart it.
+
+These are the agents whose conversations are captured, and where each keeps them. `knode agents
+list` shows the ones on this machine.
+
+| Agent | Sessions read from |
+|---|---|
+| Claude Code | `~/.claude/projects` (or `$CLAUDE_CONFIG_DIR/projects`) |
+| Codex | `~/.codex/sessions` (or `$CODEX_HOME/sessions`) |
+| Gemini CLI | `~/.gemini/tmp` (or `$GEMINI_CLI_HOME/.gemini/tmp`) |
+| GitHub Copilot CLI | `~/.copilot/session-state` (or `$COPILOT_HOME/session-state`) |
+| OpenCode | `opencode.db` in `~/.local/share/opencode` (or `$XDG_DATA_HOME/opencode`) |
+| Amp | `~/.local/share/amp/threads` (or `$XDG_DATA_HOME/amp/threads`) |
+| Aider | `.aider.chat.history.md` in each project, searched for under the folder named by `KNODE_AIDER_ROOT`, up to four folders down |
+| Cursor | Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
+| Windsurf | Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`) |
+| Cline and Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_CLINE_ROOT`, `$KNODE_ROO_CODE_ROOT`) |
+
+Each conversation is one node, with its agent, project, branch, model and the dates it started
+and ended, when the agent records them. Aider writes every session of a project to the same file,
+and each session becomes its own node. Subagents' side conversations are left out where the agent
+marks them, and so are tool output and the model's reasoning.
 
 ## instructions
 
