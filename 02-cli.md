@@ -243,6 +243,38 @@ Importing the same thing again does not make copies: Knode finds the nodes it wr
 changes only what changed. A note you edited in Knode since is never overwritten by an import of
 the same, unchanged source.
 
+### Preview a vault migration
+
+```sh
+knode import /path/to/vault --preview
+knode import /path/to/vault --preview --json
+```
+
+No destination space is required. This runs the actual Markdown-folder importer in a private
+temporary local space, reports its result and deletes that space. The source vault and any
+configured destination remain unchanged. It does not start Knode Service, download an embedding
+model, connect an agent or call an external API. Only Markdown folders are supported in preview.
+
+The report lists imported titles/source paths, unresolved wikilinks, repeated lowercased titles,
+skipped files with reasons, attached and unused files, and failed typed links. It also warns
+about ignored hidden paths/symlinks, canvases not converted by Markdown import, uppercase `.MD`
+files and possible plugin-dependent queries/templates. Plugin detection is heuristic, not an
+exhaustive compatibility audit. Preview does not expose temporary node IDs as final IDs.
+
+Review all unused files, especially shared attachment folders: current attachment import covers
+files referenced by name next to a note and attachment mappings in Knode exports, not every
+Obsidian layout. Do not treat source-text preservation as plugin execution support.
+
+Keep the source stable during preview and import: this is not a filesystem snapshot. The
+rehearsal uses ordinary temporary disk proportional to the imported data; deletion is not secure
+erasure. It tests a new space, not merge/conflict behavior against an existing destination.
+`simulation_only: true` in JSON makes this distinction explicit.
+
+After reviewing the report, import a pilot into an explicitly selected new space, inspect notes,
+links and attachments, and export for comparison before cutover. Exports can add Knode metadata;
+this report is not proof of byte-identical Obsidian round-trip fidelity or ongoing synchronization.
+Keep your original vault and a backup until those checks pass.
+
 ### Importing
 
 Everything `knode import` reads, with the kind `--from` takes:
@@ -265,10 +297,13 @@ Everything `knode import` reads, with the kind `--from` takes:
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
-  with the `title` of its frontmatter; its text is kept as it is. A folder written by
+  with the `title` of its frontmatter; its text is kept as it is, and it keeps the dates the file
+  was created and last changed. A folder written by
   `knode export` brings back every note with its id, kind, tags, dates, authors, links and
   properties. An Obsidian vault keeps its frontmatter, tags and `[[links]]`, including links written
-  as paths, such as `[[Projects/README]]`, which find the note imported from that file. `--vault` only changes
+  as paths, such as `[[Projects/README]]`, which find the note imported from that file. A link to a
+  name several notes share, such as `[[README]]` or `[[app/README]]`, finds the one nearest to the
+  note that links, as Obsidian does. `--vault` only changes
   the wording of the summary. From v0.3, a file that is not Markdown, such as an image, is
   attached to the note that embeds it with `![[name]]` (or links to it with `[[name]]`) when it is
   in the same folder as the note; other such files are left out. A kind of link the space does not
@@ -650,9 +685,14 @@ knode service <run|start|stop|status|install|uninstall>
 | `run` | Runs Knode Service in the foreground until you press Ctrl-C. If it is already running, says so |
 | `start` | Starts it in the background if it is not running |
 | `stop` | Stops it, however it was started |
-| `status` | Shows its version, process id, open spaces, connected clients, the default space conversations are captured into, how far search by meaning has indexed the spaces, and whether it starts at login |
+| `status` | Shows its version, process id, open spaces, connected clients and their last-used spaces, the default space conversations are captured into, how far search by meaning has indexed the spaces, and whether it starts at login |
 | `install` | Starts it at login, and now: a launch agent on macOS, a systemd user unit on Linux |
 | `uninstall` | Stops starting it at login, and stops it |
+
+For each authenticated connection that has used a space, `status` lists its connection id,
+person (app/CLI) or agent identity, and the last space it successfully used. Switching spaces
+updates that entry; disconnecting removes it. Refused calls do not change it. This inventory is
+only available to you, not to agents, and connection ids reset when the service restarts.
 
 After `install`, Knode Service starts again by itself if it crashes. After `knode service stop` it
 stays stopped until your next login, or until a `knode` command or an agent needs it.
@@ -671,3 +711,11 @@ capture_exclude = ["/Users/you/code/secret-project"]
 
 Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
 within a few seconds, so there is no need to restart it.
+
+## instructions
+
+`knode instructions codex|claude-code --project <folder> [--apply] [--remove]` previews, installs
+or removes a versioned project-local memory workflow. It preserves other rules and saves numbered
+backups on changes. Without `--apply` it writes nothing. It does not connect an agent or change
+spaces, permissions or capture. `knode connect <agent> --instructions <folder>` combines connection
+with installation; `--print` previews both. See [the workflow guide](06-project-workflow.md).
