@@ -66,6 +66,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | `read_excerpt` | Reads a bounded body range by node id, with a snapshot for safe continuation; omits full-note links and metadata |
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
 | `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
+| `projects` | Lists the projects as a tree, with how many notes each has; given one by name or id, lists its notes, most recently changed first, and the projects inside it |
 | `recent` | Lists the nodes that changed most recently |
 | `history` | Lists the latest changes to a node or to the whole space, with who made them (v0.2) |
 | `undo` | Undoes a change the same agent made (v0.2) |
