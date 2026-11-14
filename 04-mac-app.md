@@ -23,8 +23,8 @@ between **Projects** and **Recent**. Projects lists the top-level projects with 
 has; open one to see the projects and notes inside it, and **‹** to go back up. The main area shows
 the project's page: what it is part of, its description, the projects inside it and its most recent
 notes. **Edit description** opens the project itself as a note. Recent lists the most recently
-changed notes: up to 1,000 while Knode Service runs (the count reads `1000+` when there are more),
-and up to 10,000 when the app opens the space itself. The graph can show only the projects (see
+changed notes: up to 1,000 while Knode Service runs, and up to 10,000 when the app opens the space
+itself; the count ends in `+` when there are more. The graph can show only the projects (see
 [Graph](#graph)).
 
 The preview shows GitHub tables, and an HTML image line, such as a README banner, as a link to the
