@@ -171,11 +171,17 @@ point remains available later.
    to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
    into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
    These are deterministic folder suggestions, not AI interpretations of decisions.
-3. Choose whether to also bring the conversations your agents held in these project folders. When
-   on (the default, except for an empty start), Knode reads the sessions of Claude Code, Codex and
-   the other agents it knows, and brings those whose working folder is inside one of the projects,
-   each part of the nearest project; conversations held elsewhere are left out. In the terminal,
-   add `--sessions` to `knode onboard apply`. This does not turn on capture.
+3. Choose whether to also bring the conversations your agents held in these project folders. This
+   is off unless you turn it on. When on, Knode reads the sessions of Claude Code, Codex and the
+   other agents it knows, and lists which conversations it would bring, and how many per project,
+   before anything is written. It brings only those whose working folder is inside a project you
+   kept, each part of the nearest project; conversations held in excluded or reassigned folders,
+   or anywhere else, are left out. Obvious secrets (API keys, tokens, private keys and assigned
+   passwords) are replaced with `[redacted]`; other sensitive text is kept as written, so review
+   the list first. In the terminal, `knode onboard sessions --plan <plan.json>` shows the list and
+   adding `--sessions` to `knode onboard apply` brings them in. If bringing them fails after the
+   space is created, `knode onboard sessions --target <space> --apply` tries again without adding
+   any twice. This does not turn on capture.
 4. Choose a new space name/location outside the source and acknowledge the compatibility notes.
    Existing spaces are never overwritten. Knode revalidates source fingerprints, stages a copy,
    imports it and adds an editable index note per project and typed links. The source is
