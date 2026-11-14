@@ -8,7 +8,8 @@ The Mac app shows your spaces and lets you read, write and organise them.
 
 - Open a `.knode` space, or create a new one, from the File menu or the welcome screen.
 - Reopen a space you used recently: File > Open Recent, or the list on the welcome screen.
-- List its notes, the most recently changed first.
+- List its notes, the most recently changed first. A note imported from a Markdown file shows
+  the folder it came from next to its title, so many notes named `README` stay apart.
 - Read and edit a note in Markdown, with a live preview. Changes are saved as you type, and each
   one is recorded as made by you, with the name of your Mac user account.
 - Search titles and text.
@@ -61,6 +62,23 @@ goes to every space that lists the folder with capture on; one held anywhere els
 default space. Turn capture off for a project and nothing of it is kept, in any space. The same
 settings are in the terminal as `knode folders` and `knode spaces capture` (see the
 [CLI](02-cli.md#folders)).
+
+### Add project folders when creating a space
+
+A project folder is where a project's files live, such as a code repository. The New Space sheet
+offers **Add project folders next**: leave it on and **Folders and Capture** opens once the space
+is created, or turn it off and add them later from the Space menu or Settings > Spaces.
+
+Choose **Add Folder > Project folder**, pick the folder, then confirm it. **Capture conversations
+held in this folder** is on, as for every folder; turn it off and nothing agents say in that
+folder is captured, in any space. Capture also needs to be on for the space and for Knode Service.
+Agents can still save notes through MCP when they can write to the space. Cancel and nothing is
+added. Repeat for each project.
+
+One space can hold several projects, and every agent that can read the space can read all of
+them: use separate spaces when agents need different access. Adding a project folder does not
+move or import its notes, connect an agent or change the space an agent uses. Import notes with
+`knode import`, and connect agents in Settings > Agents.
 
 ## History of a note (v0.2)
 
@@ -150,6 +168,13 @@ every note is a point and every link a line between two. Press it again to go ba
 part of the graph on screen and where every note is. Open it again from the same menu and the graph
 looks exactly as you left it, on any Mac that opens the space. Moving notes in a saved view keeps
 their new places. From the same menu you can save new filters to the view, rename it or delete it.
+
+### Watch what an agent reads
+
+While an agent reads through Knode Service, the notes it opens or finds light up in the graph and
+fade after a few seconds, and a line at the bottom says which agent is reading what. Turn on
+**Follow** (top right) to move the view to each note it reads. Only you see this, never other
+agents, and nothing of it is kept; what agents call is in the access log.
 
 ### Canvases
 
