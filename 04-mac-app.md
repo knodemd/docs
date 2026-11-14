@@ -16,6 +16,20 @@ The Mac app shows your spaces and lets you read, write and organise them.
 - Try the example space to see how it works. Its notes stay in memory and are never saved.
 - See what your agents write as they write it, through Knode Service.
 
+## Projects
+
+When a space has projects, such as those an import makes from your folders, the sidebar switches
+between **Projects** and **Recent**. Projects lists the top-level projects with how many notes each
+has; open one to see the projects and notes inside it, and **‹** to go back up. The main area shows
+the project's page: what it is part of, its description, the projects inside it and its most recent
+notes. **Edit description** opens the project itself as a note. Recent lists the most recently
+changed notes: up to 1,000 while Knode Service runs, and up to 10,000 when the app opens the space
+itself; the count ends in `+` when there are more. The graph can show only the projects (see
+[Graph](#graph)).
+
+The preview shows GitHub tables, and an HTML image line, such as a README banner, as a link to the
+image: Knode does not download it.
+
 ## Several spaces (v0.2)
 
 Keep work and personal memory apart in different spaces. The sidebar lists every space you created
@@ -163,6 +177,8 @@ every note is a point and every link a line between two. Press it again to go ba
 - **Find a note:** type part of a title and press Return to centre it and mark it.
 - **Filter:** show only some kinds of note, kinds of link, tags, people or agents, or notes changed
   today, in the past 7 or 30 days, or in the past year.
+- **Projects:** show only the projects, the projects they are part of and the projects related to
+  them. Click it again to show every note.
 
 **Saved views.** The **Whole Space** menu saves what you see as a named view: its filters, the
 part of the graph on screen and where every note is. Open it again from the same menu and the graph
