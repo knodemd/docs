@@ -23,8 +23,8 @@ has; open one to see the projects and notes inside it, and **‹** to go back up
 the project's page: what it is part of, its description, the projects inside it and its most recent
 notes. **Edit description** opens the project itself as a note. Recent lists the most recently
 changed notes: up to 1,000 while Knode Service runs (the count reads `1000+` when there are more),
-and up to 10,000 when the app opens the space itself. In the graph, **Projects** shows only the
-projects and how they relate; click it again to show every note.
+and up to 10,000 when the app opens the space itself. The graph can show only the projects (see
+[Graph](#graph)).
 
 The preview shows GitHub tables, and an HTML image line, such as a README banner, as a link to the
 image: Knode does not download it.
