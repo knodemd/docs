@@ -62,6 +62,23 @@ default space. Turn capture off for a project and nothing of it is kept, in any 
 settings are in the terminal as `knode folders` and `knode spaces capture` (see the
 [CLI](02-cli.md#folders)).
 
+### Add project folders when creating a space
+
+A project folder is where a project's files live, such as a code repository. The New Space sheet
+offers **Add project folders next**: leave it on and **Folders and Capture** opens once the space
+is created, or turn it off and add them later from the Space menu or Settings > Spaces.
+
+Choose **Add Folder > Project folder**, pick the folder, then confirm it. **Capture conversations
+held in this folder** is on, as for every folder; turn it off and nothing agents say in that
+folder is captured, in any space. Capture also needs to be on for the space and for Knode Service.
+Agents can still save notes through MCP when they can write to the space. Cancel and nothing is
+added. Repeat for each project.
+
+One space can hold several projects, and every agent that can read the space can read all of
+them: use separate spaces when agents need different access. Adding a project folder does not
+move or import its notes, connect an agent or change the space an agent uses. Import notes with
+`knode import`, and connect agents in Settings > Agents.
+
 ## History of a note (v0.2)
 
 Every change to a note is kept, with who made it. Press Command-Y, or click the clock in the
