@@ -163,8 +163,11 @@ are in and **Copy prompt**. Paste it into your agent. Or print it yourself:
 knode onboard prompt --source ~/Notes
 ```
 
-The agent runs `knode onboard guide`, the step-by-step guide that comes with Knode, and follows
-it: it analyzes the folder with the same commands as the guided import, decides with you which
+It works from wherever you start: a folder of notes or an Obsidian vault, projects spread over the
+Desktop and other folders next to unrelated files (only Markdown and the files notes link to are
+read), or nothing yet, where the agent sets up a space, registers your project folders and writes
+a short context note for each from its repository. The agent runs `knode onboard guide`, the
+step-by-step guide that comes with Knode, and follows it: it analyzes the folder with the same commands as the guided import, decides with you which
 notes are yours and which stay with their code or keep their files, asks you once with a short
 summary, imports a copy, checks that search finds what matters, connects itself to the new space
 and, with your agreement and a backup of each file, moves your instruction files from keeping
