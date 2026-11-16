@@ -235,7 +235,8 @@ Before finishing, use **Archive copy and start again**. Afterwards, use **Review
 in the imported space's sidebar menu. The report is the original import report, not a claim that
 later user edits have not changed the notes. Archiving retains the current notes/edits in a new
 `*-archive-<timestamp>.knode` package; it does not erase them. Reopen that package with **Open
-space** to recover it. To try a different grouping, analyze the unchanged source again and create
+space** to recover it. `knode spaces` lists archives last, marked as archived; they are left out of
+the sidebar and are not matched when you name a space. To try a different grouping, analyze the unchanged source again and create
 a new independent space. Later edits from the old copy stay in its archive, not in the new import.
 
 Archiving removes agent access only to that copy, forgets its old path and briefly stops the
