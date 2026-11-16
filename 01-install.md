@@ -62,10 +62,15 @@ Or download it from [knode.md](https://knode.md). The app carries the `knode` co
 offers to install it the first time you open it; you can also do it later from **Knode > Install
 Command Line Tool…**. It adds `knode` to `/usr/local/bin`, or to `/opt/homebrew/bin` when only that
 folder is writable, and asks for your password when your Mac needs it. If `knode` is already
-installed, for example with Homebrew, the app uses that one, says so and installs nothing.
+installed, for example with Homebrew, the app uses that one, says so and installs nothing. If
+`knode` points to the command inside another copy of Knode, one that was moved, replaced or opened
+from somewhere else, the app says which copy and offers to point it to itself, since your agents
+would otherwise keep running the other copy's version; it asks once for each other copy.
 
 When released, the Mac app is downloaded as `Knode-<version>.dmg`: open it and drag Knode to
-Applications. The app and its embedded command are universal (Apple silicon and Intel) and share
+Applications: drag the Knode app inside the image, not the `.dmg` file. If you open Knode from the
+disk image, Downloads or any other folder, it offers to move itself to Applications and opens from
+there; a copy on the disk image is copied, never deleted. The app and its embedded command are universal (Apple silicon and Intel) and share
 the release version. When released, the app and the disk image are signed with Developer ID and
 notarised by Apple, and the release lists a checksum for every download. The download is available
 once the first release is published.
