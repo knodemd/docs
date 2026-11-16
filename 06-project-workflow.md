@@ -153,6 +153,24 @@ Memory is stored locally, but text an agent retrieves is sent to its model provi
 Never place credentials in notes. Raw capture, durable summaries and the agent's current context
 are separate things, with separate costs and privacy choices.
 
+## Let your agent bring your notes in
+
+The quickest way, if you work with an agent that runs commands on your Mac (Claude Code, Codex
+and others). Choose **Get started**, keep **Let your agent do it**, choose the folder your notes
+are in and **Copy prompt**. Paste it into your agent. Or print it yourself:
+
+```sh
+knode onboard prompt --source ~/Notes
+```
+
+The agent runs `knode onboard guide`, the step-by-step guide that comes with Knode, and follows
+it: it analyzes the folder with the same commands as the guided import, decides with you which
+notes are yours and which stay with their code or keep their files, asks you once with a short
+summary, imports a copy, checks that search finds what matters, connects itself to the new space
+and, with your agreement and a backup of each file, moves your instruction files from keeping
+memory in files to Knode. Your source folder is never changed. To start again, archive the copy
+with `knode onboard archive --target <space>`.
+
 ## Guided import in the Mac app
 
 Choose **Get started** on the welcome screen or **Import projects** above the spaces list. The
@@ -255,6 +273,8 @@ recovery metadata, not an agent credential and not a promise that it is synchron
 The native tutorial uses these core-backed commands:
 
 ```sh
+knode onboard guide --source /path/to/vault     # the guide an agent follows
+knode onboard prompt --source /path/to/vault    # the prompt to paste into an agent
 knode onboard analyze --mode vault --source /path/to/vault > /path/to/reviewed-plan.json
 # Edit group names, document project assignments and include flags in the proposal.
 knode onboard apply --plan /path/to/reviewed-plan.json --destination /path/outside/source/Work.knode --name Work
