@@ -16,11 +16,13 @@ knode --space /path/to/Work.knode folders add /path/to/project --kind project --
 knode --space /path/to/Work.knode folders list
 ```
 
-Repeat `folders add` for more projects. Registering a folder does not import its notes, connect
-an agent, change an explicitly configured MCP space, or enable capture for the entire space.
-Turning capture off for a project prevents its conversations being captured anywhere, even if a
-parent folder is captured. Choose this deliberately; capture is separate from intentional MCP
-writes. Do not register overlapping mappings without checking their destinations.
+Adding a project folder also adds the project of the same name, or uses the one the space already
+has, so notes can belong to it (`part-of`). Removing the folder keeps the project. Repeat `folders
+add` for more projects. Registering a folder does not import its notes, connect an agent, change an
+explicitly configured MCP space, or enable capture for the entire space. Turning capture off for a
+project prevents its conversations being captured anywhere, even if a parent folder is captured.
+Choose this deliberately; capture is separate from intentional MCP writes. Do not register
+overlapping mappings without checking their destinations.
 
 Import a copy of existing notes with the importer, not by asking a model to rewrite every file.
 Start with a pilot. Keep the original untouched, review skipped items, unresolved links and
@@ -192,6 +194,14 @@ point remains available later.
    to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
    into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
    These are deterministic folder suggestions, not AI interpretations of decisions.
+   In a vault, documents tracked by git in a repository inside it, such as each repository's
+   `README`, `CHANGELOG` or `AGENTS.md`, start unchecked: they live with their code, where agents
+   read them, and an imported copy would not follow their changes. Your own notes stay checked,
+   including untracked ones kept inside a repository and every note of a vault that is itself a
+   repository. A notice says how many were unchecked, and **Documentation tracked in your
+   repositories** lists those repositories with one switch each: turn one on when it keeps your own
+   notes, such as a status note or session logs. You can also check single documents. A project
+   import brings its documentation as before.
 3. Choose whether to also bring the conversations your agents held in these project folders. This
    is off unless you turn it on. When on, Knode reads the sessions of Claude Code, Codex and the
    other agents it knows, and lists which conversations it would bring, and how many per project,
@@ -256,7 +266,8 @@ Before finishing, use **Archive copy and start again**. Afterwards, use **Review
 in the imported space's sidebar menu. The report is the original import report, not a claim that
 later user edits have not changed the notes. Archiving retains the current notes/edits in a new
 `*-archive-<timestamp>.knode` package; it does not erase them. Reopen that package with **Open
-space** to recover it. To try a different grouping, analyze the unchanged source again and create
+space** to recover it. `knode spaces` lists archives last, marked as archived; they are left out of
+the sidebar and are not matched when you name a space. To try a different grouping, analyze the unchanged source again and create
 a new independent space. Later edits from the old copy stay in its archive, not in the new import.
 
 Archiving removes agent access only to that copy, forgets its old path and briefly stops the

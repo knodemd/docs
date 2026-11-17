@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, or notes from Apple Notes, Bear, Notion or Evernote. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, mail from Gmail (Google Takeout) or Apple Mail, or a WhatsApp, Telegram or Slack chat export. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -137,10 +137,20 @@ knode folders add ~/code/site/drafts --space Work --capture off
 knode folders list --space Work
 ```
 
-Adding the same folder again changes it. Removing a folder keeps everything already captured from
-it. A folder inside your home folder is kept as `~/...`, so the space finds it on your other Macs
-even when your user name differs there; a folder that is not on this machine is kept and marked
-`missing here`.
+A project folder holds the files of the project of the same name: adding `~/code/site` adds the
+project `site` to the space, or uses the project named `site` that the space already has. Names are
+compared without regard to upper and lower case, extra spaces or how accented letters are encoded.
+`[`, `]` and `|` cannot be part of a title, so they become `(`, `)` and `-`: `site [old]` adds the
+project `site (old)`. Its notes and the projects inside it are listed under it, in the app and by
+the MCP `projects` tool. The folder's line in `knode folders list` names its project. If two devices
+each add the folder before they sync, the space can end up with two projects of that name; the
+folder then uses the oldest.
+
+Adding the same folder again changes it, and adds its project if the space has none, such as for a
+folder added before Knode did this. Removing a folder keeps everything already captured from it, and
+its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
+so the space finds it on your other Macs even when your user name differs there; a folder that is
+not on this machine is kept and marked `missing here`.
 
 ## Spaces and folders
 
@@ -230,6 +240,8 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from apple-mail [<path>] [--folder <name>] [--since <day>] [--until <day>] [--attachments]
+knode import <file.mbox> [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <folder> --vault
 ```
 
@@ -294,6 +306,11 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Gmail (v0.3) | The `.mbox` file of a Google Takeout export of Mail, or the folder it is in; any other `.mbox` file too | `mbox` |
+| Apple Mail (v0.3) | Nothing, to read the mail on this Mac, or a mailbox exported from Apple Mail (the `<name>.mbox` folder) | `apple-mail` |
+| WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
+| Telegram (v0.3) | A Telegram Desktop export in JSON: the folder with `result.json`, a `.zip` of it, or the `result.json` | `telegram` |
+| Slack (v0.3) | A workspace export: the `.zip`, or the folder it was extracted to | `slack` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -340,6 +357,8 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Mail:** see [Mail](#mail).
+- **Chats:** see [Chat exports](#chat-exports).
 
 ```sh
 knode import ~/Downloads/data-2026-10-20.zip
@@ -350,6 +369,149 @@ knode import ~/Downloads/Export-notion.zip --json
 ```
 
 A path that is none of these fails and says what `knode import` takes.
+
+### Mail
+
+```sh
+knode import ~/Downloads/Takeout/Mail/"All mail Including Spam and Trash.mbox"
+knode import ~/Downloads/Takeout/Mail --folder Work --since 2026-01-01
+knode import --from apple-mail --folder INBOX --until 2026-06-30 --attachments
+knode import --from apple-mail ~/Desktop/Trips.mbox
+```
+
+From v0.3. Knode never signs in to a mail account: it reads the files you point it at, and
+writes only into your space. For Gmail, export your mail with
+[Google Takeout](https://takeout.google.com) (choose Mail), unzip the download and import the
+`.mbox` file in `Takeout/Mail`, or that folder. For Apple Mail, `--from apple-mail` with no path
+reads the mail stored on this Mac, only ever reading it. macOS lets only apps with Full Disk
+Access read it: if Knode cannot, it says how to turn it on in System Settings > Privacy &
+Security > Full Disk Access for the app that runs Knode (your terminal, or Knode). Or export a
+mailbox from Apple Mail (Mailbox > Export Mailbox) and import the exported `.mbox` folder with
+`--from apple-mail <path>`; it needs no Full Disk Access.
+
+A folder that holds other things besides mail, such as a vault with one `.mbox` file in it, is
+imported as Markdown unless you name the kind with `--from mbox` or `--from apple-mail`.
+
+- **One node per thread**, of kind `email`, titled with the subject. Replies are found by the
+  headers mail programs write (`Message-ID`, `In-Reply-To`, `References`). A reply that has
+  none of them joins the thread with the same subject only when it shares someone with the
+  thread and was sent at most 30 days after its last message. When one message ties together two
+  threads imported before, it goes to the older one and the two are linked; no message is ever in
+  two threads. The messages are in the order they were sent, each with
+  its sender, recipients and date. Knode keeps the plain text of a message and turns its HTML
+  into Markdown when there is no plain text.
+- **People:** everyone who sent or received a message becomes one node of kind `person`, one per
+  address, and each thread links to its people. A later import leaves a person node as it is,
+  so a name or note you add is kept; only a node titled with a bare address gets the person's
+  name once a message gives it.
+- **Folders and dates:** `--folder` imports only the messages in a Gmail label or an Apple Mail
+  mailbox (`--label` and `--mailbox` are other names for it); repeat it for more than one.
+  `--since` and `--until` take a day (`2026-01-01`) in UTC, both included; a message with no
+  date is left out when you give one. Spam and trash are left out unless you name them with
+  `--folder`.
+- **Attachments** are left out unless you add `--attachments`: then the files of each message are
+  attached to its thread, up to 100 MB each. Files attached before stay linked when you import
+  again without `--attachments`. A file the space cannot take, and the files Apple Mail keeps
+  outside some messages, are named in the thread but not attached.
+- **Importing again** adds only the new messages to their threads. Importing another date range
+  later adds those messages to the threads already there. A message in two folders (Gmail's All
+  Mail and your Inbox in Apple Mail, for example) is imported once.
+- **Your edits are kept:** a message you changed in Knode is left as you wrote it, and text you
+  add between messages or after the last one stays where you put it. Knode only writes a message
+  again while it is as Knode wrote it.
+
+### Chat exports
+
+Each chat becomes one node of kind `chat`, titled with the app and the chat's name, such as
+`WhatsApp - Book Club`. Its messages are grouped by day under `## 2026-03-04` headings, each with
+who sent it and when:
+
+```markdown
+## 2026-03-04
+
+**Ada** (09:15): Shall we read the lighthouse novel next?
+
+**Grace** (09:16): Yes!
+It is long though.
+
+**Ada** (09:17): ![[00000003-PHOTO-2026-03-04-09-17-00.jpg]]
+
+*(09:20) Ada added Linus*
+```
+
+- **Files:** photos, voice notes, videos and documents in the export are attached to the chat's
+  node, where the message shows them. A file the chat names but the export does not have, or an
+  export made without media, is marked in the text (`*[missing from the export: ...]*`), and the
+  summary counts them.
+- **Importing again:** the same chat is found again, and only the messages after the last one
+  imported are added, under the day they belong to. Importing the same export twice changes
+  nothing; a newer export of the chat adds what is new. Messages older than the last one
+  imported are not added; when an export has more of them than were imported, the summary says
+  how many were left out.
+- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal`, `group`, `channel`,
+  `private-channel` or `thread`),
+  `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
+  export writes them, in the time of the phone or computer that made it.
+- **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
+  writes only into the space you import into, and sends nothing anywhere.
+
+**WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
+`knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`WhatsApp Chat with
+<name>.txt` from Android). The date and time formats WhatsApp writes in each language are read:
+day or month first, 12 or 24 hours, two or four digit years, with brackets (iPhone) or a dash
+(Android).
+
+- **Day or month first:** WhatsApp does not say which. A day over 12 tells; otherwise the order
+  that keeps the messages in time; otherwise the habit of the format (`3/4/26, 9:15 AM` is month
+  first, as in the United States, and other formats day first). When nothing in the dates tells,
+  the summary says how they were read. The order is kept on the chat's node
+  (`chat.date_order`), and later exports of the chat are read the same way. If a later export
+  shows the order was wrong (a date such as `3/14/26`), nothing is added and the summary says so:
+  delete the chat's node and import the new export again.
+- **The chat's name:** a WhatsApp export has no id for the chat, so the chat is found again by its
+  name, from the export's file names: `WhatsApp Chat with <name>.txt` on Android, and for an
+  iPhone's `_chat.txt`, the `.zip` (`WhatsApp Chat - <name>.zip`) or the folder it is in. Keep the
+  names WhatsApp gave them. A loose `_chat.txt` in a folder WhatsApp did not name is refused,
+  since Knode cannot tell which chat it is.
+
+```sh
+knode import ~/Downloads/"WhatsApp Chat - Book Club.zip"
+knode import --from whatsapp ~/Downloads/"WhatsApp Chat with Ada.txt"
+```
+
+**Telegram:** in Telegram Desktop, export one chat (the chat's menu, Export chat history) or the
+whole account (Settings > Advanced > Export Telegram data), choosing **Machine-readable JSON** as
+the format. Give `knode import` the folder with `result.json`. An account export brings in every
+chat in it, the ones you left included. Bold, italic, struck-out text, code, links and quotes stay
+as Markdown; a reply says who it answers, when, and how that message starts. Photos, files and
+voice messages are attached when the export includes them; the export settings decide which media
+it downloads, and those left out are marked. Each chat is found again by its Telegram id, so a
+renamed chat stays the same node.
+
+```sh
+knode import ~/Downloads/Telegram\ Desktop/ChatExport_2026-03-06
+knode import --from telegram ~/Downloads/Telegram\ Desktop/DataExport_2026-03-06
+```
+
+**Slack:** a workspace owner or admin exports the workspace from Workspace settings >
+Import/Export Data > Export, and gets a `.zip`. Give `knode import` the `.zip` or the folder it
+was extracted to. Each channel, private channel, group message and direct message in it becomes
+a node (`Slack - general`). A thread becomes its own node, `Slack - general - <how it starts>
+(<date and time>)`, linked `part-of` its channel, and later replies are added to the thread's
+node. When the thread already had replies the first time its first message was imported, that
+message also says `Thread: [[...]]` in the channel. Replies whose first message is not in the
+export are kept in their thread's node too, which says that its start is not in the export. The members who wrote or
+were mentioned become nodes of kind `person`, found again by their Slack id (`slack.user`), so
+importing again never copies them; a mention becomes a `[[link]]` to the person, a channel name
+a link to the channel's node, and every chat is linked `related` to the people who wrote in it.
+Bold, italic, struck-out text, code and links become Markdown. A Slack export holds only links to
+files, which need a Slack sign-in to open, so they stay links; files an export includes (in
+`__uploads/`, as some export tools write them) are attached. Times are shown in your computer's
+time zone.
+
+```sh
+knode import ~/Downloads/"Example Slack export Mar 1 2026 - Mar 6 2026.zip"
+```
 
 ### Readwise through its API
 
@@ -724,9 +886,24 @@ list` shows the ones on this machine.
 | OpenCode | `opencode.db` in `~/.local/share/opencode` (or `$XDG_DATA_HOME/opencode`) |
 | Amp | `~/.local/share/amp/threads` (or `$XDG_DATA_HOME/amp/threads`) |
 | Aider | `.aider.chat.history.md` in each project, searched for under the folder named by `KNODE_AIDER_ROOT`, up to four folders down |
-| Cursor | Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
-| Windsurf | Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`) |
-| Cline and Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_CLINE_ROOT`, `$KNODE_ROO_CODE_ROOT`) |
+| Cursor | Chats and agent sessions in Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
+| Windsurf | Chats kept in Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`). Cascade conversations are not captured: see below |
+| Cline | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf, and `tasks` and `sessions` in Cline's data folder, `~/.cline/data` (or `$CLINE_DATA_DIR`, or `$CLINE_DIR/data`), where the Cline CLI and Cline's SDK keep them (or `$KNODE_CLINE_ROOT` instead of all of these) |
+| Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_ROO_CODE_ROOT`) |
+
+An editor's data folder is `~/Library/Application Support/<editor>` on macOS and
+`~/.config/<editor>` (or `$XDG_CONFIG_HOME/<editor>`) on Linux.
+
+Capture runs in Knode Service. When it starts at login, through launchd on macOS or a systemd user
+unit on Linux (`knode service install`), it does not see variables you set only in a shell
+profile, such as `CLINE_DATA_DIR`, `CLINE_DIR`, `XDG_CONFIG_HOME` or the `KNODE_*_ROOT` variables,
+and keeps reading the default folders. Set them where the service can see them too, with
+`launchctl setenv` on macOS or in `~/.config/environment.d/` on Linux, then restart it with
+`knode service stop` and `knode service start`.
+
+Windsurf keeps Cascade conversations in `~/.codeium/windsurf/cascade` as encrypted files whose
+format is not public, and has no way to export them, so Knode cannot read them. Connect Windsurf
+with `knode connect windsurf` instead: Cascade then reads and writes your memory through MCP.
 
 Each conversation is one node, with its agent, project, branch, model and the dates it started
 and ended, when the agent records them. Aider writes every session of a project to the same file,
