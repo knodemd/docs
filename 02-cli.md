@@ -118,6 +118,7 @@ your other devices. Only you can change them, from the command line or the app; 
 knode folders list [--json]
 knode folders add <path> [--kind project|notes|agent] [--capture on|off] [--exclude <pattern>]... [--agent <agent>]
 knode folders remove <path or id>
+knode folders overlaps [--json]
 ```
 
 From v0.2. The folders that feed a space, given with `--space` or your default space:
@@ -159,6 +160,30 @@ folder added before Knode did this. Removing a folder keeps everything already c
 its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
 so the space finds it on your other Macs even when your user name differs there; a folder that is
 not on this machine is kept and marked `missing here`.
+
+### Overlapping folders
+
+Two project folders overlap when the same folder is a project of two spaces, or when one is inside
+the other. Both can be what you want, but they change where conversations go (see
+[Spaces and folders](#spaces-and-folders)):
+
+- **The same folder in two spaces:** its conversations are captured into both, or only into the
+  spaces where capture is on for the folder and for the space.
+- **A folder inside another:** conversations held in the inner folder go to its space only, not to
+  the space of the folder around it. When capture is off for the inner folder or its space, they
+  are not captured at all.
+
+Each warning says which: when capture is off somewhere, it names the folder or space.
+
+`knode folders overlaps` lists every overlap among the spaces Knode knows, naming the space of each
+folder; `--json` prints them for scripts and apps. `knode folders add` warns when the folder it adds
+overlaps another, and `knode folders list` warns about the overlaps of its space. Nothing is
+changed: `knode folders remove` removes a folder you did not mean to have in a space.
+
+```text
+$ knode folders overlaps
+~/code/site/docs ("Personal") is inside ~/code/site ("Work"): conversations held in it are captured into "Personal" only, not into "Work".
+```
 
 ## Spaces and folders
 
@@ -1004,7 +1029,8 @@ knode sources exclude imessage "iMessage;-;+15550100" --name "Ada"
 ## connect
 
 ```sh
-knode connect <agent> [--space <path>] [--print]
+knode connect <agent> [--space <space>] [--print]
+knode connect <agent> --check [--project <folder>] [--space <space>] [--json]
 knode connect --list [--json]
 ```
 
@@ -1050,6 +1076,51 @@ on macOS and Linux.
 
 Running it again keeps the agent's key and access. If the key is missing or was revoked, the agent
 gets a new one and its old keys stop working.
+
+### Check which space an agent reaches
+
+The space an agent uses is set in its MCP settings: the `--space` that `knode connect --space`
+wrote there, or `KNODE_SPACE` in their environment, or else your default space when the agent
+starts. A project folder does not change it: project folders decide where captured conversations
+go, not which space an agent reads and writes.
+
+`knode connect <agent> --check` reads the agent's settings and tells you, changing nothing:
+
+- which space each Knode entry in its settings makes it use, and whether that follows the default
+  space. For Claude Code, the entry for `--project` in `~/.claude.json` (local scope) and the
+  project's `.mcp.json` come before the user entry, as Claude Code reads them. When
+  `CLAUDE_CONFIG_DIR` is set, Claude Code reads `$CLAUDE_CONFIG_DIR/.claude.json` instead of
+  `~/.claude.json`, and so does the check;
+- the space it is meant to use: the one in `--space`, else the space whose project folder holds
+  `--project`, else your default space;
+- whether the agent may read or write there.
+
+It reports what is wrong and what to run, and fails (or, with `--json`, says `"ok": false`):
+
+| Problem | What it means |
+|---|---|
+| `not_connected` | Knode is not in the agent's settings. |
+| `no_key` | The settings run Knode without an agent key, from before keys. |
+| `other_agent` | The settings run Knode as another agent, with that agent's access. |
+| `no_space` | There is no default space, or the space in the settings does not exist. |
+| `wrong_space` | The agent uses another space than the one meant for it. |
+| `unknown_agent` | Knode has no key for the agent, or its keys were revoked. |
+| `no_access` | The agent may not see the space it uses. |
+| `ambiguous_project` | The project folder is in several spaces, so there is no single space to compare with. |
+
+The check never gives access: `knode connect <agent> --space <space>` points the agent at a space,
+but gives it access there only if it has none anywhere yet; otherwise you grant it with
+`knode agents grant`. Read-only access is reported as a note. Restart the agent, or start a new
+session, after changing its settings.
+
+```text
+$ knode connect codex --check --project ~/code/site
+~/code/site is in the project folder ~/code/site of "Work".
+Meant to use: "Work" (where the project's conversations go).
+codex uses "Personal", the default space (Codex, ~/.codex/config.toml).
+It may read and write there.
+problem: codex uses "Personal" (it follows the default space), not "Work", ...
+```
 
 ### Agents connected before keys
 
