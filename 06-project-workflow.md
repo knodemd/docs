@@ -16,11 +16,13 @@ knode --space /path/to/Work.knode folders add /path/to/project --kind project --
 knode --space /path/to/Work.knode folders list
 ```
 
-Repeat `folders add` for more projects. Registering a folder does not import its notes, connect
-an agent, change an explicitly configured MCP space, or enable capture for the entire space.
-Turning capture off for a project prevents its conversations being captured anywhere, even if a
-parent folder is captured. Choose this deliberately; capture is separate from intentional MCP
-writes. Do not register overlapping mappings without checking their destinations.
+Adding a project folder also adds the project of the same name, or uses the one the space already
+has, so notes can belong to it (`part-of`). Removing the folder keeps the project. Repeat `folders
+add` for more projects. Registering a folder does not import its notes, connect an agent, change an
+explicitly configured MCP space, or enable capture for the entire space. Turning capture off for a
+project prevents its conversations being captured anywhere, even if a parent folder is captured.
+Choose this deliberately; capture is separate from intentional MCP writes. Do not register
+overlapping mappings without checking their destinations.
 
 Import a copy of existing notes with the importer, not by asking a model to rewrite every file.
 Start with a pilot. Keep the original untouched, review skipped items, unresolved links and

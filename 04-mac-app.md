@@ -83,11 +83,15 @@ A project folder is where a project's files live, such as a code repository. The
 offers **Add project folders next**: leave it on and **Folders and Capture** opens once the space
 is created, or turn it off and add them later from the Space menu or Settings > Spaces.
 
-Choose **Add Folder > Project folder**, pick the folder, then confirm it. **Capture conversations
-held in this folder** is on, as for every folder; turn it off and nothing agents say in that
-folder is captured, in any space. Capture also needs to be on for the space and for Knode Service.
-Agents can still save notes through MCP when they can write to the space. Cancel and nothing is
-added. Repeat for each project.
+Choose **Add Folder > Project folder**, pick the folder, then confirm it. Adding it also adds the
+project of the same name to the space, such as `site` for a folder named `site`, or uses the one of
+that name the space already has, whatever its case; the sidebar lists it under **Projects**, and the
+folder's row names it. Removing the folder later keeps the project and its notes. A folder added
+before Knode did this gets its project when you add it again. **Capture conversations held in this
+folder** is on, as for every folder; turn it off and nothing agents say in that folder is captured,
+in any space. Capture also needs to be on for the space and for Knode Service. Agents can still save
+notes through MCP when they can write to the space. Cancel and nothing is added. Repeat for each
+project.
 
 One space can hold several projects, and every agent that can read the space can read all of
 them: use separate spaces when agents need different access. Adding a project folder does not
