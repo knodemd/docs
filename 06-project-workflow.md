@@ -325,7 +325,8 @@ as an empty file. Restart Codex after restoration. Optional instruction-file edi
 separately from their numbered backups; they are not silently removed by archiving.
 
 An `onboarding.json` receipt inside the imported package records the reviewed proposal, original
-paths, source fingerprints, generated context IDs and actual import report. It is auxiliary local
+paths, source fingerprints, generated context IDs and actual import report, whose `nodes` maps
+each source path to the node it became. It is auxiliary local
 recovery metadata, not an agent credential and not a promise that it is synchronized across devices.
 
 ### CLI boundary
