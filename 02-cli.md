@@ -222,10 +222,10 @@ about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
 - **Indexing** runs in the background: when a space opens, and a couple of seconds after each
   change. It never slows down writing, and it pauses while your laptop runs on battery (`knode
   index run` indexes anyway). A note that is not indexed yet is still found by its words.
-- **Conversations and chats** (captured agent conversations and imported chats) are long and
-  mention many things in passing. Ranking words and meaning together, they count half, so the
-  short note that answers your question comes before a conversation that only mentions it.
-  `--words` and `--meaning` rank them like any note.
+- **Conversations, chats and mail** (captured agent conversations, imported chats and imported mail
+  threads) are long and mention many things in passing. Ranking words and meaning together, they
+  count half, so the short note that answers your question usually comes before a conversation that
+  only mentions it. `--words` and `--meaning` rank them like any note.
 - **Turning it off:** `knode index off`, or in `config.toml`:
 
   ```toml
