@@ -768,7 +768,11 @@ knode sources exclude imessage "iMessage;-;+15550100" --name "Ada"
   not (kept only in iCloud, or deleted) is named in the text as not attached.
 - **Reactions** (tapbacks) are left out. An edited message shows its last text, marked
   *(edited)*; one unsent shows *[unsent]*. A reply names the message it answers.
-- A message edited or unsent after the connector brought it in keeps the text it had then.
+- **Later edits are not applied.** A message edited or unsent in Messages after the connector
+  brought it in keeps, in Knode, the text it had then; edit the note by hand if it matters.
+- If Messages numbers its messages again, as after its database is rebuilt or moved to a new
+  Mac, the connector notices, reads everything once more and adds to each conversation only
+  what it is missing.
 
 ## connect
 
