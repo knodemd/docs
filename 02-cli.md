@@ -254,7 +254,7 @@ knode import --from bear
 knode import --from readwise-api
 knode import --from apple-mail [<path>] [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <file.mbox> [--folder <name>] [--since <day>] [--until <day>] [--attachments]
-knode import <folder> --vault [--report <file.json>]
+knode import <folder> --vault [--report <file.json>] [--include-deleted]
 ```
 
 Brings what you already have into the space. Knode tells what a path is by its name and what is
@@ -327,7 +327,7 @@ are any. `--json` includes the report as `report`. The receipt of a guided impor
 
 ### Importing a vault again
 
-From v0.3, importing the same folder again into the same space finds each note by its path (or by
+From v0.3, importing the same folder again into the same space finds each note by its path relative to that folder (or by
 the `id` in its frontmatter) and compares it with what the last import wrote:
 
 | The file since the last import | The note in Knode since the last import | What happens |
@@ -336,6 +336,12 @@ the `id` in its frontmatter) and compares it with what the last import wrote:
 | changed | unchanged | the note takes the file's changes: `updated` |
 | unchanged | edited | your edit is kept: `unchanged` (the report says it was edited in Knode) |
 | changed | edited | your edit is kept and the file's changes are **not** brought in: `edited`, for you to merge by hand |
+| unchanged or changed | deleted | the note stays deleted: `skipped`, with the reason "deleted in Knode, not imported again" and the id of the deleted note |
+
+A note you deleted in Knode is not imported again, whether or not its file changed: the summary
+lists it and the report counts it in `counts.deleted`. `--include-deleted` imports such notes
+again, as new notes. (Knode remembers the note of each file without an `id`, so it can tell a
+note deleted in Knode from a new file.)
 
 A note stays `edited` on every import until the two agree: copy what you want from the file into
 the note (or the note into the file), and the next import is `unchanged` again. Notes imported by
@@ -716,7 +722,8 @@ in Knode) or `missing` (such as an image in a shared attachment folder that was 
 also lists the files only in the export (notes made in Knode) and what import never reads, such as
 `.obsidian/` and `.trash/`, so nothing is silently counted as lost or as kept. `--json` prints all
 of it. It compares text and files, not Obsidian itself: plugins, settings and how a note renders
-are not checked.
+are not checked. The export folder must be apart from the vault: Knode refuses to export into it,
+into a folder inside it or into a folder that holds it.
 
 ## history
 

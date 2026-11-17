@@ -45,9 +45,22 @@ knode init vault-pilot
 knode import ~/Vault --vault --space vault-pilot --report ~/vault-report.json
 ```
 
-To pilot one project rather than the whole vault, import only its folder
-(`knode import ~/Vault/Projects/Atlas --vault --space vault-pilot`). Its links to notes outside the
-folder show as unresolved: that is expected for a pilot.
+Always import the same folder into a space. Knode finds a note again by its path relative to the
+folder you import, so `Atlas/Plan.md` imported from `~/Vault/Projects` and `Projects/Atlas/Plan.md`
+imported from `~/Vault` are two different notes: importing a subfolder and then the whole vault
+into the same space brings that subfolder's notes in twice.
+
+To pilot one project rather than the whole vault, import only its folder into a **throwaway**
+space, and delete that space once you have looked at it:
+
+```sh
+knode init atlas-trial
+knode import ~/Vault/Projects/Atlas --vault --space atlas-trial
+```
+
+Its links to notes outside the folder show as unresolved: that is expected for a trial. The space
+you keep (`vault-pilot` above, or the one you will use) gets the whole vault, imported from
+`~/Vault` from the start.
 
 `vault-report.json` is the migration report: the node each file became, what was created, updated,
 unchanged, attached, skipped or failed and why, links that find no note or several, and embedded
@@ -75,6 +88,9 @@ Open them in the Mac app too: the text, tags and links should be what you wrote.
 ```sh
 knode export ~/vault-pilot-export --space vault-pilot --compare ~/Vault
 ```
+
+Export to a folder of its own: Knode refuses to export into the vault, into a folder inside it, or
+into a folder that holds it.
 
 The comparison lists, for every note and file of the vault, whether the export has it identical,
 with only frontmatter changes, changed, moved or missing, plus what is only in the export and what
@@ -110,8 +126,10 @@ sync between them.
 
 When the pilot passes:
 
-1. Import into the space you will use (or keep the pilot space and make it the default with
-   `knode spaces default vault-pilot`), with `--report`.
+1. Import the whole vault, from the same folder as the pilot (`~/Vault`), into the space you will
+   use, with `--report`. Or keep the pilot space, if it has the whole vault, and make it the
+   default with `knode spaces default vault-pilot`. Never import into the space you keep a
+   subfolder you tried on its own: its notes would come in twice (see step 3).
 2. Compare again with `knode export <folder> --compare ~/Vault`.
 3. Point your agents at that space (see [Install](01-install.md)).
 4. Keep the vault backup from step 1 untouched for as long as you like.
@@ -122,8 +140,11 @@ To go back at any point:
 - after switching: `knode export ~/Vault-from-Knode` writes every note, with your edits in Knode,
   as Markdown Obsidian opens; your backup still has the vault as it was, settings included.
 
-If an import stops halfway, run the same command again: notes already written are found, the rest
-are added, nothing is duplicated.
+If an import stops halfway, run the same command again, on the same folder and into the same
+space: notes already written are found by their path in that folder (or the `id` in their
+frontmatter) and left alone, and the rest are added, so none of them comes in twice. Notes
+renamed or moved in the vault since, without an `id`, are the exception: they come in as new
+notes (see below).
 
 ## Ongoing sync with Obsidian
 
@@ -131,6 +152,8 @@ Knode does not keep an Obsidian vault and a space in step today:
 
 - importing again brings in changes made in the vault, but never deletes a note whose file was
   deleted, and a file renamed without an `id` in its frontmatter comes in as a new note;
+- a note you deleted in Knode stays deleted when you import the vault again: the import says it
+  was not imported again, and `--include-deleted` brings such notes back as new notes;
 - edits made in Knode stay in Knode until you export them;
 - Obsidian plugins, settings, themes, workspaces and canvases are not migrated, and plugin queries
   (Dataview and the like) are kept as text, not run;
