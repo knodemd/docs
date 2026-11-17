@@ -51,6 +51,21 @@ where they are installed; if there are none, nothing is changed.
 space with `knode markdown folder <dir>` and add notes with `aider --read <dir>/<note>.md`, or run
 `/run knode search <words>` inside Aider.
 
+### The first time
+
+Connect your agent and open a new session: you do not have to ask for anything. When the space it
+connects to is not set up yet, Knode tells the agent so as it connects, and the agent sets Knode up
+for you before other work, with the guide Knode ships: it asks where you start (a folder of notes,
+projects spread around, or nothing yet), brings in a copy of your notes and your agents' memory,
+and asks you only what needs your judgment, in your language. It needs an agent that can run
+commands on your machine, such as Claude Code or Codex.
+
+A space counts as not set up only while it has no import from `knode onboard`, no project and
+fewer than three notes you made yourself. Conversations Knode captured from your agents, notes
+agents wrote and example notes (titled `Example: ...`) do not count. Once any of these is there,
+agents are not asked again; you can still ask yours to set Knode up, or bring more notes in, at
+any time. (v0.3)
+
 ## How it works
 
 `knode mcp` reads and writes through Knode Service, starting it in the background when it is not
@@ -74,6 +89,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | `read_canvas` | Lists the canvases, or reads one: its cards with their positions and groups, and the links between them (v0.3) |
 | `attach_file` | Attaches a file to a node: its bytes, or a file in a notes folder of the space (v0.3) |
 | `read_attachment` | Reads a file attached to a node; text files come back as text (v0.3) |
+| `setup_guide` | Returns the step-by-step guide to set Knode up, the same as `knode onboard guide`, for the folder of your notes when given; see [The first time](#the-first-time) (v0.3) |
 
 Agents read and write Markdown, the same text you see in the app. A `[[Title]]` in the text links
 to the node with that title. A note imported from a file says which in `search` and `recent`, such
