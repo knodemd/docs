@@ -338,9 +338,16 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
    System Settings > Privacy & Security > Full Disk Access. Turn on Knode there (add it with the
    **+** button if it is not listed), then come back and continue. Knode reads a copy of the other
    app's data and never changes it.
-2. **Sign in**, for a connector that reaches an account: the steps that service asks for, such as
-   a code or a page that opens in your browser. The sign-in is kept in your Keychain, never in a
-   space or a settings file.
+2. **Sign in**, for a connector that reaches an account, unless it is signed in already. The
+   sign-in is kept in your Keychain, never in a space or a settings file:
+   - **Telegram**: your phone number, the code Telegram sends you, then your password if the
+     account has one.
+   - **Gmail** and **Slack**: the sign-in page opens in your browser. Sign in there and allow
+     Knode to read; the sheet goes on by itself when the browser comes back to Knode.
+     **Open the page again** opens it once more, and **Cancel** stops waiting.
+   - **Mail (IMAP)**: your address, the IMAP server (not needed for Gmail, iCloud, Outlook, Yahoo
+     or Fastmail) and an app password made in your account's security settings, not your usual
+     password.
 3. **History**: **From today**, the default, brings in what is new from the start of today on;
    **Everything** brings in everything the source has, then what is new. It is chosen once: to
    change it, disconnect and connect again.
@@ -355,6 +362,9 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
 - **Run now** brings in what is new at once, without waiting for its next run.
 - **Choose chats** (or channels, or folders) changes what it leaves out. Switching one on again
   reads it from now on; what was said while it was off is not brought in later.
+- **Signed in** shows the account a connector reads. **Sign out** asks first, ends the session
+  and removes it from your Keychain: the connector brings in nothing more, in any space, until
+  you sign in again with **Sign in**.
 - **Disconnect** asks first. The connector stops, its settings in the space and its sign-in are
   removed, and everything it brought in stays in the space.
 
