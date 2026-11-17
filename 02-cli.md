@@ -137,10 +137,20 @@ knode folders add ~/code/site/drafts --space Work --capture off
 knode folders list --space Work
 ```
 
-Adding the same folder again changes it. Removing a folder keeps everything already captured from
-it. A folder inside your home folder is kept as `~/...`, so the space finds it on your other Macs
-even when your user name differs there; a folder that is not on this machine is kept and marked
-`missing here`.
+A project folder holds the files of the project of the same name: adding `~/code/site` adds the
+project `site` to the space, or uses the project named `site` that the space already has. Names are
+compared without regard to upper and lower case, extra spaces or how accented letters are encoded.
+`[`, `]` and `|` cannot be part of a title, so they become `(`, `)` and `-`: `site [old]` adds the
+project `site (old)`. Its notes and the projects inside it are listed under it, in the app and by
+the MCP `projects` tool. The folder's line in `knode folders list` names its project. If two devices
+each add the folder before they sync, the space can end up with two projects of that name; the
+folder then uses the oldest.
+
+Adding the same folder again changes it, and adds its project if the space has none, such as for a
+folder added before Knode did this. Removing a folder keeps everything already captured from it, and
+its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
+so the space finds it on your other Macs even when your user name differs there; a folder that is
+not on this machine is kept and marked `missing here`.
 
 ## Spaces and folders
 
