@@ -167,9 +167,13 @@ Two project folders overlap when the same folder is a project of two spaces, or 
 the other. Both can be what you want, but they change where conversations go (see
 [Spaces and folders](#spaces-and-folders)):
 
-- **The same folder in two spaces:** its conversations are captured into both.
+- **The same folder in two spaces:** its conversations are captured into both, or only into the
+  spaces where capture is on for the folder and for the space.
 - **A folder inside another:** conversations held in the inner folder go to its space only, not to
-  the space of the folder around it.
+  the space of the folder around it. When capture is off for the inner folder or its space, they
+  are not captured at all.
+
+Each warning says which: when capture is off somewhere, it names the folder or space.
 
 `knode folders overlaps` lists every overlap among the spaces Knode knows, naming the space of each
 folder; `--json` prints them for scripts and apps. `knode folders add` warns when the folder it adds
@@ -995,7 +999,9 @@ go, not which space an agent reads and writes.
 
 - which space each Knode entry in its settings makes it use, and whether that follows the default
   space. For Claude Code, the entry for `--project` in `~/.claude.json` (local scope) and the
-  project's `.mcp.json` come before the user entry, as Claude Code reads them;
+  project's `.mcp.json` come before the user entry, as Claude Code reads them. When
+  `CLAUDE_CONFIG_DIR` is set, Claude Code reads `$CLAUDE_CONFIG_DIR/.claude.json` instead of
+  `~/.claude.json`, and so does the check;
 - the space it is meant to use: the one in `--space`, else the space whose project folder holds
   `--project`, else your default space;
 - whether the agent may read or write there.
