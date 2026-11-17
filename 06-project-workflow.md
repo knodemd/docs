@@ -215,6 +215,13 @@ and, with your agreement and a backup of each file, moves your instruction files
 memory in files to Knode. Your source folder is never changed. To start again, archive the copy
 with `knode onboard archive --target <space>`.
 
+When the agent is already connected to a space that is not set up yet, such as the new default
+space the app connected it to, holding only captured conversations, the agent imports into that
+space instead of a new one (`knode onboard apply --into <space>`), so it needs no reconnection and
+you need no new session. A space counts as set up once it has an onboarding receipt, a project or
+three notes of yours; such a space is refused, and the import goes to a new space. What the space
+held stays, and archiving it later puts that aside with the import.
+
 ## Guided import in the Mac app
 
 Choose **Get started** on the welcome screen or **Import projects** above the spaces list. The
@@ -332,11 +339,26 @@ knode onboard analyze --mode vault --source /path/to/vault > /path/to/reviewed-p
 # Edit group names, document project assignments and include flags in the proposal.
 knode onboard apply --plan /path/to/reviewed-plan.json --destination /path/outside/source/Work.knode --name Work
 knode onboard inspect --target /path/outside/source/Work.knode
+# Or into an existing space that is not set up yet (a name or a .knode path), instead of a new one.
+knode onboard apply --plan /path/to/reviewed-plan.json --into Memory
 # Explicit connection; modifies Codex configuration and saves its private recovery point.
 knode onboard connect-codex --target /path/outside/source/Work.knode
 # Close editors first; archive retains notes, revokes this copy's grants and restores config if safe.
 knode onboard archive --target /path/outside/source/Work.knode
 ```
+
+`--into` does what `--destination` does, with the same checks, project index notes, receipt and
+`--sessions`, but in a space that exists: one with no onboarding receipt, no project and fewer than
+three notes made by a person (captured conversations, notes agents wrote and `Example:` notes do
+not count). A set-up space is refused. The whole plan is first rehearsed in a throwaway copy, and a
+source note that would write over a note already in the space is refused: one with the id of a
+note there (or the id an earlier version of Knode recorded for it), or one without an id whose
+path is the path of a note imported there before. So a plan that would be refused writes nothing
+into the space. Notes already there stay; once the import has succeeded, capture is turned off, as
+in a new onboarding space, and a refused or failed import leaves capture as it was. As this is the space your agents are connected to, `--into` turns capture off in the space
+they write to, so their conversations are no longer captured there. With Knode Service running, the
+import goes through it, so the app and connected agents see it at once. `onboard archive` works on
+such a space too and says that what it held before is archived with it.
 
 `--mode project` imports one project; `--mode empty` needs no source. Plans are not exports: their
 fingerprints intentionally expire when the source changes. Re-analyze instead of editing digests.
