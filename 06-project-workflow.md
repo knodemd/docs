@@ -21,8 +21,21 @@ has, so notes can belong to it (`part-of`). Removing the folder keeps the projec
 add` for more projects. Registering a folder does not import its notes, connect an agent, change an
 explicitly configured MCP space, or enable capture for the entire space. Turning capture off for a
 project prevents its conversations being captured anywhere, even if a parent folder is captured.
-Choose this deliberately; capture is separate from intentional MCP writes. Do not register
-overlapping mappings without checking their destinations.
+Choose this deliberately; capture is separate from intentional MCP writes.
+
+Check the result before relying on it:
+
+```sh
+# Project folders in two spaces, or inside another folder, with the space of each.
+knode folders overlaps
+# Which space the agent's settings make it use, and whether it is the project's space.
+knode connect codex --check --project /path/to/project
+```
+
+The check reads the agent's settings and its access and changes nothing. If the agent uses another
+space, `knode --space Work connect codex` points it at Work; it gets access there only if it has
+none yet anywhere, so grant it with `knode agents grant codex Work write` if the check still says
+`no_access`. See [Check which space an agent reaches](02-cli.md#check-which-space-an-agent-reaches).
 
 Import a copy of existing notes with the importer, not by asking a model to rewrite every file.
 Start with a pilot. Keep the original untouched, review skipped items, unresolved links and
