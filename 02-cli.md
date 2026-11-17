@@ -1080,4 +1080,6 @@ marks them, and so are tool output and the model's reasoning.
 or removes a versioned project-local memory workflow. It preserves other rules and saves numbered
 backups on changes. Without `--apply` it writes nothing. It does not connect an agent or change
 spaces, permissions or capture. `knode connect <agent> --instructions <folder>` combines connection
-with installation; `--print` previews both. See [the workflow guide](06-project-workflow.md).
+with installation; `--print` previews both. After installing, it says when the agent reads the file and which other files it reads with it;
+start a new agent session to load it. See [When the agent picks up a change](06-project-workflow.md#when-the-agent-picks-up-a-change)
+and [Which instructions win](06-project-workflow.md#which-instructions-win).
