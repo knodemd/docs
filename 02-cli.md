@@ -146,6 +146,13 @@ the MCP `projects` tool. The folder's line in `knode folders list` names its pro
 each add the folder before they sync, the space can end up with two projects of that name; the
 folder then uses the oldest.
 
+Two different folders with the same name are kept apart. A folder uses the project of its name only
+when no other folder holds that project yet, such as one an import made. When another folder holds
+it, the new folder gets a project of its own, named after its parent folder too: with `~/w/a/api`
+holding `api`, adding `~/w/b/api` adds the project `api (b)`, and `knode folders add` says which
+folder holds `api`. Adding a folder again keeps its project and says it already holds it. Each
+folder remembers its project, so adding another folder, or renaming the project, never moves it.
+
 Adding the same folder again changes it, and adds its project if the space has none, such as for a
 folder added before Knode did this. Removing a folder keeps everything already captured from it, and
 its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
