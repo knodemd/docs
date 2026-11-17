@@ -21,6 +21,7 @@ Every command works without the app.
 | `knode attachments <node>` | Lists the files attached to a node (v0.3) |
 | `knode markdown folder <folder>` | Keeps a folder of Markdown files in step with the space, both ways from v0.3 (v0.2) |
 | `knode markdown deleted` | Lists the notes whose file was deleted from the live Markdown folder, and keeps or deletes them (v0.3) |
+| `knode sources <action>` | Lists what brings things into the space, importers and connectors, and connects, pauses, excludes chats from or disconnects a connector (v0.4). See [sources](#sources) |
 | `knode connect <agent>` | Gives an agent its own key and adds Knode to it; `knode connect --list` shows every agent |
 | `knode agents <action>` | Lists agents, sets what each may do in each space, or revokes their keys |
 | `knode mcp` | Runs the MCP server; agents start it themselves |
@@ -786,6 +787,63 @@ We charge **per seat**. See [[Roadmap]].
   their labels.
 - `knode import` of an exported folder, into the same space or another one, keeps every note's id,
   dates, authors, attachments and kinds of link, so exporting the copy gives the same files.
+
+## sources
+
+> Not released yet: arrives with v0.4. The connectors themselves (Apple Mail, Messages,
+> WhatsApp, Telegram, Gmail, Slack) come one by one; `knode sources list` shows the ones your
+> version has.
+
+A *source* is anything that brings things into a space. *Importers* run once on what you give
+them, with [`knode import`](#import). *Connectors* keep running in Knode Service and bring in
+what is new, the same nodes an export of the same chats would give. Every connector is off until
+you connect it to a space.
+
+```sh
+knode sources list
+knode sources connect whatsapp
+knode sources connect telegram --history everything
+knode sources containers whatsapp
+knode sources exclude whatsapp 34600000000-1600000000@g.us --name "Family"
+knode sources include whatsapp 34600000000-1600000000@g.us
+knode sources pause whatsapp
+knode sources resume whatsapp
+knode sources run whatsapp
+knode sources disconnect whatsapp
+```
+
+| Action | What it does |
+|---|---|
+| `list` | Lists the connectors, each with its state, the history chosen, how much it brought in, when it last ran and its last error, then the importers. `--json` prints it as JSON |
+| `connect <source>` | Connects a connector to the space and turns it on. It brings in what happens from today on, or with `--history everything` everything it has. The choice is kept: to change it, disconnect and connect again. Older history can still come from an export |
+| `pause <source>`, `resume <source>` | Stops the connector until you resume it |
+| `containers <source>` | Lists the chats, channels or folders the connector has now, with the excluded ones marked |
+| `exclude <source> <id>` | Excludes a chat, channel or folder: it is never read again. `--name` gives the name shown in the list. What it already brought in stays |
+| `include <source> <id>` | Reads an excluded chat, channel or folder again from now on |
+| `run <source>` | Runs the connector now instead of waiting for its next run |
+| `disconnect <source>` | Disconnects the connector. What it brought in stays in the space |
+
+Everything comes in once a connector is connected, new chats included, except what you exclude.
+Spam and trash stay out. The space keeps your choices (on or off, the history, what is excluded),
+so they are the same on every device. What a connector did on this machine, where it stopped and
+its last error, is kept in your Knode home and holds nothing it read.
+
+Knode Service runs each connector when the files it reads change, or every few minutes for one
+that reads a service over the network, and after a restart picks up where it stopped without
+writing anything twice. After an error it waits longer each time, up to an hour. Connectors that
+read another app's database (Mail, Messages, WhatsApp for Mac) read a copy of it, never the app's
+own file, and never change it; if the app changed how it stores things, the connector stops,
+writes nothing and `knode sources list` says it needs an update. Some connectors need a
+permission, such as Full Disk Access on macOS, or a sign-in; the list says which. Passwords and
+sign-in sessions stay in the system keychain, never in a space, a settings file or a log.
+
+To stop every connector on this machine, add to `config.toml`:
+
+```toml
+sources = false
+```
+
+`capture = false` stops connectors too: Knode Service then brings nothing in by itself.
 
 ## connect
 
