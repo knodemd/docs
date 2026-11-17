@@ -150,7 +150,8 @@ Two different folders with the same name are kept apart. A folder uses the proje
 when no other folder holds that project yet, such as one an import made. When another folder holds
 it, the new folder gets a project of its own, named after its parent folder too: with `~/w/a/api`
 holding `api`, adding `~/w/b/api` adds the project `api (b)`, and `knode folders add` says which
-folder holds `api`. Adding a folder again keeps its project and says it already holds it.
+folder holds `api`. Adding a folder again keeps its project and says it already holds it. Each
+folder remembers its project, so adding another folder, or renaming the project, never moves it.
 
 Adding the same folder again changes it, and adds its project if the space has none, such as for a
 folder added before Knode did this. Removing a folder keeps everything already captured from it, and
