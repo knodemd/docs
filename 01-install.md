@@ -70,10 +70,12 @@ would otherwise keep running the other copy's version; it asks once for each oth
 When released, the Mac app is downloaded as `Knode-<version>.dmg`: open it and drag Knode to
 Applications: drag the Knode app inside the image, not the `.dmg` file. If you open Knode from the
 disk image, Downloads or any other folder, it offers to move itself to Applications and opens from
-there; a copy on the disk image is copied, never deleted. The app and its embedded command are universal (Apple silicon and Intel) and share
-the release version. When released, the app and the disk image are signed with Developer ID and
-notarised by Apple, and the release lists a checksum for every download. The download is available
-once the first release is published.
+there; a copy on the disk image is copied, never deleted. If Applications already has a copy of
+Knode, the app says so, with both versions, and moves that copy to the Trash. The app and its
+embedded command are universal (Apple silicon and Intel) and share the release version. When
+released, the app and the disk image are signed with Developer ID and notarised by Apple, and the
+release lists a checksum for every download. The download is available once the first release is
+published.
 
 ## Connect your agents
 
