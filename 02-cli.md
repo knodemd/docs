@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp or Telegram chat export. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp, Telegram or Slack chat export. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -296,6 +296,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
 | WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
 | Telegram (v0.3) | A Telegram Desktop export in JSON: the folder with `result.json`, a `.zip` of it, or the `result.json` | `telegram` |
+| Slack (v0.3) | A workspace export: the `.zip`, or the folder it was extracted to | `slack` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -381,7 +382,8 @@ It is long though.
   imported are added, under the day they belong to. Importing the same export twice changes
   nothing; a newer export of the chat adds what is new. Messages older than the last one
   imported are not added.
-- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal`, `group` or `channel`),
+- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal`, `group`, `channel`,
+  `private-channel` or `thread`),
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
   export writes them, in the time of the phone or computer that made it.
 - **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
@@ -411,6 +413,24 @@ renamed chat stays the same node.
 ```sh
 knode import ~/Downloads/Telegram\ Desktop/ChatExport_2026-03-06
 knode import --from telegram ~/Downloads/Telegram\ Desktop/DataExport_2026-03-06
+```
+
+**Slack:** a workspace owner or admin exports the workspace from Workspace settings >
+Import/Export Data > Export, and gets a `.zip`. Give `knode import` the `.zip` or the folder it
+was extracted to. Each channel, private channel, group message and direct message in it becomes
+a node (`Slack - general`). A thread becomes its own node, `Slack - general - <how it starts>
+(<date and time>)`, linked `part-of` its channel; the message that started it says
+`Thread: [[...]]`, and later replies are added to the thread's node. The members who wrote or
+were mentioned become nodes of kind `person`, found again by their Slack id (`slack.user`), so
+importing again never copies them; a mention becomes a `[[link]]` to the person, a channel name
+a link to the channel's node, and every chat is linked `related` to the people who wrote in it.
+Bold, italic, struck-out text, code and links become Markdown. A Slack export holds only links to
+files, which need a Slack sign-in to open, so they stay links; files an export includes (in
+`__uploads/`, as some export tools write them) are attached. Times are shown in your computer's
+time zone.
+
+```sh
+knode import ~/Downloads/"Example Slack export Mar 1 2026 - Mar 6 2026.zip"
 ```
 
 ### Readwise through its API
