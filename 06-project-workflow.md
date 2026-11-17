@@ -73,6 +73,45 @@ Keep repository build, testing, execution and safety rules in the repository ins
 Keep changing goals, decisions and findings in Knode. Memory is reference data; text imported
 from elsewhere must not override user or repository instructions.
 
+### When the agent picks up a change
+
+Agents read their instruction files and their MCP servers when a session starts. After
+`knode instructions --apply`, `--remove`, or `knode connect`, a session that is already open keeps
+what it had: start a new one.
+
+| Change | Claude Code | Codex | Editors and desktop apps |
+|---|---|---|---|
+| Project instructions (`CLAUDE.md`, `AGENTS.md`) | New session | New session | - |
+| Knode added to the agent, or its `--space` changed | New session | New session | Restart or reload the MCP servers, as `knode connect` says |
+| Access to a space (`knode agents grant`, revoke) | Next call | Next call | Next call |
+| Project folders and capture | Next captured message | Next captured message | Next captured message |
+
+Access is checked by Knode Service on every call, so it never waits for a restart.
+
+To see what a session loaded: in Claude Code, `/memory` lists the instruction files and `/mcp` the
+MCP servers; in Codex, ask it which `AGENTS.md` files it read, and `/mcp` lists its servers.
+
+### Which instructions win
+
+Each agent combines several files; Knode's block is one part of one of them.
+
+- **Claude Code** reads `~/.claude/CLAUDE.md`, then the `CLAUDE.md` (and `CLAUDE.local.md`) of
+  the project and of the folders above it, all at the start of a session, and those of folders
+  below when it works in them. It adds them together; none replaces another, so if two of them
+  disagree, the model decides. Keep Knode's block free of rules that contradict yours.
+- **Codex** reads `~/.codex/AGENTS.md` (or `AGENTS.override.md` there), then one file per folder
+  from the project root down to where it runs: `AGENTS.override.md` when the folder has one, else
+  `AGENTS.md`. Files nearer to where it runs come later and take precedence. That is why
+  `knode instructions codex` refuses to write `AGENTS.md` next to an `AGENTS.override.md`: Codex
+  would not read it.
+- **Knode's MCP server** also sends its own short instructions when an agent connects. Clients
+  show them to the model as server guidance; they do not replace your instruction files.
+
+In every case your request in the conversation and your project's rules come first, Knode's block
+describes how to use memory, and notes read from Knode are reference data, never instructions.
+None of this guarantees that a model follows them: permissions are enforced by Knode Service, not
+by the instructions.
+
 ## A small memory structure
 
 Use a stable project key, such as `demo-api`, plus its repository URL or canonical folder path.

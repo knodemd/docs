@@ -119,7 +119,7 @@ find what was worked out earlier even when it was put in other words. The `searc
 
 | Mode | Finds |
 |---|---|
-| `hybrid` (default) | Notes that match the words or the meaning, ranked together |
+| `hybrid` (default) | Notes that match the words or the meaning, ranked together; conversations, chats and mail threads count half, so the note that answers usually comes first |
 | `words` | Notes with every word: best for names, ids and exact terms |
 | `meaning` | Notes about the same thing, whatever words they use |
 
