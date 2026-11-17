@@ -88,7 +88,9 @@ is created, or turn it off and add them later from the Space menu or Settings > 
 Choose **Add Folder > Project folder**, pick the folder, then confirm it. Adding it also adds the
 project of the same name to the space, such as `site` for a folder named `site`, or uses the project
 of that name the space already has, compared without regard to upper and lower case. `[`, `]` and
-`|` become `(`, `)` and `-`, and the confirmation shows the name it will use. The sidebar lists it
+`|` become `(`, `)` and `-`, and the confirmation shows the name it will use. If another folder of
+the same name already holds that project, the new folder gets its own, named after its parent
+folder too, such as `api (b)`, and the Folders screen says which folder holds `api`. The sidebar lists it
 under **Projects**, and the folder's row names it. Removing the folder later keeps the project and
 its notes. A folder added before Knode did this gets its project when you add it again. **Capture
 conversations held in this folder** is on, as for every folder; turn it off and nothing agents say
