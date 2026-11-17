@@ -724,9 +724,24 @@ list` shows the ones on this machine.
 | OpenCode | `opencode.db` in `~/.local/share/opencode` (or `$XDG_DATA_HOME/opencode`) |
 | Amp | `~/.local/share/amp/threads` (or `$XDG_DATA_HOME/amp/threads`) |
 | Aider | `.aider.chat.history.md` in each project, searched for under the folder named by `KNODE_AIDER_ROOT`, up to four folders down |
-| Cursor | Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
-| Windsurf | Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`) |
-| Cline and Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_CLINE_ROOT`, `$KNODE_ROO_CODE_ROOT`) |
+| Cursor | Chats and agent sessions in Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
+| Windsurf | Chats kept in Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`). Cascade conversations are not captured: see below |
+| Cline | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf, and `tasks` and `sessions` in Cline's data folder, `~/.cline/data` (or `$CLINE_DATA_DIR`, or `$CLINE_DIR/data`), where the Cline CLI and Cline's SDK keep them (or `$KNODE_CLINE_ROOT` instead of all of these) |
+| Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_ROO_CODE_ROOT`) |
+
+An editor's data folder is `~/Library/Application Support/<editor>` on macOS and
+`~/.config/<editor>` (or `$XDG_CONFIG_HOME/<editor>`) on Linux.
+
+Capture runs in Knode Service. When it starts at login, through launchd on macOS or a systemd user
+unit on Linux (`knode service install`), it does not see variables you set only in a shell
+profile, such as `CLINE_DATA_DIR`, `CLINE_DIR`, `XDG_CONFIG_HOME` or the `KNODE_*_ROOT` variables,
+and keeps reading the default folders. Set them where the service can see them too, with
+`launchctl setenv` on macOS or in `~/.config/environment.d/` on Linux, then restart it with
+`knode service stop` and `knode service start`.
+
+Windsurf keeps Cascade conversations in `~/.codeium/windsurf/cascade` as encrypted files whose
+format is not public, and has no way to export them, so Knode cannot read them. Connect Windsurf
+with `knode connect windsurf` instead: Cascade then reads and writes your memory through MCP.
 
 Each conversation is one node, with its agent, project, branch, model and the dates it started
 and ended, when the agent records them. Aider writes every session of a project to the same file,
