@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp, Telegram or Slack chat export. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, mail from Gmail (Google Takeout) or Apple Mail, or a WhatsApp, Telegram or Slack chat export. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -138,10 +138,27 @@ knode folders add ~/code/site/drafts --space Work --capture off
 knode folders list --space Work
 ```
 
-Adding the same folder again changes it. Removing a folder keeps everything already captured from
-it. A folder inside your home folder is kept as `~/...`, so the space finds it on your other Macs
-even when your user name differs there; a folder that is not on this machine is kept and marked
-`missing here`.
+A project folder holds the files of the project of the same name: adding `~/code/site` adds the
+project `site` to the space, or uses the project named `site` that the space already has. Names are
+compared without regard to upper and lower case, extra spaces or how accented letters are encoded.
+`[`, `]` and `|` cannot be part of a title, so they become `(`, `)` and `-`: `site [old]` adds the
+project `site (old)`. Its notes and the projects inside it are listed under it, in the app and by
+the MCP `projects` tool. The folder's line in `knode folders list` names its project. If two devices
+each add the folder before they sync, the space can end up with two projects of that name; the
+folder then uses the oldest.
+
+Two different folders with the same name are kept apart. A folder uses the project of its name only
+when no other folder holds that project yet, such as one an import made. When another folder holds
+it, the new folder gets a project of its own, named after its parent folder too: with `~/w/a/api`
+holding `api`, adding `~/w/b/api` adds the project `api (b)`, and `knode folders add` says which
+folder holds `api`. Adding a folder again keeps its project and says it already holds it. Each
+folder remembers its project, so adding another folder, or renaming the project, never moves it.
+
+Adding the same folder again changes it, and adds its project if the space has none, such as for a
+folder added before Knode did this. Removing a folder keeps everything already captured from it, and
+its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
+so the space finds it on your other Macs even when your user name differs there; a folder that is
+not on this machine is kept and marked `missing here`.
 
 ## Spaces and folders
 
@@ -213,6 +230,10 @@ about 100 languages). Nothing you write or search for is sent anywhere. (v0.3)
 - **Indexing** runs in the background: when a space opens, and a couple of seconds after each
   change. It never slows down writing, and it pauses while your laptop runs on battery (`knode
   index run` indexes anyway). A note that is not indexed yet is still found by its words.
+- **Conversations, chats and mail** (captured agent conversations, imported chats and imported mail
+  threads) are long and mention many things in passing. Ranking words and meaning together, they
+  count half, so the short note that answers your question usually comes before a conversation that
+  only mentions it. `--words` and `--meaning` rank them like any note.
 - **Turning it off:** `knode index off`, or in `config.toml`:
 
   ```toml
@@ -231,6 +252,8 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from apple-mail [<path>] [--folder <name>] [--since <day>] [--until <day>] [--attachments]
+knode import <file.mbox> [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <folder> --vault
 ```
 
@@ -295,6 +318,8 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Gmail (v0.3) | The `.mbox` file of a Google Takeout export of Mail, or the folder it is in; any other `.mbox` file too | `mbox` |
+| Apple Mail (v0.3) | Nothing, to read the mail on this Mac, or a mailbox exported from Apple Mail (the `<name>.mbox` folder) | `apple-mail` |
 | WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
 | Telegram (v0.3) | A Telegram Desktop export in JSON: the folder with `result.json`, a `.zip` of it, or the `result.json` | `telegram` |
 | Slack (v0.3) | A workspace export: the `.zip`, or the folder it was extracted to | `slack` |
@@ -344,6 +369,7 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Mail:** see [Mail](#mail).
 - **Chats:** see [Chat exports](#chat-exports).
 
 ```sh
@@ -355,6 +381,69 @@ knode import ~/Downloads/Export-notion.zip --json
 ```
 
 A path that is none of these fails and says what `knode import` takes.
+
+### Mail
+
+```sh
+knode import ~/Downloads/Takeout/Mail/"All mail Including Spam and Trash.mbox"
+knode import ~/Downloads/Takeout/Mail --folder Work --since 2026-01-01
+knode import --from apple-mail --folder INBOX --until 2026-06-30 --attachments
+knode import --from apple-mail ~/Desktop/Trips.mbox
+```
+
+From v0.3. Knode never signs in to a mail account: it reads the files you point it at, and
+writes only into your space. For Gmail, export your mail with
+[Google Takeout](https://takeout.google.com) (choose Mail), unzip the download and import the
+`.mbox` file in `Takeout/Mail`, or that folder. For Apple Mail, `--from apple-mail` with no path
+reads the mail stored on this Mac, only ever reading it. macOS lets only apps with Full Disk
+Access read it: if Knode cannot, it says how to turn it on in System Settings > Privacy &
+Security > Full Disk Access, and for which program: the app that runs Knode (your terminal, or
+Knode), or, when Knode Service runs the import, the `knode` program itself, by its path. Or
+export a mailbox from Apple Mail (Mailbox > Export Mailbox) and import the exported `.mbox`
+folder with `--from apple-mail <path>`; it needs no Full Disk Access.
+
+A folder that holds other things besides mail, such as a vault with one `.mbox` file in it, is
+imported as Markdown unless you name the kind with `--from mbox` or `--from apple-mail`.
+
+- **One node per thread**, of kind `email`, titled with the subject. Replies are found by the
+  headers mail programs write (`Message-ID`, `In-Reply-To`, `References`). A reply that has
+  none of them joins the thread with the same subject only when it shares someone with the
+  thread and was sent at most 30 days after its last message. When one message ties together two
+  threads imported before, it goes to the older one and the two are linked; no message is ever in
+  two threads. The messages are in the order they were sent, each with its sender, its
+  recipients (`To`, `Cc`, and `Bcc` on a line of its own) and the time it was sent, in the
+  sender's time with its offset from UTC (`2026-03-03 09:00 +01:00`). Knode keeps the plain text
+  of a message and turns its HTML into Markdown when there is no plain text.
+- **Remote images never load by themselves:** an image a message loads from the web, which can
+  tell the sender you opened it, becomes a link (`[image: shop.example](...)`) that loads nothing
+  until you follow it, and tracking pixels (1x1 or hidden images) are left out.
+- **Very large messages:** a message larger than 64 MB is skipped, and the import says so.
+- **People:** everyone who sent or received a message becomes one node of kind `person`, one per
+  address, and each thread links to its people, with two limits so that a newsletter or a
+  mailing list does not fill your space with people: the recipients of a message sent to more
+  than 20 addresses do not become people (its sender does), and `Bcc` recipients become people
+  only in mail in a sent folder: `Sent`, `Sent Mail`, `Sent Messages`, `Sent Items`, or the
+  name mail programs give it in Spanish, Portuguese, Catalan, French, German, Italian, Dutch,
+  Swedish, Danish or Norwegian (`Enviados`, `Envoyés`, `Gesendet`, `Inviati`, `Verzonden`...).
+  Every address is still listed in the thread, and the import says how many were not added as
+  people. A later import leaves a person node as it is,
+  so a name or note you add is kept; only a node titled with a bare address gets the person's
+  name once a message gives it.
+- **Folders and dates:** `--folder` imports only the messages in a Gmail label or an Apple Mail
+  mailbox (`--label` and `--mailbox` are other names for it); repeat it for more than one.
+  `--since` and `--until` take a day (`2026-01-01`) in UTC, both included; a message with no
+  date is left out when you give one. Spam and trash are left out unless you name them with
+  `--folder`.
+- **Attachments** are left out unless you add `--attachments`: then the files of each message are
+  attached to its thread, up to 100 MB each. Files attached before stay linked when you import
+  again without `--attachments`. A file the space cannot take, and the files Apple Mail keeps
+  outside some messages, are named in the thread but not attached.
+- **Importing again** adds only the new messages to their threads. Importing another date range
+  later adds those messages to the threads already there. A message in two folders (Gmail's All
+  Mail and your Inbox in Apple Mail, for example) is imported once.
+- **Your edits are kept:** a message you changed in Knode is left as you wrote it, and text you
+  add between messages or after the last one stays where you put it. Knode only writes a message
+  again while it is as Knode wrote it.
 
 ### Chat exports
 
@@ -388,14 +477,27 @@ It is long though.
   `private-channel` or `thread`),
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
   export writes them, in the time of the phone or computer that made it.
+- **Told from the path:** without `--from`, a path is a chat export only when the export is the
+  path itself: its files at the top, or in the one folder at the top (of a folder or a `.zip`).
+  A folder that holds Markdown files anywhere, outside the export's own media folders, is a
+  folder of notes and is imported as Markdown, so no note is left out. When it also holds a chat
+  export, the summary says where and gives the `knode import --from whatsapp`, `--from telegram`
+  or `--from slack` command that imports it. Named with `--from`, an export is found at any depth.
+- **Code:** code blocks keep their lines as written, blank lines included, and start on the line
+  after the sender.
 - **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
-  writes only into the space you import into, and sends nothing anywhere.
+  writes only into the space you import into, and sends nothing anywhere. What is shaped like a
+  credential in the messages is replaced with `[redacted]`, and the summary says how many were:
+  API keys and tokens in known formats, a long value of letters and digits after a name such as
+  `password:` or `token=`, and the password in a link. Ordinary words are kept, so "Secret:
+  everything went fine" stays as written.
 
 **WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
 `knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`WhatsApp Chat with
 <name>.txt` from Android). The date and time formats WhatsApp writes in each language are read:
 day or month first, 12 or 24 hours, two or four digit years, with brackets (iPhone) or a dash
-(Android).
+(Android), and with a word before the time where the language writes one (`04/03/2026 à 09:15`
+in French, `4.3.2026 klo 9.15` in Finnish).
 
 - **Day or month first:** WhatsApp does not say which. A day over 12 tells; otherwise the order
   that keeps the messages in time; otherwise the habit of the format (`3/4/26, 9:15 AM` is month
@@ -422,7 +524,8 @@ chat in it, the ones you left included. Bold, italic, struck-out text, code, lin
 as Markdown; a reply says who it answers, when, and how that message starts. Photos, files and
 voice messages are attached when the export includes them; the export settings decide which media
 it downloads, and those left out are marked. Each chat is found again by its Telegram id, so a
-renamed chat stays the same node.
+renamed chat stays the same node. An account export is read one chat at a time, so it can be
+any size; one chat can be up to 512 MB of `result.json`.
 
 ```sh
 knode import ~/Downloads/Telegram\ Desktop/ChatExport_2026-03-06
@@ -441,7 +544,8 @@ were mentioned become nodes of kind `person`, found again by their Slack id (`sl
 importing again never copies them; a mention becomes a `[[link]]` to the person, a channel name
 a link to the channel's node, and every chat is linked `related` to the people who wrote in it.
 Bold, italic, struck-out text, code and links become Markdown. A Slack export holds only links to
-files, which need a Slack sign-in to open, so they stay links; files an export includes (in
+files, which need a Slack sign-in to open, so they stay links (without the access token Slack
+puts in a file's private link); files an export includes (in
 `__uploads/`, as some export tools write them) are attached. Times are shown in your computer's
 time zone.
 
@@ -774,6 +878,39 @@ knode sources exclude apple-mail "imap://4A1B2C3D-0000-4000-8000-00000000A001/Ne
 - **Attachments** are named in the thread, not attached. To attach them, import the mailbox
   with `knode import --attachments`.
 - A message Mail has listed but not downloaded yet comes in on a later run, once Mail has it.
+
+### Messages (iMessage)
+
+On macOS, the `imessage` connector brings in the iMessage and SMS conversations of Messages on
+your Mac.
+
+```sh
+knode sources connect imessage
+knode sources containers imessage
+knode sources exclude imessage "iMessage;-;+15550100" --name "Ada"
+```
+
+- **Full Disk Access.** macOS lets only apps with Full Disk Access read your messages. Turn it on
+  for Knode in System Settings > Privacy & Security > Full Disk Access; until then
+  `knode sources list` shows the connector's error asking for it.
+- **What it reads.** A copy of the Messages database, made each time the connector runs, read and
+  then deleted. Messages' own database is never opened or changed. If a new version of macOS
+  changed how Messages stores things, the connector writes nothing and says it needs an update.
+- **One node per conversation**, of kind `chat`, the same as a [chat import](#import): the
+  messages grouped by day under `## YYYY-MM-DD`, each as `**Sender** (HH:MM): text`, with
+  `chat.app` set to `imessage` and `chat.id` to the conversation's id in Messages (the one
+  `exclude` takes). Group conversations keep their name; a new name given in Messages shows as a
+  line of its own.
+- **People** show as their phone number or email address, and you as `Me`.
+- **Files** sent in a conversation are attached to its node when they are on the Mac; one that is
+  not (kept only in iCloud, or deleted) is named in the text as not attached.
+- **Reactions** (tapbacks) are left out. An edited message shows its last text, marked
+  *(edited)*; one unsent shows *[unsent]*. A reply names the message it answers.
+- **Later edits are not applied.** A message edited or unsent in Messages after the connector
+  brought it in keeps, in Knode, the text it had then; edit the note by hand if it matters.
+- If Messages numbers its messages again, as after its database is rebuilt or moved to a new
+  Mac, the connector notices, reads everything once more and adds to each conversation only
+  what it is missing.
 
 ## connect
 
