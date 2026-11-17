@@ -155,6 +155,19 @@ default space.
 
 Agents are managed through Knode Service. If it is not running, the screen offers to start it.
 
+### Connect your agents
+
+The first time you open Knode, once the `knode` command is installed (or if it already was), the
+app shows **Connect your agents**. It is also in **Get started**, under **Let your agent do it**,
+and in **Knode > Connect Your Agents…**.
+
+It lists the agents on your Mac, and any agent already connected: Claude Code first, then Codex,
+then the others. Choose the space they get (your default space, unless you pick another), then
+**Connect** one, or **Connect all detected**. Agents already connected show **Connected**. Once an
+agent is connected, the app says what to do next: open a new session of that agent, and it will set
+up your memory. If an agent could not be connected, for example because its own command is not
+installed, the app shows what `knode connect` said.
+
 > Permissions are not a sandbox. They decide what an agent can do through Knode. A program running
 > as you can still open the files of a space directly, or run the `knode` command, which acts for
 > you.
@@ -338,8 +351,8 @@ Closing the window keeps Knode in the menu bar; quit it from the menu.
 
 The app carries the `knode` command inside. The first time you open it, it offers to install the
 command so your terminal and your agents can use it; you can also install or uninstall it from the
-Knode menu. If `knode` is already installed with Homebrew, the app uses that one. See
-[Install](01-install.md#the-mac-app).
+Knode menu. If `knode` is already installed with Homebrew, the app uses that one. Then it offers to
+[connect your agents](#connect-your-agents). See [Install](01-install.md#the-mac-app).
 
 ## Next
 

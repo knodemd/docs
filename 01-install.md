@@ -64,6 +64,11 @@ Command Line Tool…**. It adds `knode` to `/usr/local/bin`, or to `/opt/homebre
 folder is writable, and asks for your password when your Mac needs it. If `knode` is already
 installed, for example with Homebrew, the app uses that one, says so and installs nothing.
 
+Then the app shows **Connect your agents**: the agents it found on your Mac, Claude Code first,
+with a **Connect** button each and **Connect all detected**. Once an agent is connected, open a new
+session of it: it will set up your memory. Agents already connected show **Connected**. The same
+step is in **Get started** and in **Knode > Connect Your Agents…**.
+
 When released, the Mac app is downloaded as `Knode-<version>.dmg`: open it and drag Knode to
 Applications. The app and its embedded command are universal (Apple silicon and Intel) and share
 the release version. When released, the app and the disk image are signed with Developer ID and
