@@ -385,9 +385,10 @@ writes only into your space. For Gmail, export your mail with
 `.mbox` file in `Takeout/Mail`, or that folder. For Apple Mail, `--from apple-mail` with no path
 reads the mail stored on this Mac, only ever reading it. macOS lets only apps with Full Disk
 Access read it: if Knode cannot, it says how to turn it on in System Settings > Privacy &
-Security > Full Disk Access for the app that runs Knode (your terminal, or Knode). Or export a
-mailbox from Apple Mail (Mailbox > Export Mailbox) and import the exported `.mbox` folder with
-`--from apple-mail <path>`; it needs no Full Disk Access.
+Security > Full Disk Access, and for which program: the app that runs Knode (your terminal, or
+Knode), or, when Knode Service runs the import, the `knode` program itself, by its path. Or
+export a mailbox from Apple Mail (Mailbox > Export Mailbox) and import the exported `.mbox`
+folder with `--from apple-mail <path>`; it needs no Full Disk Access.
 
 A folder that holds other things besides mail, such as a vault with one `.mbox` file in it, is
 imported as Markdown unless you name the kind with `--from mbox` or `--from apple-mail`.
@@ -397,11 +398,20 @@ imported as Markdown unless you name the kind with `--from mbox` or `--from appl
   none of them joins the thread with the same subject only when it shares someone with the
   thread and was sent at most 30 days after its last message. When one message ties together two
   threads imported before, it goes to the older one and the two are linked; no message is ever in
-  two threads. The messages are in the order they were sent, each with
-  its sender, recipients and date. Knode keeps the plain text of a message and turns its HTML
-  into Markdown when there is no plain text.
+  two threads. The messages are in the order they were sent, each with its sender, its
+  recipients (`To`, `Cc`, and `Bcc` on a line of its own) and the time it was sent, in the
+  sender's time with its offset from UTC (`2026-03-03 09:00 +01:00`). Knode keeps the plain text
+  of a message and turns its HTML into Markdown when there is no plain text.
+- **Remote images never load by themselves:** an image a message loads from the web, which can
+  tell the sender you opened it, becomes a link (`[image: shop.example](...)`) that loads nothing
+  until you follow it, and tracking pixels (1x1 or hidden images) are left out.
+- **Very large messages:** a message larger than 64 MB is skipped, and the import says so.
 - **People:** everyone who sent or received a message becomes one node of kind `person`, one per
-  address, and each thread links to its people. A later import leaves a person node as it is,
+  address, and each thread links to its people, with two limits so that a newsletter or a
+  mailing list does not fill your space with people: the recipients of a message sent to more
+  than 20 addresses do not become people (its sender does), and `Bcc` recipients become people
+  only in mail you sent. Every address is still listed in the thread, and the import says how
+  many were not added as people. A later import leaves a person node as it is,
   so a name or note you add is kept; only a node titled with a bare address gets the person's
   name once a message gives it.
 - **Folders and dates:** `--folder` imports only the messages in a Gmail label or an Apple Mail
