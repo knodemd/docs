@@ -78,10 +78,12 @@ installed, for example with Homebrew, the app uses that one, says so and install
 from somewhere else, the app says which copy and offers to point it to itself, since your agents
 would otherwise keep running the other copy's version; it asks once for each other copy.
 
-Then the app shows **Connect your agents**: the agents it found on your Mac, Claude Code first,
-with a **Connect** button each and **Connect all detected**. Once an agent is connected, open a new
-session of it: it will set up your memory. Agents already connected show **Connected**. The same
-step is in **Get started** and in **Knode > Connect Your Agents…**.
+The first time you open Knode, it also opens **Get started**, on **Let your agent do it**, which
+starts with **Connect your agents**: the agents it found on your Mac, Claude Code first, with a
+**Connect** button each and **Connect all detected**. Once an agent is connected, open a new session
+of it: it will set up your memory. Agents already connected show **Connected**. If Get started is
+not open when the command is installed on the first run, the app shows Connect your agents on its
+own. It is also in **Knode > Connect Your Agents…**, whenever no other sheet is open.
 
 When released, the Mac app is downloaded as `Knode-<version>.dmg`: open it and drag Knode to
 Applications: drag the Knode app inside the image, not the `.dmg` file. If you open Knode from the
