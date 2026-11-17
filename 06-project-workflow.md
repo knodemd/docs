@@ -173,6 +173,14 @@ point remains available later.
    to exclude. Filter document paths and use **Assign matches** to move a whole matching folder
    into a chosen project without assigning hundreds of notes individually; exclusions stay excluded.
    These are deterministic folder suggestions, not AI interpretations of decisions.
+   In a vault, documents tracked by git in a repository inside it, such as each repository's
+   `README`, `CHANGELOG` or `AGENTS.md`, start unchecked: they live with their code, where agents
+   read them, and an imported copy would not follow their changes. Your own notes stay checked,
+   including untracked ones kept inside a repository and every note of a vault that is itself a
+   repository. A notice says how many were unchecked, and **Documentation tracked in your
+   repositories** lists those repositories with one switch each: turn one on when it keeps your own
+   notes, such as a status note or session logs. You can also check single documents. A project
+   import brings its documentation as before.
 3. Choose whether to also bring the conversations your agents held in these project folders. This
    is off unless you turn it on. When on, Knode reads the sessions of Claude Code, Codex and the
    other agents it knows, and lists which conversations it would bring, and how many per project,
