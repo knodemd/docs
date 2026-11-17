@@ -18,6 +18,7 @@ Read them at [knode.md/docs](https://knode.md/docs).
 | 4 | [Mac app](04-mac-app.md): spaces, nodes and search |
 | 5 | [The .knode format](05-format.md): what is inside a space |
 | 6 | [Projects and durable memory](06-project-workflow.md): setup, agent instructions and checkpoints |
+| 7 | [Moving from Obsidian](07-migrate-from-obsidian.md): preview, pilot, validate and switch, reversibly |
 
 How the project works is in the [handbook](https://knode.md/handbook). Found something wrong or
 missing? [Open an issue](https://github.com/knodemd/docs/issues).

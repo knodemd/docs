@@ -10,7 +10,7 @@ Every command works without the app.
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
 | `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, mail from Gmail (Google Takeout) or Apple Mail, or a WhatsApp, Telegram or Slack chat export. See [Importing](#importing) |
-| `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
+| `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2); `--compare <vault>` lists what differs from the folder you imported (v0.3) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
 | `knode restore <node> <version>` | Puts a node back to an earlier version, or brings back a deleted one (v0.2) |
@@ -107,7 +107,7 @@ From v0.2. Without an action, lists every space Knode knows: those in `config.to
 | `rename` | Renames the space. Its file keeps its name, so nothing that points at it breaks |
 | `icon` | Sets the icon of the space, one emoji, or removes it with `--clear` |
 | `default` | Makes it your default space. The previous default stays in the list |
-| `capture` | Turns capture of agent conversations into the space on or off. Off, the conversations of its projects are stored nowhere |
+| `capture` | Turns capture of agent conversations into the space on or off. Off, the conversations of its projects are stored nowhere. On, it captures conversations from now on, not earlier ones, when capture was off or the space was waiting until it is set up (see [Capture](#capture)) |
 
 The name, the icon and the capture setting are kept inside the space, so they travel with it to
 your other devices. Only you can change them, from the command line or the app; agents cannot.
@@ -277,9 +277,10 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from claude-code-memory [<path>]
 knode import --from apple-mail [<path>] [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <file.mbox> [--folder <name>] [--since <day>] [--until <day>] [--attachments]
-knode import <folder> --vault
+knode import <folder> --vault [--report <file.json>] [--include-deleted]
 ```
 
 Brings what you already have into the space. Knode tells what a path is by its name and what is
@@ -322,7 +323,62 @@ erasure. It tests a new space, not merge/conflict behavior against an existing d
 After reviewing the report, import a pilot into an explicitly selected new space, inspect notes,
 links and attachments, and export for comparison before cutover. Exports can add Knode metadata;
 this report is not proof of byte-identical Obsidian round-trip fidelity or ongoing synchronization.
-Keep your original vault and a backup until those checks pass.
+Keep your original vault and a backup until those checks pass. The whole path, step by step, is
+in [Moving from Obsidian](07-migrate-from-obsidian.md).
+
+### Migration report
+
+```sh
+knode import /path/to/vault --vault --report report.json
+```
+
+From v0.3. For a folder of Markdown files, `--report <file.json>` writes the migration report:
+
+- every file of the folder, hidden ones included, with its `status` (`created`, `updated`,
+  `unchanged`, `edited`, `attached`, `skipped` or `failed`), the `node` id of each note and the
+  `reason` for anything that was not simply imported (a hidden folder such as `.obsidian`, a
+  canvas, a file no note uses, a note that is not UTF-8 text);
+- `counts` of each status;
+- `unresolved_links`: `[[links]]` that name no note;
+- `ambiguous_links`: `[[links]]` that name several notes by title, with the one they point at
+  (the nearest by folder, as Obsidian does) and every candidate;
+- `missing_attachments`: files a note embeds or links to that are not attached, with any file of
+  the folder that could be it (a shared attachment folder, for example) and why;
+- `failed_links`: typed links of the frontmatter that could not be made;
+- `limits`: what the report does not check.
+
+The summary on screen lists the same problems, one line each, also without `--report` when there
+are any. `--json` includes the report as `report`. The receipt of a guided import
+(`onboarding.json`) maps each source path to its node in `import.nodes`.
+
+### Importing a vault again
+
+From v0.3, importing the same folder again into the same space finds each note by its path relative to that folder (or by
+the `id` in its frontmatter) and compares it with what the last import wrote:
+
+| The file since the last import | The note in Knode since the last import | What happens |
+|---|---|---|
+| unchanged | unchanged | `unchanged` |
+| changed | unchanged | the note takes the file's changes: `updated` |
+| unchanged | edited | your edit is kept: `unchanged` (the report says it was edited in Knode) |
+| changed | edited | your edit is kept and the file's changes are **not** brought in: `edited`, for you to merge by hand |
+| unchanged or changed | deleted | the note stays deleted: `skipped`, with the reason "deleted in Knode, not imported again" and the id of the deleted note |
+
+A note you deleted in Knode is not imported again, whether or not its file changed: the summary
+lists it and the report counts it in `counts.deleted`. `--include-deleted` imports such notes
+again, as new notes. (Knode remembers the note of each file without an `id`, so it can tell a
+note deleted in Knode from a new file.)
+
+A note stays `edited` on every import until the two agree: copy what you want from the file into
+the note (or the note into the file), and the next import is `unchanged` again. Notes imported by
+an earlier version of Knode take the file once, as before; the earlier text stays in their history
+(`knode history`, `knode restore`).
+
+An import writes one note at a time. If it stops halfway (the computer sleeps, a file cannot be
+read), run it again: notes already written are found and left alone, the rest are written, and
+typed links, made at the end, are made then. Fixing a file that failed and importing again brings
+in only that file. A file renamed or moved in the vault without an `id` in its frontmatter is
+imported as a new note; the note of its old path stays, and you can delete it.
 
 ### Importing
 
@@ -343,6 +399,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Claude Code memory (v0.3) | Nothing, to read the memory Claude Code keeps on this machine, or its `.claude` folder or the `projects` folder inside | `claude-code-memory` |
 | Gmail (v0.3) | The `.mbox` file of a Google Takeout export of Mail, or the folder it is in; any other `.mbox` file too | `mbox` |
 | Apple Mail (v0.3) | Nothing, to read the mail on this Mac, or a mailbox exported from Apple Mail (the `<name>.mbox` folder) | `apple-mail` |
 | WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
@@ -398,6 +455,21 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Claude Code memory:** with no path, Knode reads `projects` in the folder `CLAUDE_CONFIG_DIR`
+  names, else in `~/.claude`. Claude Code keeps a folder there for each folder it works in, named
+  after its full path: ASCII letters and digits are kept and every other character becomes `-`
+  (`/Users/ada/Work/web.app` is `-Users-ada-Work-web-app`). Each file in its `memory` folder
+  becomes a note titled with the `name` of its frontmatter, with its `description` and type kept
+  as the properties `claude-code.description` and `claude-code.type`. Left out, and listed with
+  the reason: `MEMORY.md`, which only lists the others, and folders or files that are links to
+  others. Each note is linked `part-of` the project of the space its folder belongs to: the
+  project folder of the space that is that folder or contains it (the longest one wins), linked
+  to the project that folder holds; in a space made by guided import, the project made from that
+  folder of the source; otherwise a project named as the folder, upper and lower case aside.
+  Knode never makes a project up: notes whose folder matches none are imported without a
+  project, and the report lists those folders and how many notes went to each project.
+  Importing again skips memory that did not change. A note edited in Knode since it was
+  imported is kept as it is, even when its memory changed, and the report says so.
 - **Mail:** see [Mail](#mail).
 - **Chats:** see [Chat exports](#chat-exports).
 
@@ -406,6 +478,7 @@ knode import ~/Downloads/data-2026-10-20.zip
 knode import ~/Documents/"My Clippings.txt"
 knode import https://example.com/essays/on-rivers
 knode import --from apple-notes
+knode import --from claude-code-memory
 knode import ~/Downloads/Export-notion.zip --json
 ```
 
@@ -677,11 +750,23 @@ From v0.3. Lists the files attached to a node, with their type, size, date and w
 
 ```sh
 knode export <folder>
+knode export <folder> --compare <vault> [--json]
 ```
 
 From v0.2. Writes every node of the space to `<folder>` as a `.md` file, creating the folder if
 needed, and prints how many files it wrote, left as they were, and removed. Exporting again to the
 same folder rewrites only what changed. See [Markdown in and out](#markdown-in-and-out).
+
+From v0.3, `--compare <vault>` then compares the export with the folder you imported, and changes
+neither. For each note and file of the vault it says whether the export has it `identical`, with
+only frontmatter changes (usually just the `id` Knode adds, listed by key), `changed` (with the
+first line of text that differs), `moved` (the same text at another path, such as a note renamed
+in Knode) or `missing` (such as an image in a shared attachment folder that was never attached). It
+also lists the files only in the export (notes made in Knode) and what import never reads, such as
+`.obsidian/` and `.trash/`, so nothing is silently counted as lost or as kept. `--json` prints all
+of it. It compares text and files, not Obsidian itself: plugins, settings and how a note renders
+are not checked. The export folder must be apart from the vault: Knode refuses to export into it,
+into a folder inside it or into a folder that holds it.
 
 ## history
 
@@ -946,11 +1031,15 @@ knode sources exclude imessage "iMessage;-;+15550100" --name "Ada"
 ```sh
 knode connect <agent> [--space <space>] [--print]
 knode connect <agent> --check [--project <folder>] [--space <space>] [--json]
-knode connect --list
+knode connect --list [--json]
 ```
 
 `--list` shows every agent Knode can be added to, whether it is on this machine, and the file it
-would change.
+would change. With `--json` it prints them as JSON, for apps and scripts: for each agent, what to
+type after `knode connect` (`agent`), its name in Knode (`name`), its `title`, whether it is on this
+machine (`detected`), whether its settings already run Knode as that agent (`connected`), and
+whether Knode can be added to it at all (`can_connect`; Aider has no MCP client). Listing changes
+nothing.
 
 Connecting an agent does two things:
 
@@ -1112,6 +1201,22 @@ capture_exclude = ["/Users/you/code/secret-project"]
 
 Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
 within a few seconds, so there is no need to restart it.
+
+A new space waits before capturing anything, so a space you have just made with `knode init` and
+connected with `knode connect` does not fill with every earlier conversation of your agents before
+you were asked. Capture into it starts as soon as any of these happens:
+
+- you turn capture on for it with `knode spaces capture <space> on` (or in the app): it keeps
+  conversations started from then on, and earlier ones stay out;
+- `knode onboard` sets it up;
+- you add a folder to it with `knode folders add`;
+- something is written into it, such as your first note.
+
+In the last three cases, earlier conversations are brought in too. Turning capture on again for a
+space where you had turned it off also keeps only the conversations started from then on.
+
+Capture stays on by default: a space Knode already captures into never waits. To keep a new space
+free of conversations, turn capture off for it with `knode spaces capture <space> off`.
 
 These are the agents whose conversations are captured, and where each keeps them. `knode agents
 list` shows the ones on this machine.

@@ -61,7 +61,9 @@ Every space you create or open in the app is added to the spaces Knode knows (`s
 Each space keeps the folders that feed it. Choose **Folders and Capture…** in the Space menu or the
 right-click menu of a space, or open Settings > Spaces. There you can:
 
-- turn **capture into this space** on or off: off, nothing captured is written to it;
+- turn **capture into this space** on or off: off, nothing captured is written to it; turned on,
+  it keeps conversations from then on, not earlier ones. A new space captures nothing until it is
+  set up or you write something in it (see [Capture](02-cli.md#capture));
 - **add a folder** with the **Add Folder** menu: a **project** (a folder you and your agents work
   in, such as a code repository), a **notes** folder of Markdown files, or an **agent** folder
   where an agent keeps its sessions (choose the agent from the list);
@@ -161,6 +163,29 @@ Do** only describes the changes first. The first time, a new agent can read and 
 default space.
 
 Agents are managed through Knode Service. If it is not running, the screen offers to start it.
+
+### Connect your agents
+
+The first time you open Knode, it opens **Get started** on **Let your agent do it**, which starts
+with **Connect your agents**. If Get started is not open when the `knode` command is installed on
+the first run (or found already installed), the app shows Connect your agents on its own. It is also
+in **Knode > Connect Your Agents…**, whenever no other sheet is open; the menu item never replaces a
+sheet you are using.
+
+It lists the agents on your Mac, and any agent already connected: Claude Code first, then Codex,
+then the others. Choose the space they get (your default space, unless you pick another), then
+**Connect** one, or **Connect all detected**. Agents already connected show **Connected**. Once an
+agent is connected, the app says what to do next: open a new session of that agent, and it will set
+up your memory. If an agent could not be connected, for example because its own command is not
+installed, the app shows what `knode connect` said.
+
+The app runs `knode connect` with the `PATH` of your login shell and the variables that say where
+agents keep their settings (`CLAUDE_CONFIG_DIR`, `CODEX_HOME`, `COPILOT_HOME`, `CLINE_DIR`,
+`CLINE_MCP_SETTINGS_PATH`, `XDG_CONFIG_HOME`), so it configures the same folders your terminal
+sessions use. If Knode runs from its disk image, Downloads or a temporary folder, it does not
+connect agents, which would then run a copy that goes away: move Knode to Applications first (the
+step offers **Move to Applications**). If your `knode` command is too old to list agents, the step
+says to update it: `brew upgrade knodemd/tap/knode`.
 
 > Permissions are not a sandbox. They decide what an agent can do through Knode. A program running
 > as you can still open the files of a space directly, or run the `knode` command, which acts for
@@ -345,8 +370,8 @@ Closing the window keeps Knode in the menu bar; quit it from the menu.
 
 The app carries the `knode` command inside. The first time you open it, it offers to install the
 command so your terminal and your agents can use it; you can also install or uninstall it from the
-Knode menu. If `knode` is already installed with Homebrew, the app uses that one. See
-[Install](01-install.md#the-mac-app).
+Knode menu. If `knode` is already installed with Homebrew, the app uses that one. To connect your
+agents, see [Connect your agents](#connect-your-agents) and [Install](01-install.md#the-mac-app).
 
 ## Next
 
