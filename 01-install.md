@@ -29,9 +29,10 @@ Or give it a prefix, and it puts `knode` in that prefix's `bin` folder, here `/o
 curl -fsSL https://knode.md/install.sh | sh -s -- --prefix /opt/knode
 ```
 
-`curl -fsSL https://knode.md/install.sh | sh -s -- --help` lists every option and setting. The script works on macOS too, but there
-Homebrew keeps `knode` up to date and the Mac app includes it, so it reminds you of both. Until the
-first release is published, it stops and says that no release is out yet.
+`curl -fsSL https://knode.md/install.sh | sh -s -- --help` lists every option and setting. The
+script works on macOS too, but there Homebrew keeps `knode` up to date and the Mac app includes it,
+so it reminds you of both. Until the first release is published, it stops and says that no release
+is out yet.
 
 On Linux there are two builds. From v0.3 the script picks the static musl build on systems that use
 musl, such as Alpine, and on glibc older than 2.35, and the glibc build everywhere else. To choose
