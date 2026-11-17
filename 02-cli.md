@@ -845,6 +845,40 @@ sources = false
 
 `capture = false` stops connectors too: Knode Service then brings nothing in by itself.
 
+### Apple Mail
+
+On macOS, the `apple-mail` connector brings in new mail from Apple Mail on your Mac. Every
+account you added to Mail comes along: Gmail, iCloud, Outlook, Exchange, any other IMAP
+account, and the mailboxes On My Mac. For Gmail this is the way that needs no setup: add the
+account to Mail and connect the connector.
+
+```sh
+knode sources connect apple-mail
+knode sources containers apple-mail
+knode sources exclude apple-mail "imap://4A1B2C3D-0000-4000-8000-00000000A001/Newsletters" --name "Newsletters"
+```
+
+- **Full Disk Access.** macOS lets only apps with Full Disk Access read your mail. Turn it on for
+  Knode in System Settings > Privacy & Security > Full Disk Access, then quit and reopen Knode;
+  until then `knode sources list` shows the connector's error saying so.
+- **When.** New mail is in your space within a minute of Mail receiving it.
+- **What it reads.** Mail's files in `~/Library/Mail`, without changing them: a copy of Mail's
+  index of messages, made when it changed, read and then deleted, and the message files it
+  names. If a new version of macOS changed how Mail stores things, the connector writes nothing
+  and says it needs an update.
+- **Every mailbox comes in**, new ones too, except spam and trash (`Junk`, `Spam`, `Trash`,
+  `Bin`, `Deleted Messages`, `Deleted Items`) and the mailboxes you exclude. `containers` lists
+  each mailbox by its name, followed by its account when two accounts have one with the same
+  name, and its id, the one `exclude` takes. Messages Mail marked as deleted are left out.
+- **The same nodes as importing mail**: one node per thread, of kind `email`, the people of each
+  thread, and what you wrote in a thread kept when new messages come in. A message you already
+  imported from an Apple Mail export or a Gmail Takeout `.mbox` is found by its `Message-ID` and
+  not added twice, and Gmail mail that Mail shows in several mailboxes (Inbox and All Mail)
+  comes in once.
+- **Attachments** are named in the thread, not attached. To attach them, import the mailbox
+  with `knode import --attachments`.
+- A message Mail has listed but not downloaded yet comes in on a later run, once Mail has it.
+
 ### Messages (iMessage)
 
 On macOS, the `imessage` connector brings in the iMessage and SMS conversations of Messages on
