@@ -452,14 +452,24 @@ It is long though.
   `private-channel` or `thread`),
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
   export writes them, in the time of the phone or computer that made it.
+- **Told from the path:** without `--from`, a path is a chat export only when the export is the
+  path itself: its files at the top, or in the one folder at the top of a `.zip`. A folder of
+  notes that holds a chat export somewhere inside, or has Markdown files next to the export, is
+  imported as a folder of Markdown, so no note is left out. To import an export further down,
+  name it with `--from whatsapp`, `--from telegram` or `--from slack`.
+- **Code:** code blocks keep their lines as written, blank lines included, and start on the line
+  after the sender.
 - **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
-  writes only into the space you import into, and sends nothing anywhere.
+  writes only into the space you import into, and sends nothing anywhere. Secrets that look
+  obvious in the messages, such as API keys, access tokens and passwords, are replaced with
+  `[redacted]`, and the summary says how many were.
 
 **WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
 `knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`WhatsApp Chat with
 <name>.txt` from Android). The date and time formats WhatsApp writes in each language are read:
 day or month first, 12 or 24 hours, two or four digit years, with brackets (iPhone) or a dash
-(Android).
+(Android), and with a word before the time where the language writes one (`04/03/2026 à 09:15`
+in French, `4.3.2026 klo 9.15` in Finnish).
 
 - **Day or month first:** WhatsApp does not say which. A day over 12 tells; otherwise the order
   that keeps the messages in time; otherwise the habit of the format (`3/4/26, 9:15 AM` is month
@@ -486,7 +496,8 @@ chat in it, the ones you left included. Bold, italic, struck-out text, code, lin
 as Markdown; a reply says who it answers, when, and how that message starts. Photos, files and
 voice messages are attached when the export includes them; the export settings decide which media
 it downloads, and those left out are marked. Each chat is found again by its Telegram id, so a
-renamed chat stays the same node.
+renamed chat stays the same node. An account export is read one chat at a time, so it can be
+any size; one chat can be up to 512 MB of `result.json`.
 
 ```sh
 knode import ~/Downloads/Telegram\ Desktop/ChatExport_2026-03-06
@@ -505,7 +516,8 @@ were mentioned become nodes of kind `person`, found again by their Slack id (`sl
 importing again never copies them; a mention becomes a `[[link]]` to the person, a channel name
 a link to the channel's node, and every chat is linked `related` to the people who wrote in it.
 Bold, italic, struck-out text, code and links become Markdown. A Slack export holds only links to
-files, which need a Slack sign-in to open, so they stay links; files an export includes (in
+files, which need a Slack sign-in to open, so they stay links (without the access token Slack
+puts in a file's private link); files an export includes (in
 `__uploads/`, as some export tools write them) are attached. Times are shown in your computer's
 time zone.
 
