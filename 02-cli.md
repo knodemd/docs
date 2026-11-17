@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, or notes from Apple Notes, Bear, Notion or Evernote. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp chat export. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -294,6 +294,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -340,6 +341,7 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Chats:** see [Chat exports](#chat-exports).
 
 ```sh
 knode import ~/Downloads/data-2026-10-20.zip
@@ -350,6 +352,51 @@ knode import ~/Downloads/Export-notion.zip --json
 ```
 
 A path that is none of these fails and says what `knode import` takes.
+
+### Chat exports
+
+Each chat becomes one node of kind `chat`, titled with the app and the chat's name, such as
+`WhatsApp - Book Club`. Its messages are grouped by day under `## 2026-03-04` headings, each with
+who sent it and when:
+
+```markdown
+## 2026-03-04
+
+**Ada** (09:15): Shall we read the lighthouse novel next?
+
+**Grace** (09:16): Yes!
+It is long though.
+
+**Ada** (09:17): ![[00000003-PHOTO-2026-03-04-09-17-00.jpg]]
+
+*(09:20) Ada added Linus*
+```
+
+- **Files:** photos, voice notes, videos and documents in the export are attached to the chat's
+  node, where the message shows them. A file the chat names but the export does not have, or an
+  export made without media, is marked in the text (`*[missing from the export: ...]*`), and the
+  summary counts them.
+- **Importing again:** the same chat is found again, and only the messages after the last one
+  imported are added, under the day they belong to. Importing the same export twice changes
+  nothing; a newer export of the chat adds what is new. Messages older than the last one
+  imported are not added.
+- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal` or `group`),
+  `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
+  export writes them, in the time of the phone or computer that made it.
+- **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
+  writes only into the space you import into, and sends nothing anywhere.
+
+**WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
+`knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`_chat.txt` from an
+iPhone, `WhatsApp Chat with <name>.txt` from Android). Every language and date format WhatsApp
+writes is read: day or month first, 12 or 24 hours, two or four digit years. A WhatsApp export has
+no id for the chat, so the chat is found again by its name, from the export's file name; keep the
+name WhatsApp gave the file.
+
+```sh
+knode import ~/Downloads/"WhatsApp Chat - Book Club.zip"
+knode import --from whatsapp ~/Downloads/"WhatsApp Chat with Ada.txt"
+```
 
 ### Readwise through its API
 
