@@ -312,9 +312,11 @@ knode onboard archive --target /path/outside/source/Work.knode
 `--sessions`, but in a space that exists: one with no onboarding receipt, no project and fewer than
 three notes made by a person (captured conversations, notes agents wrote and `Example:` notes do
 not count). A set-up space is refused. The whole plan is first rehearsed in a throwaway copy, and a
-source note whose id is already in the space is refused, so a plan that would be refused writes
-nothing into the space. Notes already there stay; capture is turned off, as in a new onboarding
-space. As this is the space your agents are connected to, `--into` turns capture off in the space
+source note that would write over a note already in the space is refused: one with the id of a
+note there (or the id an earlier version of Knode recorded for it), or one without an id whose
+path is the path of a note imported there before. So a plan that would be refused writes nothing
+into the space. Notes already there stay; once the import has succeeded, capture is turned off, as
+in a new onboarding space, and a refused or failed import leaves capture as it was. As this is the space your agents are connected to, `--into` turns capture off in the space
 they write to, so their conversations are no longer captured there. With Knode Service running, the
 import goes through it, so the app and connected agents see it at once. `onboard archive` works on
 such a space too and says that what it held before is archived with it.
