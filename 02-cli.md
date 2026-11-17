@@ -410,8 +410,11 @@ imported as Markdown unless you name the kind with `--from mbox` or `--from appl
   address, and each thread links to its people, with two limits so that a newsletter or a
   mailing list does not fill your space with people: the recipients of a message sent to more
   than 20 addresses do not become people (its sender does), and `Bcc` recipients become people
-  only in mail you sent. Every address is still listed in the thread, and the import says how
-  many were not added as people. A later import leaves a person node as it is,
+  only in mail in a sent folder: `Sent`, `Sent Mail`, `Sent Messages`, `Sent Items`, or the
+  name mail programs give it in Spanish, Portuguese, Catalan, French, German, Italian, Dutch,
+  Swedish, Danish or Norwegian (`Enviados`, `Envoyés`, `Gesendet`, `Inviati`, `Verzonden`...).
+  Every address is still listed in the thread, and the import says how many were not added as
+  people. A later import leaves a person node as it is,
   so a name or note you add is kept; only a node titled with a bare address gets the person's
   name once a message gives it.
 - **Folders and dates:** `--folder` imports only the messages in a Gmail label or an Apple Mail
