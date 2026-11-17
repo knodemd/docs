@@ -90,7 +90,10 @@ of that name the space already has, compared without regard to upper and lower c
 the same name already holds that project, the new folder gets its own, named after its parent
 folder too, such as `api (b)`, and the Folders screen says which folder holds `api`. The sidebar lists it
 under **Projects**, and the folder's row names it. Removing the folder later keeps the project and
-its notes. A folder added before Knode did this gets its project when you add it again. **Capture
+its notes, kept for that folder: another folder of the same name gets a project of its own, and
+adding the folder again gives it back its project. A project no folder has held, such as one an
+import made, goes to the first folder of its name. A folder added before Knode did this keeps the
+project of its own name. **Capture
 conversations held in this folder** is on, as for every folder; turn it off and nothing agents say
 in that folder is captured, in any space. Capture also needs to be on for the space and for Knode
 Service. Agents can still save notes through MCP when they can write to the space. Cancel and
