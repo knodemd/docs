@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp chat export. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or a WhatsApp or Telegram chat export. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -295,6 +295,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
 | WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
+| Telegram (v0.3) | A Telegram Desktop export in JSON: the folder with `result.json`, a `.zip` of it, or the `result.json` | `telegram` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -380,7 +381,7 @@ It is long though.
   imported are added, under the day they belong to. Importing the same export twice changes
   nothing; a newer export of the chat adds what is new. Messages older than the last one
   imported are not added.
-- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal` or `group`),
+- **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal`, `group` or `channel`),
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
   export writes them, in the time of the phone or computer that made it.
 - **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
@@ -396,6 +397,20 @@ name WhatsApp gave the file.
 ```sh
 knode import ~/Downloads/"WhatsApp Chat - Book Club.zip"
 knode import --from whatsapp ~/Downloads/"WhatsApp Chat with Ada.txt"
+```
+
+**Telegram:** in Telegram Desktop, export one chat (the chat's menu, Export chat history) or the
+whole account (Settings > Advanced > Export Telegram data), choosing **Machine-readable JSON** as
+the format. Give `knode import` the folder with `result.json`. An account export brings in every
+chat in it, the ones you left included. Bold, italic, struck-out text, code, links and quotes stay
+as Markdown; a reply says who it answers, when, and how that message starts. Photos, files and
+voice messages are attached when the export includes them; the export settings decide which media
+it downloads, and those left out are marked. Each chat is found again by its Telegram id, so a
+renamed chat stays the same node.
+
+```sh
+knode import ~/Downloads/Telegram\ Desktop/ChatExport_2026-03-06
+knode import --from telegram ~/Downloads/Telegram\ Desktop/DataExport_2026-03-06
 ```
 
 ### Readwise through its API
