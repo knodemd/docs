@@ -309,8 +309,10 @@ Everything `knode import` reads, with the kind `--from` takes:
   in the same folder as the note; other such files are left out. A kind of link the space does not
   have yet is added to it, so no link is lost. See [Markdown in and out](#markdown-in-and-out).
 - **A Markdown file:** one note, titled with the `title` of its frontmatter, else its first heading,
-  else its file name. Its frontmatter is kept as properties, and importing the file again updates
-  that note.
+  else its file name. Its frontmatter is kept as properties. The note is known by where the file
+  is: importing the same file again updates that note, while a file with the same name in another
+  folder, or in a folder imported as a whole, is a note of its own. A note an earlier version of
+  Knode imported from the file is updated too, not copied.
 - **A session file:** one node of kind `conversation`, with its title, project and date, written
   as that agent.
 - **A data export:** Knode tells Claude, ChatGPT and Google Takeout (Gemini Apps) apart by what is
