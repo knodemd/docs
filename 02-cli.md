@@ -149,15 +149,18 @@ each add the folder before they sync, the space can end up with two projects of 
 folder then uses the oldest.
 
 Two different folders with the same name are kept apart. A folder uses the project of its name only
-when no other folder holds that project yet, such as one an import made. When another folder holds
-it, the new folder gets a project of its own, named after its parent folder too: with `~/w/a/api`
-holding `api`, adding `~/w/b/api` adds the project `api (b)`, and `knode folders add` says which
-folder holds `api`. Adding a folder again keeps its project and says it already holds it. Each
-folder remembers its project, so adding another folder, or renaming the project, never moves it.
+when no folder has ever held it, such as one an import made. When another folder holds it, the new
+folder gets a project of its own, named after its parent folder too: with `~/w/a/api` holding
+`api`, adding `~/w/b/api` adds the project `api (b)`, and `knode folders add` says which folder
+holds `api`. Adding a folder again keeps its project and says it already holds it. Each folder
+remembers its project, so adding another folder, or renaming the project, never moves it. Folders
+added before Knode did this keep the project of their own name: the next folder you add records
+it for them first.
 
-Adding the same folder again changes it, and adds its project if the space has none, such as for a
-folder added before Knode did this. Removing a folder keeps everything already captured from it, and
-its project with the notes that are part of it. A folder inside your home folder is kept as `~/...`,
+Removing a folder keeps everything already captured from it, and its project with the notes that
+are part of it. The project stays kept for that folder: another folder with the same name gets a
+project of its own, and `knode folders add` says which folder `api` is kept for. Add the removed
+folder again and it holds its project, and its notes, again. A folder inside your home folder is kept as `~/...`,
 so the space finds it on your other Macs even when your user name differs there; a folder that is
 not on this machine is kept and marked `missing here`.
 
