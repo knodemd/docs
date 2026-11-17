@@ -252,6 +252,7 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from claude-code-memory [<path>]
 knode import --from apple-mail [<path>] [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <file.mbox> [--folder <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <folder> --vault
@@ -318,6 +319,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Claude Code memory (v0.3) | Nothing, to read the memory Claude Code keeps on this machine, or its `.claude` folder or the `projects` folder inside | `claude-code-memory` |
 | Gmail (v0.3) | The `.mbox` file of a Google Takeout export of Mail, or the folder it is in; any other `.mbox` file too | `mbox` |
 | Apple Mail (v0.3) | Nothing, to read the mail on this Mac, or a mailbox exported from Apple Mail (the `<name>.mbox` folder) | `apple-mail` |
 | WhatsApp (v0.3) | A chat export: the `.zip`, the folder it was extracted to, or the chat's `.txt` | `whatsapp` |
@@ -373,6 +375,21 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Claude Code memory:** with no path, Knode reads `projects` in the folder `CLAUDE_CONFIG_DIR`
+  names, else in `~/.claude`. Claude Code keeps a folder there for each folder it works in, named
+  after its full path: ASCII letters and digits are kept and every other character becomes `-`
+  (`/Users/ada/Work/web.app` is `-Users-ada-Work-web-app`). Each file in its `memory` folder
+  becomes a note titled with the `name` of its frontmatter, with its `description` and type kept
+  as the properties `claude-code.description` and `claude-code.type`. Left out, and listed with
+  the reason: `MEMORY.md`, which only lists the others, and folders or files that are links to
+  others. Each note is linked `part-of` the project of the space its folder belongs to: the
+  project folder of the space that is that folder or contains it (the longest one wins), linked
+  to the project that folder holds; in a space made by guided import, the project made from that
+  folder of the source; otherwise a project named as the folder, upper and lower case aside.
+  Knode never makes a project up: notes whose folder matches none are imported without a
+  project, and the report lists those folders and how many notes went to each project.
+  Importing again skips memory that did not change. A note edited in Knode since it was
+  imported is kept as it is, even when its memory changed, and the report says so.
 - **Mail:** see [Mail](#mail).
 - **Chats:** see [Chat exports](#chat-exports).
 
@@ -381,6 +398,7 @@ knode import ~/Downloads/data-2026-10-20.zip
 knode import ~/Documents/"My Clippings.txt"
 knode import https://example.com/essays/on-rivers
 knode import --from apple-notes
+knode import --from claude-code-memory
 knode import ~/Downloads/Export-notion.zip --json
 ```
 
