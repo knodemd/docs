@@ -16,11 +16,13 @@ knode --space /path/to/Work.knode folders add /path/to/project --kind project --
 knode --space /path/to/Work.knode folders list
 ```
 
-Repeat `folders add` for more projects. Registering a folder does not import its notes, connect
-an agent, change an explicitly configured MCP space, or enable capture for the entire space.
-Turning capture off for a project prevents its conversations being captured anywhere, even if a
-parent folder is captured. Choose this deliberately; capture is separate from intentional MCP
-writes. Do not register overlapping mappings without checking their destinations.
+Adding a project folder also adds the project of the same name, or uses the one the space already
+has, so notes can belong to it (`part-of`). Removing the folder keeps the project. Repeat `folders
+add` for more projects. Registering a folder does not import its notes, connect an agent, change an
+explicitly configured MCP space, or enable capture for the entire space. Turning capture off for a
+project prevents its conversations being captured anywhere, even if a parent folder is captured.
+Choose this deliberately; capture is separate from intentional MCP writes. Do not register
+overlapping mappings without checking their destinations.
 
 Import a copy of existing notes with the importer, not by asking a model to rewrite every file.
 Start with a pilot. Keep the original untouched, review skipped items, unresolved links and
@@ -153,6 +155,27 @@ Memory is stored locally, but text an agent retrieves is sent to its model provi
 Never place credentials in notes. Raw capture, durable summaries and the agent's current context
 are separate things, with separate costs and privacy choices.
 
+## Let your agent bring your notes in
+
+The quickest way, if you work with an agent that runs commands on your Mac (Claude Code, Codex
+and others). Choose **Get started**, keep **Let your agent do it**, choose the folder your notes
+are in and **Copy prompt**. Paste it into your agent. Or print it yourself:
+
+```sh
+knode onboard prompt --source ~/Notes
+```
+
+It works from wherever you start: a folder of notes or an Obsidian vault, projects spread over the
+Desktop and other folders next to unrelated files (only Markdown and the files notes link to are
+read), or nothing yet, where the agent sets up a space, registers your project folders and writes
+a short context note for each from its repository. The agent runs `knode onboard guide`, the
+step-by-step guide that comes with Knode, and follows it: it analyzes the folder with the same commands as the guided import, decides with you which
+notes are yours and which stay with their code or keep their files, asks you once with a short
+summary, imports a copy, checks that search finds what matters, connects itself to the new space
+and, with your agreement and a backup of each file, moves your instruction files from keeping
+memory in files to Knode. Your source folder is never changed. To start again, archive the copy
+with `knode onboard archive --target <space>`.
+
 ## Guided import in the Mac app
 
 Choose **Get started** on the welcome screen or **Import projects** above the spaces list. The
@@ -243,7 +266,8 @@ Before finishing, use **Archive copy and start again**. Afterwards, use **Review
 in the imported space's sidebar menu. The report is the original import report, not a claim that
 later user edits have not changed the notes. Archiving retains the current notes/edits in a new
 `*-archive-<timestamp>.knode` package; it does not erase them. Reopen that package with **Open
-space** to recover it. To try a different grouping, analyze the unchanged source again and create
+space** to recover it. `knode spaces` lists archives last, marked as archived; they are left out of
+the sidebar and are not matched when you name a space. To try a different grouping, analyze the unchanged source again and create
 a new independent space. Later edits from the old copy stay in its archive, not in the new import.
 
 Archiving removes agent access only to that copy, forgets its old path and briefly stops the
@@ -263,6 +287,8 @@ recovery metadata, not an agent credential and not a promise that it is synchron
 The native tutorial uses these core-backed commands:
 
 ```sh
+knode onboard guide --source /path/to/vault     # the guide an agent follows
+knode onboard prompt --source /path/to/vault    # the prompt to paste into an agent
 knode onboard analyze --mode vault --source /path/to/vault > /path/to/reviewed-plan.json
 # Edit group names, document project assignments and include flags in the proposal.
 knode onboard apply --plan /path/to/reviewed-plan.json --destination /path/outside/source/Work.knode --name Work
