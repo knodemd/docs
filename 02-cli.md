@@ -144,7 +144,18 @@ compared without regard to upper and lower case, extra spaces or how accented le
 project `site (old)`. Its notes and the projects inside it are listed under it, in the app and by
 the MCP `projects` tool. The folder's line in `knode folders list` names its project. If two devices
 each add the folder before they sync, the space can end up with two projects of that name; the
-folder then uses the oldest.
+folder then uses the oldest, the same one on every device.
+
+Two repositories can have the same name. When another folder, added earlier, already holds the
+files of the project `api`, adding `~/work/b/api` adds the project `api (~/work/b)`, named after the
+folder and where it is, so the notes of the two are not mixed:
+
+```text
+Added the project api (~/work/b): the project api holds the files of another folder.
+```
+
+A project the space already has with no folder of its own, such as one made by `knode onboard`, is
+used as before.
 
 Adding the same folder again changes it, and adds its project if the space has none, such as for a
 folder added before Knode did this. Removing a folder keeps everything already captured from it, and
