@@ -718,6 +718,7 @@ knode sources disconnect whatsapp
 | `include <source> <id>` | Reads an excluded chat, channel or folder again from now on |
 | `run <source>` | Runs the connector now instead of waiting for its next run |
 | `disconnect <source>` | Disconnects the connector. What it brought in stays in the space |
+| `sign-in <source>`, `sign-out <source>` | Signs a connector in to the account it reads (Gmail, mail over IMAP), on this machine, or out of it, forgetting its secrets |
 
 Everything comes in once a connector is connected, new chats included, except what you exclude.
 Spam and trash stay out. The space keeps your choices (on or off, the history, what is excluded),
@@ -740,6 +741,75 @@ sources = false
 ```
 
 `capture = false` stops connectors too: Knode Service then brings nothing in by itself.
+
+### Gmail and other mail accounts
+
+Two connectors bring new mail into your space as it arrives, as the same nodes as
+[importing mail](#import): one node per thread, of kind `email`, and the people of each thread.
+
+- **`gmail`** signs in with Google in your browser and reads your mail through the Gmail API. It
+  asks Google only to read mail: Knode never sends, changes or deletes anything, and mail goes
+  from Google straight to your machine.
+- **`imap`** reads any mail account over IMAP with an app password: Gmail, iCloud, Fastmail,
+  Yahoo, Outlook, or your own server. It works on macOS and Linux.
+
+```sh
+knode sources sign-in gmail
+knode sources connect gmail --history everything
+knode sources containers gmail
+knode sources exclude gmail Label_12 --name "Newsletters"
+
+knode sources sign-in imap
+knode sources connect imap
+knode sources exclude imap "Lists/Announcements"
+```
+
+`connect` signs in first when the connector is not signed in yet. The sign-in belongs to this
+machine, not to a space: one sign-in serves every space you connect the connector to.
+
+**Signing in with Google.** `knode sources sign-in gmail` asks for your Gmail address (or press
+Return to choose the account on Google's page), opens Google's sign-in page in your browser and
+waits. Allow Knode to read your email; when the browser says you are signed in, go back to the
+terminal and press Return. Knode Service has to be running (`knode service status`). The
+browser comes back to Knode on your own machine, so sign in on the machine Knode runs on.
+
+> While Knode's Google Cloud project waits for Google's verification, Sign in with Google works
+> only for the accounts added as testers, and a build of Knode without its Google client says
+> "Sign in with Google is not set up". Use `imap` with an app password for Gmail until then.
+
+**Signing in with an app password.** `knode sources sign-in imap` asks for your address, then an
+app password, and checks them by signing in once. For Gmail, iCloud, Outlook, Yahoo and Fastmail
+the address is enough; for any other server, give the server after it:
+
+```text
+Your mail address, then the IMAP server ...: you@example.com imap.example.com
+App password (an app password for you@example.com): ****
+Signed imap in as you@example.com.
+```
+
+An app password is a password for one app, made in your account's security settings; accounts
+with two-step verification need one. For Gmail: Google Account > Security > 2-Step Verification >
+App passwords. Knode speaks only IMAP over TLS (port 993), never unencrypted IMAP.
+
+- **When.** New mail comes in within about a minute. Knode asks the server what is new every
+  minute; it reads only the mailboxes that changed, and never marks anything as read.
+- **Every label or mailbox comes in**, new ones too, except spam, trash and the ones you exclude.
+  `containers` lists them with the id `exclude` takes: Gmail's label id (`INBOX`, `Label_12`)
+  for `gmail`, the mailbox name on the server for `imap`. A message with an excluded Gmail label
+  stays out even when it has other labels. On Gmail, `imap` reads All Mail once with each
+  message's labels, so a message in several labels comes in once.
+- **History.** With the default history, mail from the day you connected on comes in; with
+  `--history everything`, all of it, in batches.
+- **Nothing twice.** A message already in the space from a Google Takeout `.mbox`, Apple Mail or
+  the other connector is found by its `Message-ID` and not added again.
+- **Attachments** are named in the thread, not attached. To attach them, import an export with
+  `knode import --attachments`.
+- **Secrets** (the app password, Google's sign-in) stay in the system keychain. `knode sources
+  sign-out gmail` or `knode sources sign-out imap` forgets them (and, for Gmail, ends Knode's
+  access at Google); disconnecting the connector from the last space that has it does too. You can
+  also remove Knode's access in your Google Account under Security > Third-party access.
+- If your password changes or you remove Knode's access, `knode sources list` says the connector
+  needs you: sign in again.
 
 ## connect
 
