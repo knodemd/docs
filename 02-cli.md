@@ -9,7 +9,7 @@ Every command works without the app.
 | `knode init <name>` | Creates a space, a `<name>.knode` file in `~/Knode` |
 | `knode search <words>` | Searches the space by words and meaning and prints the matching nodes |
 | `knode index <action>` | Shows how far search by meaning has indexed the space, indexes it now, or turns it off (v0.3) |
-| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, or notes from Apple Notes, Bear, Notion or Evernote. See [Importing](#importing) |
+| `knode import <path or URL>` | Imports a folder of Markdown files (an export or an Obsidian vault), a Markdown file or an agent session file, and from v0.3 a Claude, ChatGPT or Gemini data export, a PDF, a web page, Kindle or Readwise highlights, notes from Apple Notes, Bear, Notion or Evernote, or mail from Gmail (Google Takeout) or Apple Mail. See [Importing](#importing) |
 | `knode export <folder>` | Writes the space to a folder of Markdown files, one per note (v0.2) |
 | `knode history [<node>]` | Shows the latest changes to the space, or to one node, and who made them (v0.2) |
 | `knode undo <change>` | Undoes a change (v0.2) |
@@ -230,6 +230,8 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from apple-mail [--mailbox <name>] [--since <day>] [--until <day>] [--attachments]
+knode import <file.mbox> [--label <name>] [--since <day>] [--until <day>] [--attachments]
 knode import <folder> --vault
 ```
 
@@ -294,6 +296,8 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Gmail (v0.3) | The `.mbox` file of a Google Takeout export of Mail, or the folder it is in; any other `.mbox` file too | `mbox` |
+| Apple Mail (v0.3) | Nothing, to read the mail on this Mac, or a mailbox exported from Apple Mail (`.mbox`) | `apple-mail` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -340,6 +344,7 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Mail:** see [Mail](#mail).
 
 ```sh
 knode import ~/Downloads/data-2026-10-20.zip
@@ -350,6 +355,43 @@ knode import ~/Downloads/Export-notion.zip --json
 ```
 
 A path that is none of these fails and says what `knode import` takes.
+
+### Mail
+
+```sh
+knode import ~/Downloads/Takeout/Mail/"All mail Including Spam and Trash.mbox"
+knode import ~/Downloads/Takeout/Mail --label Work --since 2026-01-01
+knode import --from apple-mail --mailbox INBOX --until 2026-06-30 --attachments
+```
+
+From v0.3. Knode never signs in to a mail account: it reads the files you point it at, and
+writes only into your space. For Gmail, export your mail with
+[Google Takeout](https://takeout.google.com) (choose Mail), unzip the download and import the
+`.mbox` file in `Takeout/Mail`, or that folder. For Apple Mail, `--from apple-mail` with no path
+reads the mail stored on this Mac, only ever reading it. macOS lets only apps with Full Disk
+Access read it: if Knode cannot, it says how to turn it on in System Settings > Privacy &
+Security > Full Disk Access for the app that runs Knode (your terminal, or Knode). Or export a
+mailbox from Apple Mail (Mailbox > Export Mailbox) and import the exported `.mbox`.
+
+- **One node per thread**, of kind `email`, titled with the subject. Replies are found by the
+  headers mail programs write (`Message-ID`, `In-Reply-To`, `References`), and by the subject
+  only when a reply has none of them. The messages are in the order they were sent, each with
+  its sender, recipients and date. Knode keeps the plain text of a message and turns its HTML
+  into Markdown when there is no plain text.
+- **People:** everyone who sent or received a message becomes one node of kind `person`, one per
+  address, and each thread links to its people. A later import leaves a person node as it is,
+  so a name or note you add is kept; only a node titled with a bare address gets the person's
+  name once a message gives it.
+- **Folders and dates:** `--label` (or `--mailbox`, or `--folder`) imports only the messages in a
+  Gmail label or an Apple Mail mailbox; repeat it for more than one. `--since` and `--until` take
+  a day (`2026-01-01`), both included. Spam and trash are left out unless you name them with
+  `--label`.
+- **Attachments** are left out unless you add `--attachments`: then the files of each message are
+  attached to its thread, up to 100 MB each. Apple Mail keeps the files of some messages outside
+  them; those are named in the thread but not attached.
+- **Importing again** adds only the new messages to their threads. Importing another date range
+  later adds those messages to the threads already there. A message in two folders (Gmail's All
+  Mail and your Inbox in Apple Mail, for example) is imported once.
 
 ### Readwise through its API
 
