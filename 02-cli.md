@@ -453,16 +453,19 @@ It is long though.
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
   export writes them, in the time of the phone or computer that made it.
 - **Told from the path:** without `--from`, a path is a chat export only when the export is the
-  path itself: its files at the top, or in the one folder at the top of a `.zip`. A folder of
-  notes that holds a chat export somewhere inside, or has Markdown files next to the export, is
-  imported as a folder of Markdown, so no note is left out. To import an export further down,
-  name it with `--from whatsapp`, `--from telegram` or `--from slack`.
+  path itself: its files at the top, or in the one folder at the top (of a folder or a `.zip`).
+  A folder that holds Markdown files anywhere, outside the export's own media folders, is a
+  folder of notes and is imported as Markdown, so no note is left out. When it also holds a chat
+  export, the summary says where and gives the `knode import --from whatsapp`, `--from telegram`
+  or `--from slack` command that imports it. Named with `--from`, an export is found at any depth.
 - **Code:** code blocks keep their lines as written, blank lines included, and start on the line
   after the sender.
 - **Privacy:** chats hold other people's messages. Knode reads only the files you give it,
-  writes only into the space you import into, and sends nothing anywhere. Secrets that look
-  obvious in the messages, such as API keys, access tokens and passwords, are replaced with
-  `[redacted]`, and the summary says how many were.
+  writes only into the space you import into, and sends nothing anywhere. What is shaped like a
+  credential in the messages is replaced with `[redacted]`, and the summary says how many were:
+  API keys and tokens in known formats, a long value of letters and digits after a name such as
+  `password:` or `token=`, and the password in a link. Ordinary words are kept, so "Secret:
+  everything went fine" stays as written.
 
 **WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
 `knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`WhatsApp Chat with
