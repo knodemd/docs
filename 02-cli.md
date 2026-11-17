@@ -230,6 +230,7 @@ knode import <path or URL> [--from <kind>] [--json]
 knode import --from apple-notes
 knode import --from bear
 knode import --from readwise-api
+knode import --from claude-code-memory [<path>]
 knode import <folder> --vault
 ```
 
@@ -294,6 +295,7 @@ Everything `knode import` reads, with the kind `--from` takes:
 | Bear (v0.3) | Nothing, to read the notes on this Mac, or a backup (`.bear2bk`), TextBundles or an exported Markdown folder | `bear` |
 | Notion (v0.3) | The "Markdown & CSV" export `.zip`, or the folder it was extracted to | `notion` |
 | Evernote (v0.3) | An `.enex` file, or a folder of them | `evernote` |
+| Claude Code memory (v0.3) | Nothing, to read the memory Claude Code keeps on this machine, or its `.claude` folder or the `projects` folder inside | `claude-code-memory` |
 
 - **A folder of Markdown:** every `.md` file in it and in its subfolders, leaving out hidden ones
   such as `.git`, `.obsidian` and `.trash`. Each file becomes a note titled with its file name, or
@@ -340,12 +342,26 @@ Everything `knode import` reads, with the kind `--from` takes:
   of a database becomes a note with its columns as properties.
 - **Evernote:** each note keeps its notebook, tags, dates, attached files, checklists and tables.
   Encrypted text is left out.
+- **Claude Code memory:** with no path, Knode reads `projects` in the folder `CLAUDE_CONFIG_DIR`
+  names, else in `~/.claude`. Claude Code keeps a folder there for each folder it works in, named
+  after its full path with every character other than a letter or digit as `-`
+  (`/Users/ada/Work/web.app` is `-Users-ada-Work-web-app`). Each file in its `memory` folder
+  becomes a note titled with the `name` of its frontmatter, with its `description` and type kept
+  as the properties `claude-code.description` and `claude-code.type`; `MEMORY.md`, which only
+  lists the others, is left out, and so are folders that are links to other folders. Each note is
+  linked `part-of` the project of the space its folder belongs to: the project folder of the
+  space that is that folder or contains it (the longest one wins), linked to the project named
+  as that folder; in a space made by guided import, the project made from that folder of the
+  source; or, in a space with no project folders, a project named as the folder. Knode never
+  makes a project up: notes whose folder matches none are imported without a project, and the
+  report lists those folders and how many notes went to each project.
 
 ```sh
 knode import ~/Downloads/data-2026-10-20.zip
 knode import ~/Documents/"My Clippings.txt"
 knode import https://example.com/essays/on-rivers
 knode import --from apple-notes
+knode import --from claude-code-memory
 knode import ~/Downloads/Export-notion.zip --json
 ```
 
