@@ -381,7 +381,8 @@ It is long though.
 - **Importing again:** the same chat is found again, and only the messages after the last one
   imported are added, under the day they belong to. Importing the same export twice changes
   nothing; a newer export of the chat adds what is new. Messages older than the last one
-  imported are not added.
+  imported are not added; when an export has more of them than were imported, the summary says
+  how many were left out.
 - **Properties:** `chat.app`, `chat.id`, `chat.type` (`personal`, `group`, `channel`,
   `private-channel` or `thread`),
   `chat.participants`, `chat.started_at`, `chat.ended_at` and `chat.messages`. Times are as the
@@ -390,11 +391,23 @@ It is long though.
   writes only into the space you import into, and sends nothing anywhere.
 
 **WhatsApp:** on the phone, open the chat, then Export Chat (with or without media). Give
-`knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`_chat.txt` from an
-iPhone, `WhatsApp Chat with <name>.txt` from Android). Every language and date format WhatsApp
-writes is read: day or month first, 12 or 24 hours, two or four digit years. A WhatsApp export has
-no id for the chat, so the chat is found again by its name, from the export's file name; keep the
-name WhatsApp gave the file.
+`knode import` the `.zip`, the folder it was extracted to, or the `.txt` (`WhatsApp Chat with
+<name>.txt` from Android). The date and time formats WhatsApp writes in each language are read:
+day or month first, 12 or 24 hours, two or four digit years, with brackets (iPhone) or a dash
+(Android).
+
+- **Day or month first:** WhatsApp does not say which. A day over 12 tells; otherwise the order
+  that keeps the messages in time; otherwise the habit of the format (`3/4/26, 9:15 AM` is month
+  first, as in the United States, and other formats day first). When nothing in the dates tells,
+  the summary says how they were read. The order is kept on the chat's node
+  (`chat.date_order`), and later exports of the chat are read the same way. If a later export
+  shows the order was wrong (a date such as `3/14/26`), nothing is added and the summary says so:
+  delete the chat's node and import the new export again.
+- **The chat's name:** a WhatsApp export has no id for the chat, so the chat is found again by its
+  name, from the export's file names: `WhatsApp Chat with <name>.txt` on Android, and for an
+  iPhone's `_chat.txt`, the `.zip` (`WhatsApp Chat - <name>.zip`) or the folder it is in. Keep the
+  names WhatsApp gave them. A loose `_chat.txt` in a folder WhatsApp did not name is refused,
+  since Knode cannot tell which chat it is.
 
 ```sh
 knode import ~/Downloads/"WhatsApp Chat - Book Club.zip"
@@ -419,8 +432,10 @@ knode import --from telegram ~/Downloads/Telegram\ Desktop/DataExport_2026-03-06
 Import/Export Data > Export, and gets a `.zip`. Give `knode import` the `.zip` or the folder it
 was extracted to. Each channel, private channel, group message and direct message in it becomes
 a node (`Slack - general`). A thread becomes its own node, `Slack - general - <how it starts>
-(<date and time>)`, linked `part-of` its channel; the message that started it says
-`Thread: [[...]]`, and later replies are added to the thread's node. The members who wrote or
+(<date and time>)`, linked `part-of` its channel, and later replies are added to the thread's
+node. When the thread already had replies the first time its first message was imported, that
+message also says `Thread: [[...]]` in the channel. Replies whose first message is not in the
+export are kept in their thread's node too, which says that its start is not in the export. The members who wrote or
 were mentioned become nodes of kind `person`, found again by their Slack id (`slack.user`), so
 importing again never copies them; a mention becomes a `[[link]]` to the person, a channel name
 a link to the channel's node, and every chat is linked `related` to the people who wrote in it.
