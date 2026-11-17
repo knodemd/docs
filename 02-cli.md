@@ -361,17 +361,19 @@ Everything `knode import` reads, with the kind `--from` takes:
   Encrypted text is left out.
 - **Claude Code memory:** with no path, Knode reads `projects` in the folder `CLAUDE_CONFIG_DIR`
   names, else in `~/.claude`. Claude Code keeps a folder there for each folder it works in, named
-  after its full path with every character other than a letter or digit as `-`
+  after its full path: ASCII letters and digits are kept and every other character becomes `-`
   (`/Users/ada/Work/web.app` is `-Users-ada-Work-web-app`). Each file in its `memory` folder
   becomes a note titled with the `name` of its frontmatter, with its `description` and type kept
-  as the properties `claude-code.description` and `claude-code.type`; `MEMORY.md`, which only
-  lists the others, is left out, and so are folders that are links to other folders. Each note is
-  linked `part-of` the project of the space its folder belongs to: the project folder of the
-  space that is that folder or contains it (the longest one wins), linked to the project named
-  as that folder; in a space made by guided import, the project made from that folder of the
-  source; or, in a space with no project folders, a project named as the folder. Knode never
-  makes a project up: notes whose folder matches none are imported without a project, and the
-  report lists those folders and how many notes went to each project.
+  as the properties `claude-code.description` and `claude-code.type`. Left out, and listed with
+  the reason: `MEMORY.md`, which only lists the others, and folders or files that are links to
+  others. Each note is linked `part-of` the project of the space its folder belongs to: the
+  project folder of the space that is that folder or contains it (the longest one wins), linked
+  to the project that folder holds; in a space made by guided import, the project made from that
+  folder of the source; otherwise a project named as the folder, upper and lower case aside.
+  Knode never makes a project up: notes whose folder matches none are imported without a
+  project, and the report lists those folders and how many notes went to each project.
+  Importing again skips memory that did not change. A note edited in Knode since it was
+  imported is kept as it is, even when its memory changed, and the report says so.
 - **Mail:** see [Mail](#mail).
 - **Chats:** see [Chat exports](#chat-exports).
 
