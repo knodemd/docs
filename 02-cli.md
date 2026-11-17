@@ -138,10 +138,13 @@ knode folders list --space Work
 ```
 
 A project folder holds the files of the project of the same name: adding `~/code/site` adds the
-project `site` to the space, or uses the project named `site` that the space already has (the
-name is compared without regard to case), so a name never gets a second project. Its notes and
-the projects inside it are listed under it, in the app and by the MCP `projects` tool. The
-folder's line in `knode folders list` names its project.
+project `site` to the space, or uses the project named `site` that the space already has. Names are
+compared without regard to upper and lower case, extra spaces or how accented letters are encoded.
+`[`, `]` and `|` cannot be part of a title, so they become `(`, `)` and `-`: `site [old]` adds the
+project `site (old)`. Its notes and the projects inside it are listed under it, in the app and by
+the MCP `projects` tool. The folder's line in `knode folders list` names its project. If two devices
+each add the folder before they sync, the space can end up with two projects of that name; the
+folder then uses the oldest.
 
 Adding the same folder again changes it, and adds its project if the space has none, such as for a
 folder added before Knode did this. Removing a folder keeps everything already captured from it, and
