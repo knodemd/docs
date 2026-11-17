@@ -938,11 +938,15 @@ knode sources exclude imessage "iMessage;-;+15550100" --name "Ada"
 
 ```sh
 knode connect <agent> [--space <path>] [--print]
-knode connect --list
+knode connect --list [--json]
 ```
 
 `--list` shows every agent Knode can be added to, whether it is on this machine, and the file it
-would change.
+would change. With `--json` it prints them as JSON, for apps and scripts: for each agent, what to
+type after `knode connect` (`agent`), its name in Knode (`name`), its `title`, whether it is on this
+machine (`detected`), whether its settings already run Knode as that agent (`connected`), and
+whether Knode can be added to it at all (`can_connect`; Aider has no MCP client). Listing changes
+nothing.
 
 Connecting an agent does two things:
 
