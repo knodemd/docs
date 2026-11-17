@@ -309,14 +309,15 @@ knode onboard archive --target /path/outside/source/Work.knode
 ```
 
 `--into` does what `--destination` does, with the same checks, project index notes, receipt and
-`--sessions`, but in a space that exists: one with no onboarding receipt, no project and fewer
-than three notes made by a person (captured conversations, notes agents wrote and `Example:`
-notes do not count). A set-up space is refused. The whole plan is first rehearsed in a throwaway
-copy, and a source note whose id is already in the space is refused, so a plan that would fail
-writes nothing into the space. Notes already there stay; capture is turned off, as in a new
-onboarding space. With Knode Service running, the import goes through it, so the app and connected
-agents see it at once. `onboard archive` works on such a space too and says that what it held
-before is archived with it.
+`--sessions`, but in a space that exists: one with no onboarding receipt, no project and fewer than
+three notes made by a person (captured conversations, notes agents wrote and `Example:` notes do
+not count). A set-up space is refused. The whole plan is first rehearsed in a throwaway copy, and a
+source note whose id is already in the space is refused, so a plan that would be refused writes
+nothing into the space. Notes already there stay; capture is turned off, as in a new onboarding
+space. As this is the space your agents are connected to, `--into` turns capture off in the space
+they write to, so their conversations are no longer captured there. With Knode Service running, the
+import goes through it, so the app and connected agents see it at once. `onboard archive` works on
+such a space too and says that what it held before is archived with it.
 
 `--mode project` imports one project; `--mode empty` needs no source. Plans are not exports: their
 fingerprints intentionally expire when the source changes. Re-analyze instead of editing digests.
