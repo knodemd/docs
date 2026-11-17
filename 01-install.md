@@ -131,8 +131,8 @@ claude mcp add knode -- knode mcp --agent claude-code
 
 | What | Where |
 |---|---|
-| iPhone and iPad app | App Store, from v0.4 |
-| Web app | [app.knode.md](https://app.knode.md), from v0.5 |
+| iPhone and iPad app | App Store, from v0.5 |
+| Web app | [app.knode.md](https://app.knode.md), from v0.6 |
 | Rust libraries | `cargo add knode-format` and `cargo add knode-md` |
 | Swift package | Add `https://github.com/knodemd/knode` in Xcode |
 
