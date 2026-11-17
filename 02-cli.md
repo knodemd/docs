@@ -732,6 +732,13 @@ list` shows the ones on this machine.
 An editor's data folder is `~/Library/Application Support/<editor>` on macOS and
 `~/.config/<editor>` (or `$XDG_CONFIG_HOME/<editor>`) on Linux.
 
+Capture runs in Knode Service. When it starts at login, through launchd on macOS or a systemd user
+unit on Linux (`knode service install`), it does not see variables you set only in a shell
+profile, such as `CLINE_DATA_DIR`, `CLINE_DIR`, `XDG_CONFIG_HOME` or the `KNODE_*_ROOT` variables,
+and keeps reading the default folders. Set them where the service can see them too, with
+`launchctl setenv` on macOS or in `~/.config/environment.d/` on Linux, then restart it with
+`knode service stop` and `knode service start`.
+
 Windsurf keeps Cascade conversations in `~/.codeium/windsurf/cascade` as encrypted files whose
 format is not public, and has no way to export them, so Knode cannot read them. Connect Windsurf
 with `knode connect windsurf` instead: Cascade then reads and writes your memory through MCP.
