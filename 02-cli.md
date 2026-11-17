@@ -106,7 +106,7 @@ From v0.2. Without an action, lists every space Knode knows: those in `config.to
 | `rename` | Renames the space. Its file keeps its name, so nothing that points at it breaks |
 | `icon` | Sets the icon of the space, one emoji, or removes it with `--clear` |
 | `default` | Makes it your default space. The previous default stays in the list |
-| `capture` | Turns capture of agent conversations into the space on or off. Off, the conversations of its projects are stored nowhere |
+| `capture` | Turns capture of agent conversations into the space on or off. Off, the conversations of its projects are stored nowhere. On, a new space starts capturing at once instead of waiting until it is set up (see [Capture](#capture)) |
 
 The name, the icon and the capture setting are kept inside the space, so they travel with it to
 your other devices. Only you can change them, from the command line or the app; agents cannot.
@@ -873,6 +873,19 @@ capture_exclude = ["/Users/you/code/secret-project"]
 
 Leaving out a folder leaves out every project inside it. Knode Service reads `config.toml` again
 within a few seconds, so there is no need to restart it.
+
+A new space waits before capturing anything, so a space you have just made with `knode init` and
+connected with `knode connect` does not fill with every earlier conversation of your agents before
+you were asked. Capture into it starts, earlier conversations included, as soon as any of these
+happens:
+
+- you turn capture on for it with `knode spaces capture <space> on` (or in the app);
+- `knode onboard` sets it up;
+- you add a folder to it with `knode folders add`;
+- something is written into it, such as your first note.
+
+Capture stays on by default: a space Knode already captures into never waits. To keep a new space
+free of conversations, turn capture off for it with `knode spaces capture <space> off`.
 
 These are the agents whose conversations are captured, and where each keeps them. `knode agents
 list` shows the ones on this machine.

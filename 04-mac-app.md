@@ -61,7 +61,9 @@ Every space you create or open in the app is added to the spaces Knode knows (`s
 Each space keeps the folders that feed it. Choose **Folders and Capture…** in the Space menu or the
 right-click menu of a space, or open Settings > Spaces. There you can:
 
-- turn **capture into this space** on or off: off, nothing captured is written to it;
+- turn **capture into this space** on or off: off, nothing captured is written to it. A new
+  space captures nothing until it is set up or you write something in it (see
+  [Capture](02-cli.md#capture));
 - **add a folder** with the **Add Folder** menu: a **project** (a folder you and your agents work
   in, such as a code repository), a **notes** folder of Markdown files, or an **agent** folder
   where an agent keeps its sessions (choose the agent from the list);
