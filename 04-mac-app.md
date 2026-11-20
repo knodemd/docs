@@ -344,6 +344,72 @@ note with the path its file had, and choose, for one note or for all of them:
 The same choices are in the terminal as `knode markdown deleted` (see the
 [CLI](02-cli.md#markdown-deleted)).
 
+## Sources (v0.4)
+
+A *source* brings things into a space. **Connectors** keep running in Knode Service, on your Mac,
+and bring in what is new as it happens, such as the chats of a messaging app or a mail store.
+**Importers** run once, on an export you give them, with `knode import`. Every connector is off
+until you connect it to a space, and each space has its own.
+
+Open **Knode > Settings… > Sources** and choose a space at the top. Each connector shows:
+
+- what it reads, and what it needs: **Full Disk Access** for the ones that read another app's data
+  on this Mac, **Sign-in** for the ones that reach an account;
+- its state: **Not connected**, **On**, **Running**, **Paused**, **Failing**, **Needs attention**
+  (a permission or a sign-in is missing), **Needs an update** or **Stopped**;
+- once connected, its history, when it last ran, how many items it brought in in all and in its
+  last run, and its last error.
+
+The list updates by itself while it is open, so you see a run start, finish and what it brought in.
+
+**Needs an update** means the other app changed how it keeps its data. Knode then brings in
+nothing from it, rather than something wrong, until Knode is updated; what came in before stays.
+
+### Connect a source
+
+**Connect** opens a sheet that goes step by step:
+
+1. **Access**, for a connector that reads another app's data: **Open Full Disk Access** opens
+   System Settings > Privacy & Security > Full Disk Access. Turn on Knode there (add it with the
+   **+** button if it is not listed), then come back and continue. Knode reads a copy of the other
+   app's data and never changes it.
+2. **Sign in**, for a connector that reaches an account, unless it is signed in already. The
+   sign-in is kept in your Keychain, never in a space or a settings file:
+   - **Telegram**: your phone number, the code Telegram sends you, then your password if the
+     account has one.
+   - **Gmail** and **Slack**: the sign-in page opens in your browser. Sign in there and allow
+     Knode to read; the sheet goes on by itself when the browser comes back to Knode.
+     **Open the page again** opens it once more, and **Cancel** stops waiting.
+   - **Mail (IMAP)**: your address, the IMAP server (not needed for Gmail, iCloud, Outlook, Yahoo
+     or Fastmail) and an app password made in your account's security settings, not your usual
+     password.
+3. **History**: **From today**, the default, brings in what is new from the start of today on;
+   **Everything** brings in everything the source has, then what is new. It is chosen once: to
+   change it, disconnect and connect again.
+4. **Chats**, **channels** or **folders**: everything comes in, new ones too, except the ones you
+   switch off. One switched off is never read again, and what came from it before stays. The
+   connector waits, paused, until you press **Start**, so nothing is read before you choose.
+   **Start later**, or closing the window, leaves it connected and paused: turn on **On in**
+   *space* on its card when you are ready.
+
+### Pause, run and disconnect
+
+- **On in** *space* is the switch of a connected source: off pauses it, and nothing new comes in
+  until you turn it on again.
+- **Run now** brings in what is new at once, without waiting for its next run.
+- **Choose chats** (or channels, or folders) changes what it leaves out. Switching one on again
+  reads it from now on; what was said while it was off is not brought in later.
+- **Signed in** shows the account a connector reads. **Sign out** asks first, ends the session
+  and removes it from your Keychain: the connector brings in nothing more, in any space, until
+  you sign in again with **Sign in**.
+- **Disconnect** asks first. The connector stops, its settings in the space are removed, and
+  everything it brought in stays in the space. Its sign-in is removed from your Keychain once no
+  space on this Mac has it connected.
+
+Connectors run in Knode Service: when it is not running, the screen offers to start it.
+`sources = false` or `capture = false` in `config.toml` stops every connector, and the screen
+shows them as **Stopped**. The same list and actions are in the terminal as `knode sources`.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
