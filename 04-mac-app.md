@@ -354,6 +354,8 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
 4. **Chats**, **channels** or **folders**: everything comes in, new ones too, except the ones you
    switch off. One switched off is never read again, and what came from it before stays. The
    connector waits, paused, until you press **Start**, so nothing is read before you choose.
+   **Start later**, or closing the window, leaves it connected and paused: turn on **On in**
+   *space* on its card when you are ready.
 
 ### Pause, run and disconnect
 
@@ -365,8 +367,9 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
 - **Signed in** shows the account a connector reads. **Sign out** asks first, ends the session
   and removes it from your Keychain: the connector brings in nothing more, in any space, until
   you sign in again with **Sign in**.
-- **Disconnect** asks first. The connector stops, its settings in the space and its sign-in are
-  removed, and everything it brought in stays in the space.
+- **Disconnect** asks first. The connector stops, its settings in the space are removed, and
+  everything it brought in stays in the space. Its sign-in is removed from your Keychain once no
+  space on this Mac has it connected.
 
 Connectors run in Knode Service: when it is not running, the screen offers to start it.
 `sources = false` or `capture = false` in `config.toml` stops every connector, and the screen
