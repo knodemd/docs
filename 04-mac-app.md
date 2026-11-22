@@ -350,7 +350,14 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
      password.
 3. **History**: **From today**, the default, brings in what is new from the start of today on;
    **Everything** brings in everything the source has, then what is new. It is chosen once: to
-   change it, disconnect and connect again.
+   change it, disconnect and connect again. For **Telegram**, **Largest file to download** sets
+   the biggest photo or file Knode attaches, in MB: larger ones are named in the chat as not
+   downloaded, 0 downloads none, and empty keeps Telegram's default (20 MB). Change it later on
+   Telegram's card. For **Messages**, **Names from Contacts** shows people by name instead of by
+   phone number or address; Knode asks for access to Contacts the first time. Knode Service cannot
+   read Contacts itself, so the app gives it the names: they stay on this Mac in Knode's own folder
+   and are never added to a space, and only conversations brought in after you turn it on use
+   them. Turning it off forgets them.
 4. **Chats**, **channels** or **folders**: everything comes in, new ones too, except the ones you
    switch off. One switched off is never read again, and what came from it before stays. The
    connector waits, paused, until you press **Start**, so nothing is read before you choose.
