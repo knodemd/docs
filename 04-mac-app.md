@@ -399,6 +399,141 @@ this Mac, and is transcribed and summarised the same way. Choose whether to brin
 or the ones you already have, and leave out folders you do not want. Voice Memos needs Full Disk
 Access for Knode; a memo still in iCloud is waited for.
 
+## Calendar (v0.4)
+
+Knode for Mac can bring the events of your calendars into a space, so you and your agents can
+connect notes and meeting recordings to the meeting they came from. Everything stays on your
+Mac: Knode reads your calendars, never changes them, and sends nothing anywhere.
+
+### Connect your calendars
+
+1. Open **Settings > Sources** and choose the space.
+2. Under **Calendar**, click **Connect**.
+3. Click **Allow Access**. macOS asks whether Knode may read your calendars: allow full access.
+   Knode asks only now, when you connect the source.
+4. Choose the history: **From today** (the default) or **Everything**.
+5. Switch off the calendars you want to leave out, then click **Start**.
+
+If you declined access, the source shows **Needs your attention**. Allow Knode in **System
+Settings > Privacy & Security > Calendars**, then connect again or click **Check Again**.
+
+### What comes in
+
+- One note of kind `event` per event, titled with the event and its day, such as
+  `Weekly sync (2026-11-24)`. Every occurrence of a recurring event gets its own note.
+- The note says when and where it happens, the link to the call (Zoom, Google Meet, Teams and
+  others), who is invited, the calendar, and the event's notes (cut when they are long).
+- Attendees are named, never written with their mail address, unless you turn on **Attendees'
+  addresses**. An attendee whose name matches a person note in the space links to it.
+- When an event changes, its note changes with it. A cancelled event is marked **Cancelled**, and
+  an event deleted from your calendar is marked **Removed from the calendar**; neither note is
+  deleted.
+- Events are written by Knode itself, as the `calendar` source.
+
+### Which days
+
+By default Knode keeps events from 30 days back to 14 days ahead. With **From today**, it never
+goes back before the day you connected the source. Change **Days back** and **Days ahead** in the
+Calendar card in **Settings > Sources**. Knode reads your calendars again when one changes, every
+15 minutes, and when you click **Run now**.
+
+### Meetings and events
+
+When you start **Record Meeting…** during an event, the sheet offers **Link to <event>**. Leave it
+on, and the meeting takes the event's title and is linked to the event in your space. If you
+choose a project, the event becomes part of it too.
+
+### Leave a calendar out, pause or disconnect
+
+- **Choose calendars** in the Calendar card switches calendars on or off. A calendar switched off
+  is never read again; what came from it stays.
+- **On in <space>** pauses the source.
+- **Disconnect** stops it. The events it brought in stay in the space.
+
+## Photos, recordings and videos (v0.4)
+
+Add the photo of a whiteboard, a voice note from a walk or a talk filmed on your phone to a space,
+and Knode turns it into text your agents can search, on your Mac. Nothing is uploaded.
+
+### Add them
+
+In the Knode app for Mac, open a space, then:
+
+- drag photos, audio files or videos onto the list of notes (or a folder: Knode adds the photos,
+  recordings and videos in it and in its folders, down to three levels, as `knode import` does), or
+- choose **File > Add Photos…** or **File > Add Recording or Video…**.
+
+If a project is selected, what you add belongs to it. Knode takes HEIC, JPEG and PNG photos, audio
+files (M4A, MP3, WAV, AAC, AIFF, CAF, FLAC, Voice Memos) and videos (MOV, MP4, M4V).
+
+From the terminal:
+
+```sh
+knode import ~/Desktop/whiteboard.heic
+knode import ~/Movies/talk.mov
+knode import --from media ~/Pictures/Trip    # every photo, recording and video in the folder
+```
+
+The app reads and transcribes what you import this way the next time it opens the space.
+
+Each file becomes one note, with the original kept unchanged as its attachment. Adding the same
+file again finds the note it already has instead of making a second one.
+
+### Photos
+
+Knode reads each photo on your Mac with Apple's Vision:
+
+- the **text in the photo** (a whiteboard, a slide, a receipt), in any language Vision reads,
+  Spanish included;
+- **what it shows**, as a few labels such as "whiteboard" or "document".
+
+Both go into the note under *Text in the photo* and *What it shows*, so a search for "the
+whiteboard photo" or for a word written on it finds the photo. The note's first line says when
+and where the photo was taken and with which camera, from the photo's own metadata, and the same
+details are kept as properties of the note (`photo.taken_at`, `photo.latitude`,
+`photo.longitude`, `photo.camera`, `photo.width`, `photo.height`).
+
+Knode keeps the coordinates, not the name of the place: naming a place from coordinates needs the
+internet, and photos are read only on your Mac. A location a camera got wrong (coordinates that
+cannot exist) is left out. To keep no location at all for a space:
+
+```sh
+knode spaces photo-location Work off
+```
+
+Turning it off also removes the location Knode already wrote for the photos of that space: the
+coordinates in the note's properties and the place in its first line.
+
+**The attached original keeps its own EXIF data, location included.** Knode never changes the
+file you add, so a photo's GPS coordinates stay inside the attached file, and anyone or any agent
+that can open the attachment can read them. If you do not want a photo's location in the space at
+all, remove it from the file before you add it (for example, by leaving out the location when
+you export the photo from Photos).
+
+If a photo cannot be read, the Knode menu bar menu shows it with **Retry**.
+
+### Recordings and videos
+
+Audio files and videos are transcribed on your Mac the same way as meetings: Apple's on-device
+speech recognition writes a transcript note, with times, linked to the recording, and, where Apple
+Intelligence is available and the space has minutes on, Apple's on-device model writes the summary,
+decisions and action items into the recording's note. For a video, Knode transcribes its sound.
+
+A space keeps files of up to 100 MB. A recording or a video larger than that is not refused: Knode
+takes its sound on your Mac as a small audio file (about 30 MB an hour), keeps that in the space
+and transcribes it, and says in the note that the original stays where it was. The original file
+is never changed. A photo larger than 100 MB, or a recording so long that even its sound is larger
+than 100 MB, is not added, and Knode says why.
+
+Some places require everyone recorded to agree to it. Recordings of people that you add are your
+responsibility, as with meetings.
+
+### Privacy
+
+Photos, recordings and videos stay on your Mac and go only into the space you pick. Reading,
+transcribing and summarising all run on the device; no image, audio, video or text is sent to any
+server.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
