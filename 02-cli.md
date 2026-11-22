@@ -420,7 +420,10 @@ Everything `knode import` reads, with the kind `--from` takes:
   note that links, as Obsidian does. `--vault` only changes
   the wording of the summary. From v0.3, a file that is not Markdown, such as an image, is
   attached to the note that embeds it with `![[name]]` (or links to it with `[[name]]`) when it is
-  in the same folder as the note; other such files are left out. A kind of link the space does not
+  in the same folder as the note, whether the note names it by name, by a relative path such as
+  `../notes/p.png`, or by a path from the top of the vault, as Obsidian writes with "Absolute path
+  in vault"; files kept in another folder (such as `attachments/`) are left out, and the migration
+  report lists them as elsewhere in the folder. A kind of link the space does not
   have yet is added to it, so no link is lost. See [Markdown in and out](#markdown-in-and-out).
 - **A Markdown file:** one note, titled with the `title` of its frontmatter, else its first heading,
   else its file name. Its frontmatter is kept as properties. The note is known by where the file
@@ -939,6 +942,7 @@ knode sources disconnect whatsapp
 | `include <source> <id>` | Reads an excluded chat, channel or folder again from now on |
 | `run <source>` | Runs the connector now instead of waiting for its next run |
 | `disconnect <source>` | Disconnects the connector. What it brought in stays in the space |
+| `media <source> [MB]` | Sets the largest photo or file the connector downloads into this space, such as Telegram's; `0` downloads none, and leaving the number out goes back to the default (20 MB for Telegram). Files left out appear in the chat as *not downloaded*, with the reason. Works with or without Knode Service |
 
 Everything comes in once a connector is connected, new chats included, except what you exclude.
 Spam and trash stay out. The space keeps your choices (on or off, the history, what is excluded),
@@ -1234,6 +1238,7 @@ list` shows the ones on this machine.
 | Amp | `~/.local/share/amp/threads` (or `$XDG_DATA_HOME/amp/threads`) |
 | Aider | `.aider.chat.history.md` in each project, searched for under the folder named by `KNODE_AIDER_ROOT`, up to four folders down |
 | Cursor | Chats and agent sessions in Cursor's `User/globalStorage/state.vscdb` (or `$KNODE_CURSOR_ROOT`) |
+| Cursor CLI (`cursor-agent`) | `~/.cursor/chats` (or `$KNODE_CURSOR_CLI_ROOT`): one conversation per chat with its title, project, model and date, apart from the Cursor editor's; thinking and tool output are left out |
 | Windsurf | Chats kept in Windsurf's `User/workspaceStorage` (or `$KNODE_WINDSURF_ROOT`). Cascade conversations are not captured: see below |
 | Cline | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf, and `tasks` and `sessions` in Cline's data folder, `~/.cline/data` (or `$CLINE_DATA_DIR`, or `$CLINE_DIR/data`), where the Cline CLI and Cline's SDK keep them (or `$KNODE_CLINE_ROOT` instead of all of these) |
 | Roo Code | The extension's `tasks` folder in VS Code, VS Code Insiders, VSCodium, Cursor or Windsurf (or `$KNODE_ROO_CODE_ROOT`) |
