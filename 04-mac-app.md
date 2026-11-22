@@ -330,6 +330,17 @@ The list updates by itself while it is open, so you see a run start, finish and 
 **Needs an update** means the other app changed how it keeps its data. Knode then brings in
 nothing from it, rather than something wrong, until Knode is updated; what came in before stays.
 
+### Connect your things
+
+Knode brings in what is new from your apps, on your Mac. Open **Connect your things** from the
+welcome screen, the **Sources** button in the sidebar, or **Knode > Connect Your Things…**. Choose
+the space at the top, then click a tile. Mail, Messages and WhatsApp need Full Disk Access: Knode
+opens System Settings for you; turn on Knode and the sheet goes on by itself. For Gmail, when your
+Knode cannot sign in with Google yet, use Apple Mail (add your Google account in Mail first) or an
+app password: open **App passwords** in your Google account (2-Step Verification must be on),
+create one named Knode, and paste it with your Gmail address. Sources marked **Coming soon** are
+not available in this build yet. Change or disconnect anything later in Settings > Sources.
+
 ### Connect a source
 
 **Connect** opens a sheet that goes step by step:
