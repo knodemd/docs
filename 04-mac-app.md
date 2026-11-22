@@ -351,14 +351,17 @@ your Mac. Nothing is sent anywhere.
 
 ### Record a meeting
 
-In the menu bar menu:
+Use the **Record** menu, the **Record** button at the top right of the window, or the Knode menu in
+the menu bar:
 
-- **Record Meeting…** for a call (Meet, Zoom, Teams and others): it records the sound of your Mac,
+- **Record Meeting…** (Shift-Command-R) for a call (Meet, Zoom, Teams and others): it records the sound of your Mac,
   everyone else on the call, and your microphone, you.
-- **Record In Person…** for people in a room: it records only the microphone.
+- **Record In Person…** (Option-Shift-Command-R) for people in a room: it records only the
+  microphone.
 
-Choose the space and the project the meeting belongs to, and start. While Knode records, the menu
-bar shows a red dot and the time; **Stop** ends it. Nothing is ever recorded unless you start it,
+Choose the space and the project the meeting belongs to, and start. While Knode records, a red bar
+in the window shows the time with **Pause** and **Stop**, the Dock icon shows **REC**, and the menu
+bar shows a red dot; Shift-Command-R or **Stop** ends it. Nothing is ever recorded unless you start it,
 for that meeting. The first time, Knode reminds you that some places require everyone's consent
 before a meeting is recorded, and it gives you a short notice to paste in the meeting chat.
 
