@@ -534,6 +534,59 @@ Photos, recordings and videos stay on your Mac and go only into the space you pi
 transcribing and summarising all run on the device; no image, audio, video or text is sent to any
 server.
 
+# Photos library and storage (user docs draft, for knodemd/docs)
+
+## Photos library (v0.4)
+
+Bring the photos and videos of the albums you choose in Photos into a space.
+
+1. Open **Settings > Sources** and choose **Connect** on **Photos library**.
+2. **Access**: Knode asks for Photos access now, not before. If you said no earlier, choose
+   **Check Again** and allow Knode in **System Settings > Privacy & Security > Photos**.
+3. **History**: **From today** brings in only what you take from now on; **Everything** brings in
+   what is already in the albums too.
+4. **Albums**: switch on the albums Knode reads. Nothing is read until you pick one.
+
+What happens:
+
+- Each photo becomes a photo note with its original file (HEIC or JPEG, unchanged), the date,
+  place and camera, and the text and things your Mac finds in it.
+- Each video becomes a recording with the video attached and a transcript made on your Mac. A
+  video larger than 100 MB keeps only its audio; the video stays in Photos.
+- New photos and videos in the picked albums come in by themselves. Nothing is added twice, even
+  if your library is rebuilt or the same photo is in the library of another Mac.
+- Albums are picked on each Mac: every Mac has its own Photos library. If a space reads albums
+  picked on another Mac, this one says **No albums picked on this Mac** until you pick some here.
+- A photo you added to the space yourself stays yours: the Photos library adds its own note for
+  it, and the file is kept once.
+- A photo you delete in Photos, take out of an album, or whose album you switch off stays in the
+  space, marked as removed from the Photos library. It comes back to normal if it returns. The
+  mark is kept apart from the note's text, so it stays when the text is read again.
+- A photo or video you delete from the space is not brought back.
+- Videos that can never be added (even their audio is larger than 100 MB) are skipped from then
+  on; the source's card says how many.
+- Photos kept only in iCloud wait until your Mac has the original. To download them, turn on
+  **Download from iCloud** in the source's card.
+- Everything happens on your Mac. Knode never changes your Photos library and sends nothing
+  anywhere.
+
+## Storage (v0.4)
+
+**Settings > Spaces**, then choose a space, shows **Storage**:
+
+- The total size of the space, and how much is notes, photos, videos, audio and other files.
+  "Deleted" is files of deleted notes, freed the next time the space is purged.
+- Who added what: a source such as the Photos library, an agent, or you.
+- The largest files. **Show** opens the note; **Remove** takes the file out of the note (after
+  asking) and keeps its text, such as what was read or transcribed. You can undo it from the
+  history.
+- **Warn past**: once a space is larger than this (10 GB unless you change it), adding files asks
+  first and the Photos library stops adding new items until there is room. **Never** turns it off.
+- One file is at most 100 MB: a video larger than that keeps only its audio for the transcript,
+  and the original stays where it was.
+
+Sizes are computed on your Mac.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
