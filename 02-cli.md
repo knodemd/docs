@@ -1080,12 +1080,19 @@ on macOS and Linux.
 Running it again keeps the agent's key and access. If the key is missing or was revoked, the agent
 gets a new one and its old keys stop working.
 
+Your default space is never written into the agent's settings, even when `--space` names it: the
+agent follows your default space, and saves to the space of the project folder it works in when it
+may write there (see [Several spaces](03-mcp.md#several-spaces)). `--space` with another space
+fixes the agent to that space wherever it works, for an agent that must see only part of your
+memory. Running `knode connect <agent>` again without `--space` removes a space the agent was fixed
+to, and says so.
+
 ### Check which space an agent reaches
 
-The space an agent uses is set in its MCP settings: the `--space` that `knode connect --space`
-wrote there, or `KNODE_SPACE` in their environment, or else your default space when the agent
-starts. A project folder does not change it: project folders decide where captured conversations
-go, not which space an agent reads and writes.
+The space an agent saves to is set in its MCP settings: the `--space` that `knode connect --space`
+wrote there, or `KNODE_SPACE` in their environment, fixes it to that space wherever it works. When
+they name none, the agent follows your default space, and in a project folder saves to that
+folder's space when it may write there.
 
 `knode connect <agent> --check` reads the agent's settings and tells you, changing nothing:
 
@@ -1096,7 +1103,8 @@ go, not which space an agent reads and writes.
   `~/.claude.json`, and so does the check;
 - the space it is meant to use: the one in `--space`, else the space whose project folder holds
   `--project`, else your default space;
-- whether the agent may read or write there.
+- whether the agent may read or write there. For an agent whose settings name no space, that is
+  the project's space when it may write there, else the default space.
 
 It reports what is wrong and what to run, and fails (or, with `--json`, says `"ok": false`):
 
@@ -1106,14 +1114,14 @@ It reports what is wrong and what to run, and fails (or, with `--json`, says `"o
 | `no_key` | The settings run Knode without an agent key, from before keys. |
 | `other_agent` | The settings run Knode as another agent, with that agent's access. |
 | `no_space` | There is no default space, or the space in the settings does not exist. |
-| `wrong_space` | The agent uses another space than the one meant for it. |
+| `wrong_space` | The agent saves to another space than the one meant for it: its settings fix it to another space, or it may not write to the project's space. |
 | `unknown_agent` | Knode has no key for the agent, or its keys were revoked. |
 | `no_access` | The agent may not see the space it uses. |
 | `ambiguous_project` | The project folder is in several spaces, so there is no single space to compare with. |
 
-The check never gives access: `knode connect <agent> --space <space>` points the agent at a space,
-but gives it access there only if it has none anywhere yet; otherwise you grant it with
-`knode agents grant`. Read-only access is reported as a note. Restart the agent, or start a new
+The check never gives access. `knode connect <agent>` without `--space` lets the agent follow the
+project folder it works in; `knode connect <agent> --space <space>` fixes it to a space, and gives it
+access there only if it has none anywhere yet. Otherwise you grant it with `knode agents grant`. Read-only access is reported as a note. Restart the agent, or start a new
 session, after changing its settings.
 
 ```text
@@ -1122,7 +1130,7 @@ $ knode connect codex --check --project ~/code/site
 Meant to use: "Work" (where the project's conversations go).
 codex uses "Personal", the default space (Codex, ~/.codex/config.toml).
 It may read and write there.
-problem: codex uses "Personal" (it follows the default space), not "Work", ...
+problem: codex follows the folder it works in, but may not write to "Work", ...
 ```
 
 ### Agents connected before keys

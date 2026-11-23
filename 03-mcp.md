@@ -263,7 +263,8 @@ An agent reads wide and writes narrow:
   the agent works in: Claude Code and Codex start `knode mcp` in the session's folder, and the
   nearest project folder that holds it wins, as for [capture](02-cli.md#capture), among the spaces
   the agent may write to. When no such folder holds it, the default space. A space given with
-  `--space <path>` or `KNODE_SPACE` wins over the folder. Their results name the space written to,
+  `--space <path>` or `KNODE_SPACE` wins over the folder; `knode connect` and the Mac app write
+  `--space` only for a space other than your default. Their results name the space written to,
   and the agent is told at the start which spaces it reads and where it saves.
 - A node of a space the agent only reads is not changed from a session that saves elsewhere, and
   a link joins two nodes of the space it saves to.
