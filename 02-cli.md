@@ -16,6 +16,8 @@ Every command works without the app.
 | `knode restore <node> <version>` | Puts a node back to an earlier version, or brings back a deleted one (v0.2) |
 | `knode links <node>` | Shows the links of a node, each as it reads from the node, such as *part of* or *needed by* (v0.3) |
 | `knode link <from> <to>` | Links two nodes, with a kind of link such as `part-of` (v0.3) |
+| `knode unlink <from> <to>` | Removes a link made by hand, such as a `part-of` link, to move a note or a project to another project (v0.6) |
+| `knode projects [<action>]` | Lists the projects of the space as a tree, or moves one, with its notes, links and history, to another space (v0.6). See [projects](#projects) |
 | `knode kinds [<action>]` | Lists the kinds of link, or adds or removes one of the space's own (v0.3) |
 | `knode attach <node> <file>` | Attaches a file to a node (v0.3) |
 | `knode attachments <node>` | Lists the files attached to a node (v0.3) |
@@ -699,6 +701,71 @@ From v0.3. Links two nodes, by id or exact title, with a kind of link: `related`
 any kind `knode kinds` lists. Linking twice does nothing more. `mentions` links come only from
 `[[links]]` in a note's text.
 
+## unlink
+
+```sh
+knode unlink <from> <to> [--kind <kind>]
+```
+
+From v0.6. Removes a link made by hand between two nodes, by id or exact title: `related` by
+default, or the kind you give. Removing a link that is not there changes nothing. A `[[link]]` in a
+note's text is removed by editing the text.
+
+With `knode link`, it moves a note or a project to another project:
+
+```sh
+knode unlink "Website" "Acme" --kind part-of
+knode link "Website" "Studio" --kind part-of
+```
+
+## projects
+
+```sh
+knode projects [list] [--json]
+knode projects move <project> --to <space> [--dry-run] [--json]
+```
+
+From v0.6. `knode projects` lists the projects of the space, each under the project it is part of,
+with how many notes it has and its id.
+
+`knode projects move` moves a project to another space, such as the team space it is shared in
+from now on: the project, every project inside it at any depth and every note that is part of any
+of them. They keep their ids, text, tags, properties, attached files, the links among them and
+their whole history, each version with who wrote it and when. The project folders that hold them
+move too, so the next conversation in those folders is captured into the new space. `<project>` is
+its id or title; `--to` is a space name or a `.knode` path.
+
+`--dry-run` shows what would move and changes nothing:
+
+```text
+$ knode projects move Acme --to Team --dry-run
+Would move "Acme" from Personal to Team:
+  2 projects (Acme, Website), 14 notes, 61 versions
+  1 attached file (48211 bytes)
+  23 links among them, kept
+  2 links to notes that stay, which do not cross spaces ([[links]] stay as text):
+    "Acme" part-of "Clients"
+    "Pricing" mentions "Brand"
+  Project folder ~/code/acme: its conversations go to Team from now on
+```
+
+Links do not cross spaces. A link between a note that moves and one that stays is listed, and
+then:
+
+- a `[[link]]` in a note's text stays as the text you wrote, and links again if the other space
+  has, or gets, a note with that title;
+- a link made by hand, such as `part-of` or `related`, is removed. Undoing the move puts it back.
+
+Canvases stay in their space, and so does a project folder the other space already has. When the
+other space already has one of the notes (the same id), nothing moves and `--dry-run` says which.
+
+The move is one change in each space. `knode undo <change>`, with the change from either space,
+undoes it in both: the notes come back with their links and folders, and are removed from the
+other space with what they brought, history included. If someone changed them after the move,
+`knode undo` stops; move the project back instead, which brings those changes too.
+
+Only a person moves a project. Agents have no tool for it, whatever they may do in each space.
+
 ## kinds
 
 ```sh
@@ -781,7 +848,8 @@ From v0.2. Without a node, lists the latest changes to the space, newest first: 
 when, what was done, to which note, and who did it, a person or an agent. With a node (its id or
 exact title, even a deleted one by id), lists the changes to that node with the **version** each one
 wrote. `--limit` (or `-n`) sets how many changes to show, 20 by default; `--json` prints them as
-JSON.
+JSON. A note moved from another space (v0.6) lists the move with every version it brought, each
+with who wrote it and when.
 
 ```text
 "Pricing decision"  01K83N6V4W5D2XQJ0Y7RZ9T1AB
@@ -803,6 +871,9 @@ put back. The undo is one more change, so nothing is lost: undoing it redoes the
 If someone changed the same notes later, `knode undo` stops and names those changes, because
 undoing would overwrite them. Check them with `knode history`, then pass `--force` to undo anyway.
 Changes to settings are not undone: set them again instead.
+
+From v0.6, undoing a `project.move` change undoes the move in both spaces at once (see
+[projects](#projects)); the other space must be one Knode knows.
 
 ## restore
 
