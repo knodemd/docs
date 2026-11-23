@@ -8,7 +8,7 @@ steps below work independently of that UI.
 
 Create a space or choose an existing one. A space is a permission boundary. A project is an
 organization convention inside that space; an agent allowed to read the space can read its other
-projects too. Use separate spaces when access must differ.
+projects too. Use separate spaces when access must differ. See [Organise your memory](08-organise-your-memory.md).
 
 ```sh
 knode init Work
