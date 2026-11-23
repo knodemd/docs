@@ -84,6 +84,7 @@ Agents never open a space by themselves: if Knode Service cannot start, the tool
 | `read_excerpt` | Reads a bounded body range by node id, with a snapshot for safe continuation; omits full-note links and metadata |
 | `write_node` | Creates a node, or edits one by id or title; can append to the end of the text. From v0.3, a rewrite is merged with what others changed since the agent read the node |
 | `link_nodes` | Links two nodes, by id or title, with a kind of link: `related`, `part-of`, `derived-from`, and from v0.3 `answers`, `contradicts` or a kind of the space's own |
+| `unlink_nodes` | Removes a link made by hand, such as a `part-of` link; with `link_nodes`, moves a note or a project to another project (v0.6) |
 | `projects` | Lists the projects as a tree, with how many notes each has; given one by name or id, lists its notes, most recently changed first, and the projects inside it |
 | `recent` | Lists the nodes that changed most recently |
 | `history` | Lists the latest changes to a node or to the whole space, with who made them (v0.2) |
@@ -209,6 +210,8 @@ From v0.2, every change is kept, so any of them can be undone. Agents see the ch
 `history`, for one node or for the whole space.
 
 An agent can only `undo` its own changes, and only when nobody changed the same notes after it.
+Moving a project to another space is yours alone: agents have no tool for it (see
+[the command line](02-cli.md#projects)).
 Anything else it leaves to you: it tells you the change number, and you decide with
 `knode history` and `knode undo` (see [the command line](02-cli.md#undo)). Like every undo, it is
 one more change, so nothing is lost.
