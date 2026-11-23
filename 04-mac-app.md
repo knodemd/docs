@@ -102,7 +102,8 @@ Service. Agents can still save notes through MCP when they can write to the spac
 nothing is added. Repeat for each project.
 
 One space can hold several projects, and every agent that can read the space can read all of
-them: use separate spaces when agents need different access. Adding a project folder does not
+them: use separate spaces when agents need different access. How to choose is in
+[Organise your memory](08-organise-your-memory.md). Adding a project folder does not
 move or import its notes, connect an agent or change the space an agent uses. Import notes with
 `knode import`, and connect agents in Settings > Agents.
 
