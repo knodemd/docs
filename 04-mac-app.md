@@ -177,7 +177,9 @@ sheet you are using.
 
 It lists the agents on your Mac, and any agent already connected: Claude Code first, then Codex,
 then the others. Choose the space they get (your default space, unless you pick another), then
-**Connect** one, or **Connect all detected**. Agents already connected show **Connected**. Once an
+**Connect** one, or **Connect all detected**. An agent connected with your default space follows it
+and saves to the space of the project folder it works in; one connected with another space is fixed
+to that space. Agents already connected show **Connected**. Once an
 agent is connected, the app says what to do next: open a new session of that agent, and it will set
 up your memory. If an agent could not be connected, for example because its own command is not
 installed, the app shows what `knode connect` said.

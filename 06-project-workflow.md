@@ -32,10 +32,10 @@ knode folders overlaps
 knode connect codex --check --project /path/to/project
 ```
 
-The check reads the agent's settings and its access and changes nothing. If the agent uses another
-space, `knode --space Work connect codex` points it at Work; it gets access there only if it has
-none yet anywhere, so grant it with `knode agents grant codex Work write` if the check still says
-`no_access`. See [Check which space an agent reaches](02-cli.md#check-which-space-an-agent-reaches).
+The check reads the agent's settings and its access and changes nothing. An agent whose settings
+name no space saves to the project's space once it may write there: `knode agents grant codex Work
+write`. If its settings fix it to another space, `knode connect codex` (without `--space`) lets it
+follow the project folder again. See [Check which space an agent reaches](02-cli.md#check-which-space-an-agent-reaches).
 
 Import a copy of existing notes with the importer, not by asking a model to rewrite every file.
 Start with a pilot. Keep the original untouched, review skipped items, unresolved links and
