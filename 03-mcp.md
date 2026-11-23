@@ -14,9 +14,9 @@ knode connect claude-code
 
 See [Install](01-install.md) for every agent, and [the command line](02-cli.md#connect) for what
 `knode connect` changes. It gives the agent its own key, kept in your machine's credential store,
-and lets it read and write your default space only. The server itself is `knode mcp --agent
-<name>`, which agents start on their own; it uses your default space, or the one in
-`--space <path>` or `KNODE_SPACE`.
+and lets it read and write your default space. The server itself is `knode mcp --agent
+<name>`, which agents start on their own. With more than one space, see
+[Several spaces](#several-spaces).
 
 ### Where each agent is configured
 
@@ -250,6 +250,25 @@ knode agents revoke codex
 
 See [the command line](02-cli.md#agents) for every option. Grants keep each agent to the spaces you
 gave it through Knode; they are not a sandbox for programs that can read your files directly.
+
+## Several spaces
+
+An agent reads wide and writes narrow:
+
+- **It reads every space it may read.** `search`, `projects` and `recent` cover every space where
+  the agent has `read` or `write`, ranked together, and each result says which space it comes
+  from. `read_node` (and `read_excerpt`, `history`, `read_canvas`, `read_attachment`) takes an id
+  or title from any of them. A space where it has `none` never appears.
+- **It saves to one space.** `write_node` and `link_nodes` save to the space of the project folder
+  the agent works in: Claude Code and Codex start `knode mcp` in the session's folder, and the
+  nearest project folder that holds it wins, as for [capture](02-cli.md#capture), among the spaces
+  the agent may write to. When no such folder holds it, the default space. A space given with
+  `--space <path>` or `KNODE_SPACE` wins over the folder. Their results name the space written to,
+  and the agent is told at the start which spaces it reads and where it saves.
+- A node of a space the agent only reads is not changed from a session that saves elsewhere, and
+  a link joins two nodes of the space it saves to.
+
+Give an agent access to another space with `knode agents grant <agent> <space> read` (or `write`).
 
 ## Daily project workflow
 
