@@ -60,6 +60,22 @@ Acme (with Ana and Luis)
 
 The day you share it, that whole branch is what goes to the team space.
 
+## Work across spaces
+
+With a space of your own and team spaces, your agents work like this:
+
+- **They read every space you let them read.** From a personal project you can ask about your
+  team's work: the answer comes from the team space, and each result says which space it is from.
+- **They write to one space:** the space of the project folder they work in, or the one you tell
+  them. Team decisions go to the team space; your own notes stay in yours.
+- **Access is one way.** Your agents can read your team spaces; your teammates' agents never read
+  your own space.
+- **Your view of team work** goes in your space. Link it to the team's note so you can follow it;
+  people without access to your space never see that link.
+
+This is how Knode will work once agents read across spaces ([knode#398](https://github.com/knodemd/knode/issues/398))
+and notes can refer to other spaces ([knode#403](https://github.com/knodemd/knode/issues/403)).
+
 ## Know the current limits
 
 - **An agent reads one space.** `knode mcp` serves your default space, or the one in `--space`. An
