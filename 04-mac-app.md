@@ -385,6 +385,13 @@ and project of a recording, and its recordings get only the transcript. Transcri
 the minutes go on in the background while the app is open; if you quit in the middle, they go on
 the next time you open it. If a step fails, **Retry** appears in the menu bar menu.
 
+The transcript is in the language spoken. When your Mac has several languages in **System Settings >
+General > Language & Region**, Knode listens to a short part of the recording in each and keeps the
+one being spoken, so a Mac in English transcribes a meeting in Spanish in Spanish. Only the
+languages in that list are tried: add the ones you speak in meetings. If a transcript came out in
+the wrong language, open the meeting and choose **Record > Transcribe Again**: Knode listens for the
+language again, replaces the transcript and writes the minutes again.
+
 A recording is never thrown away. If it cannot be stored in its space (Knode Service is stopped,
 or the disk is full), it waits under **Unsaved recording** in the menu bar menu and Knode tries
 again on its own; you can also save it again, show it in the Finder or delete it. Quitting Knode
