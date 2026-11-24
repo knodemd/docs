@@ -378,7 +378,9 @@ When the recording stops, a note of kind `meeting` appears in the project, with 
 - **The minutes**, written into the meeting note: a summary, the key points, every decision, the
   action items with who owns them, and the open questions. They are written by Apple's on-device
   model, which needs Apple Intelligence turned on (System Settings > Apple Intelligence & Siri).
-  Without it you still get the transcript, and the meeting says why there are no minutes.
+  Without it you still get the transcript, and the meeting says why there are no minutes. Once the
+  model is ready (it downloads after you turn Apple Intelligence on), Knode writes the missing
+  minutes on its own.
 
 Minutes are on for every space; turn **Write minutes** off for a space where you choose the space
 and project of a recording, and its recordings get only the transcript. Transcribing and writing
