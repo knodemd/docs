@@ -360,6 +360,9 @@ menu shows:
   connected;
 - **Open Knode**, to bring up the window;
 - **Start Knode Service** or **Stop Knode Service**;
+- when the running Knode Service is older than the app (its version is lower, or it did not know
+  something the app asked of it), a warning and **Restart Knode Service**. If the `knode` command
+  was installed apart from the app, such as with Homebrew, update it first: the app runs that one;
 - **Run at Login**, to start the service every time you log in (the same as
   `knode service install`);
 - search by meaning: the model, how far each open space is indexed, a switch to turn it on or off
