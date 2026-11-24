@@ -378,12 +378,21 @@ When the recording stops, a note of kind `meeting` appears in the project, with 
 - **The minutes**, written into the meeting note: a summary, the key points, every decision, the
   action items with who owns them, and the open questions. They are written by Apple's on-device
   model, which needs Apple Intelligence turned on (System Settings > Apple Intelligence & Siri).
-  Without it you still get the transcript, and the meeting says why there are no minutes.
+  Without it you still get the transcript, and the meeting says why there are no minutes. Once the
+  model is ready (it downloads after you turn Apple Intelligence on), Knode writes the missing
+  minutes on its own.
 
 Minutes are on for every space; turn **Write minutes** off for a space where you choose the space
 and project of a recording, and its recordings get only the transcript. Transcribing and writing
 the minutes go on in the background while the app is open; if you quit in the middle, they go on
 the next time you open it. If a step fails, **Retry** appears in the menu bar menu.
+
+The transcript is in the language spoken. When your Mac has several languages in **System Settings >
+General > Language & Region**, Knode listens to a short part of the recording in each and keeps the
+one being spoken, so a Mac in English transcribes a meeting in Spanish in Spanish. Only the
+languages in that list are tried: add the ones you speak in meetings. If a transcript came out in
+the wrong language, open the meeting and choose **Record > Transcribe Again**: Knode listens for the
+language again, replaces the transcript and writes the minutes again.
 
 A recording is never thrown away. If it cannot be stored in its space (Knode Service is stopped,
 or the disk is full), it waits under **Unsaved recording** in the menu bar menu and Knode tries
