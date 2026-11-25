@@ -344,6 +344,64 @@ note with the path its file had, and choose, for one note or for all of them:
 The same choices are in the terminal as `knode markdown deleted` (see the
 [CLI](02-cli.md#markdown-deleted)).
 
+## Meetings and voice memos (v0.4)
+
+Knode can record a meeting, write down everything that was said and turn it into minutes, all on
+your Mac. Nothing is sent anywhere.
+
+### Record a meeting
+
+Use the **Record** menu, the **Record** button at the top right of the window, or the Knode menu in
+the menu bar:
+
+- **Record Meeting…** (Shift-Command-R) for a call (Meet, Zoom, Teams and others): it records the sound of your Mac,
+  everyone else on the call, and your microphone, you.
+- **Record In Person…** (Option-Shift-Command-R) for people in a room: it records only the
+  microphone.
+
+Choose the space and the project the meeting belongs to, and start. While Knode records, a red bar
+in the window shows the time with **Pause** and **Stop**, the Dock icon shows **REC**, and the menu
+bar shows a red dot; Shift-Command-R or **Stop** ends it. Nothing is ever recorded unless you start it,
+for that meeting. The first time, Knode reminds you that some places require everyone's consent
+before a meeting is recorded, and it gives you a short notice to paste in the meeting chat.
+
+The first recording asks for access to the microphone and, for calls, to the sound of other apps;
+allow both in System Settings > Privacy & Security if you said no.
+
+### What you get
+
+When the recording stops, a note of kind `meeting` appears in the project, with the audio attached:
+
+- **The transcript**, a note of its own linked to the meeting: everything that was said, with the
+  time of each part, and who said it in a call (**Me** and **Others**). It is always kept, so your
+  agents can read the whole meeting and nothing is lost.
+- **The minutes**, written into the meeting note: a summary, the key points, every decision, the
+  action items with who owns them, and the open questions. They are written by Apple's on-device
+  model, which needs Apple Intelligence turned on (System Settings > Apple Intelligence & Siri).
+  Without it you still get the transcript, and the meeting says why there are no minutes.
+
+Minutes are on for every space; turn **Write minutes** off for a space where you choose the space
+and project of a recording, and its recordings get only the transcript. Transcribing and writing
+the minutes go on in the background while the app is open; if you quit in the middle, they go on
+the next time you open it. If a step fails, **Retry** appears in the menu bar menu.
+
+A recording is never thrown away. If it cannot be stored in its space (Knode Service is stopped,
+or the disk is full), it waits under **Unsaved recording** in the menu bar menu and Knode tries
+again on its own; you can also save it again, show it in the Finder or delete it. Quitting Knode
+while it records stops the recording and stores it first. After about three hours Knode warns you,
+and a little later it stores the meeting and offers to record the rest as a new one.
+
+If your microphone changes during a meeting, for example when you put in your AirPods, Knode goes
+on recording from the new one.
+
+### Voice memos
+
+Connect **Voice Memos** in Settings > Sources: every memo you record, on your iPhone or your Mac,
+comes into the space as a note of kind `voice-memo` with its audio, once iCloud has brought it to
+this Mac, and is transcribed and summarised the same way. Choose whether to bring in only new memos
+or the ones you already have, and leave out folders you do not want. Voice Memos needs Full Disk
+Access for Knode; a memo still in iCloud is waited for.
+
 ## Knode Service and the menu bar
 
 When Knode Service is running, the app opens your spaces through it, like your agents do, so a note
