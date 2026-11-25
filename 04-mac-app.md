@@ -330,6 +330,17 @@ The list updates by itself while it is open, so you see a run start, finish and 
 **Needs an update** means the other app changed how it keeps its data. Knode then brings in
 nothing from it, rather than something wrong, until Knode is updated; what came in before stays.
 
+### Connect your things
+
+Knode brings in what is new from your apps, on your Mac. Open **Connect your things** from the
+welcome screen, the **Sources** button in the sidebar, or **Knode > Connect Your Things…**. Choose
+the space at the top, then click a tile. Mail, Messages and WhatsApp need Full Disk Access: Knode
+opens System Settings for you; turn on Knode and the sheet goes on by itself. For Gmail, when your
+Knode cannot sign in with Google yet, use Apple Mail (add your Google account in Mail first) or an
+app password: open **App passwords** in your Google account (2-Step Verification must be on),
+create one named Knode, and paste it with your Gmail address. Sources marked **Coming soon** are
+not available in this build yet. Change or disconnect anything later in Settings > Sources.
+
 ### Connect a source
 
 **Connect** opens a sheet that goes step by step:
@@ -350,7 +361,14 @@ nothing from it, rather than something wrong, until Knode is updated; what came 
      password.
 3. **History**: **From today**, the default, brings in what is new from the start of today on;
    **Everything** brings in everything the source has, then what is new. It is chosen once: to
-   change it, disconnect and connect again.
+   change it, disconnect and connect again. For **Telegram**, **Largest file to download** sets
+   the biggest photo or file Knode attaches, in MB: larger ones are named in the chat as not
+   downloaded, 0 downloads none, and empty keeps Telegram's default (20 MB). Change it later on
+   Telegram's card. For **Messages**, **Names from Contacts** shows people by name instead of by
+   phone number or address; Knode asks for access to Contacts the first time. Knode Service cannot
+   read Contacts itself, so the app gives it the names: they stay on this Mac in Knode's own folder
+   and are never added to a space, and only conversations brought in after you turn it on use
+   them. Turning it off forgets them.
 4. **Chats**, **channels** or **folders**: everything comes in, new ones too, except the ones you
    switch off. One switched off is never read again, and what came from it before stays. The
    connector waits, paused, until you press **Start**, so nothing is read before you choose.
